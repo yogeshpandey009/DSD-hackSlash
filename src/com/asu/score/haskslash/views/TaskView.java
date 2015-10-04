@@ -58,7 +58,7 @@ public class TaskView extends ViewPart {
 		public void dispose() {
 		}
 		public Object[] getElements(Object parent) {
-			return new String[] { "One", "Two", "Three" };
+			return new String[] { "Task 1", "Task 2", "Task 3" };
 		}
 	}
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
