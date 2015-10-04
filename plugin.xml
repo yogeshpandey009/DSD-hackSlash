@@ -34,5 +34,29 @@
             file="contexts.xml">
       </contexts>
    </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="com.asu.score.hackslash.actionSet"
+            label="DSD Action Set"
+            visible="true">
+         <menu
+               id="sampleMenu"
+               label="DSD &amp;Menu">
+            <separator
+                  name="sampleGroup">
+            </separator>
+         </menu>
+         <action
+               class="com.asu.score.hackslash.actions.DSDAction"
+               icon="icons/sample.gif"
+               id="com.asu.score.hackslash.actions.DSDAction"
+               label="&amp;DSD Action"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Hello, Eclipse world">
+         </action>
+      </actionSet>
+   </extension>
 
 </plugin>
