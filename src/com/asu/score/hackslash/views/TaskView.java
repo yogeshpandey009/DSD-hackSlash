@@ -1,4 +1,4 @@
-package com.asu.score.haskslash.views;
+package com.asu.score.hackslash.views;
 
 
 import org.eclipse.swt.widgets.Composite;
@@ -35,7 +35,7 @@ public class TaskView extends ViewPart {
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String ID = "com.asu.score.haskslash.views.TaskView";
+	public static final String ID = "com.asu.score.hackslash.views.TaskView";
 
 	private TableViewer viewer;
 	private Action action1;
@@ -94,7 +94,7 @@ public class TaskView extends ViewPart {
 		viewer.setInput(getViewSite());
 
 		// Create the help context id for the viewer's control
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "com.asu.score.haskslash.viewer");
+		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "com.asu.score.hackslash.viewer");
 		getSite().setSelectionProvider(viewer);
 		makeActions();
 		hookContextMenu();
