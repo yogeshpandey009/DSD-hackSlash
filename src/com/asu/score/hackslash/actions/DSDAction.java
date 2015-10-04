@@ -5,6 +5,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
+
+import com.asu.score.hackslash.dialogs.LoginDialog;
 
 /**
  * Our sample action implements workbench action delegate.
@@ -29,10 +32,19 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		MessageDialog.openInformation(
-			window.getShell(),
-			"Hackslash",
-			"Hello User, Welcome to DSD work enviroment");
+		LoginDialog dialog = new LoginDialog(window.getShell());
+	    
+	    // get the new values from the dialog
+	    if (dialog.open() == Window.OK) {
+	      String user = dialog.getUser();
+	      String pw = dialog.getPassword();
+	      System.out.println(user);
+	      System.out.println(pw);
+	    }
+//		MessageDialog.openInformation(
+//			window.getShell(),
+//			"Hackslash",
+//			"Hello User, Welcome to DSD work enviroment");
 	}
 
 	/**
