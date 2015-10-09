@@ -8,6 +8,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 
 import com.asu.score.hackslash.dialogs.LoginDialog;
+import com.asu.score.hackslash.engine.Server;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -37,6 +38,7 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 
 		// get the new values from the dialog
 		if (dialog.open() == Window.OK) {
+			Server.createConnection();
 			String user = dialog.getUser();
 			String pw = dialog.getPassword();
 			System.out.println(user);
