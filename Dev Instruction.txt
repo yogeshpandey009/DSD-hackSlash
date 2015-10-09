@@ -1,0 +1,7 @@
+<sasl>
+    <mechs> PLAIN </mechs>
+</sasl>
+
+Add the above to your Openfire folder in "openfire.xml" file.
+
+Note: Run openfire server with Administrator Rights.
