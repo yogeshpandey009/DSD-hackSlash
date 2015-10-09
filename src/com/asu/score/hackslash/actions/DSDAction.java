@@ -1,9 +1,13 @@
 package com.asu.score.hackslash.actions;
 
+import java.io.IOException;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 
@@ -38,7 +42,12 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 
 		// get the new values from the dialog
 		if (dialog.open() == Window.OK) {
-			Server.createConnection();
+			try {
+				Server.createConnection();
+			} catch (SmackException | IOException | XMPPException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			String user = dialog.getUser();
 			String pw = dialog.getPassword();
 			System.out.println(user);
