@@ -6,10 +6,12 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: com.asu.score.hackslash.Activator
 Bundle-Vendor: ASU
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources;bundle-version="3.9.1"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .,
+ src/,
  libs/httpclient-4.1.2.jar,
  libs/jxmpp-core-0.4.1.jar,
  libs/jxmpp-util-cache-0.5.0-alpha2.jar,

@@ -5,3 +5,13 @@
 Add the above to your Openfire folder in "openfire.xml" file.
 
 Note: Run openfire server with Administrator Rights.
+
+In case you are unable to login
+  <admin>  
+      <authorizedUsernames>admin</authorizedUsernames>  
+      <!-- <authorizedJIDs></authorizedJIDs> -->  
+  </admin>
+and
+  <setup>false</setup>  
+
+and restart the server

@@ -1,16 +1,27 @@
 package com.asu.score.hackslash.views;
 
+import org.eclipse.jface.action.*;
+import org.eclipse.jface.dialogs.InputDialog;
+import org.eclipse.jface.viewers.*;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.ui.*;
+import org.eclipse.ui.part.ViewPart;
+
+import com.asu.score.hackslash.helper.ImageProviderHelper;
+import com.asu.score.hackslash.taskhelper.Word;
+import com.asu.score.hackslash.taskhelper.WordContentProvider;
+import com.asu.score.hackslash.taskhelper.WordFile;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.SWT;
-
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -32,160 +43,246 @@ import org.eclipse.swt.SWT;
 
 public class TaskView extends ViewPart {
 
+	WordFile input;
+	ListViewer viewer;
+	Action addItemAction, deleteItemAction, selectAllAction;
+	IMemento memento;
+	
 	/**
-	 * The ID of the view as specified by the extension.
-	 */
-	public static final String ID = "com.asu.score.hackslash.views.TaskView";
-
-	private TableViewer viewer;
-	private Action action1;
-	private Action action2;
-	private Action doubleClickAction;
-
-	/*
-	 * The content provider class is responsible for
-	 * providing objects to the view. It can wrap
-	 * existing objects in adapters or simply return
-	 * objects as-is. These objects may be sensitive
-	 * to the current input of the view, or ignore
-	 * it and always show the same content 
-	 * (like Task List, for example).
-	 */
-	 
-	class ViewContentProvider implements IStructuredContentProvider {
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-		public void dispose() {
-		}
-		public Object[] getElements(Object parent) {
-			return new String[] { "Task 1", "Task 2", "Task 3" };
-		}
-	}
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-		public String getColumnText(Object obj, int index) {
-			return getText(obj);
-		}
-		public Image getColumnImage(Object obj, int index) {
-			return getImage(obj);
-		}
-		public Image getImage(Object obj) {
-			return PlatformUI.getWorkbench().
-					getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
-		}
-	}
-	class NameSorter extends ViewerSorter {
-	}
-
-	/**
-	 * The constructor.
+	 * Constructor
 	 */
 	public TaskView() {
+		super();
+		input = new WordFile(new File("users.txt"));
 	}
 
 	/**
-	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
+	 * @see IViewPart.init(IViewSite)
 	 */
-	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(new NameSorter());
-		viewer.setInput(getViewSite());
-
-		// Create the help context id for the viewer's control
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "com.asu.score.hackslash.viewer");
-		getSite().setSelectionProvider(viewer);
-		makeActions();
-		hookContextMenu();
-		hookDoubleClickAction();
-		contributeToActionBars();
+	public void init(IViewSite site) throws PartInitException {
+		super.init(site);
 	}
 
-	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				TaskView.this.fillContextMenu(manager);
-			}
-		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, viewer);
-	}
-
-	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalPullDown(bars.getMenuManager());
-		fillLocalToolBar(bars.getToolBarManager());
-	}
-
-	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(new Separator());
-		manager.add(action2);
-	}
-
-	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(action2);
-		// Other plug-ins can contribute there actions here
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
+	/**
+	 * Initializes this view with the given view site.  A memento is passed to
+ 	 * the view which contains a snapshot of the views state from a previous
+	 * session.  	
+	 */
+	public void init(IViewSite site,IMemento memento) throws PartInitException {
+		init(site);
+		this.memento = memento;	
 	}
 	
-	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
-		manager.add(action2);
-	}
-
-	private void makeActions() {
-		action1 = new Action() {
-			public void run() {
-				showMessage("Action 1 executed");
-			}
-		};
-		action1.setText("Action 1");
-		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		
-		action2 = new Action() {
-			public void run() {
-				showMessage("Action 2 executed");
-			}
-		};
-		action2.setText("Action 2");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		doubleClickAction = new Action() {
-			public void run() {
-				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				showMessage("Double-click detected on "+obj.toString());
-			}
-		};
-	}
-
-	private void hookDoubleClickAction() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
-			}
-		});
-	}
-	private void showMessage(String message) {
-		MessageDialog.openInformation(
-			viewer.getControl().getShell(),
-			"DSD Task View",
-			message);
-	}
-
 	/**
-	 * Passing the focus request to the viewer's control.
+	 * @see IWorkbenchPart#createPartControl(Composite)
+	 */
+	public void createPartControl(Composite parent) {
+		// Create viewer.
+		viewer = new ListViewer(parent);
+		viewer.setContentProvider(new WordContentProvider());
+		viewer.setLabelProvider(new LabelProvider());
+		viewer.setInput(input);
+		getSite().setSelectionProvider(viewer);
+
+		// Create menu and toolbars.
+		createActions();
+		createMenu();
+		createToolbar();
+		createContextMenu();
+		hookGlobalActions();
+		
+		// Restore state from the previous session.
+		restoreState();
+	}
+	
+	/**
+	 * @see WorkbenchPart#setFocus()
 	 */
 	public void setFocus() {
 		viewer.getControl().setFocus();
 	}
+
+	/**
+	 * Create the actions.
+	 */
+	public void createActions() {
+		addItemAction = new Action("Add...") {
+			public void run() { 
+				addItem();
+			}
+		};
+		addItemAction.setImageDescriptor(ImageProviderHelper.getImageDescriptor("add.gif"));
+		deleteItemAction = new Action("Delete") {
+			public void run() {
+				deleteItem();
+			}
+		};
+		deleteItemAction.setImageDescriptor(ImageProviderHelper.getImageDescriptor("delete.gif"));
+		selectAllAction = new Action("Select All") {
+			public void run() {
+				selectAll();
+			}
+		};
+		
+		// Add selection listener.
+		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+			public void selectionChanged(SelectionChangedEvent event) {
+				updateActionEnablement();
+			}
+		});
+	}
+	
+	/**
+	 * Create menu.
+	 */
+	private void createMenu() {
+		IMenuManager mgr = getViewSite().getActionBars().getMenuManager();
+		mgr.add(selectAllAction);
+	}
+	
+	/**
+	 * Create toolbar.
+	 */
+	private void createToolbar() {
+		IToolBarManager mgr = getViewSite().getActionBars().getToolBarManager();
+		mgr.add(addItemAction);
+		mgr.add(deleteItemAction);
+	}
+		
+	/**
+	 * Create context menu.
+	 */
+	private void createContextMenu() {
+		// Create menu manager.
+		MenuManager menuMgr = new MenuManager();
+		menuMgr.setRemoveAllWhenShown(true);
+		menuMgr.addMenuListener(new IMenuListener() {
+			public void menuAboutToShow(IMenuManager mgr) {
+				fillContextMenu(mgr);
+			}
+		});
+		
+		// Create menu.
+		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+		
+		// Register menu for extension.
+		getSite().registerContextMenu(menuMgr, viewer);
+	}
+
+	/**
+	 * Hook global actions
+	 */
+	private void hookGlobalActions() {
+		IActionBars bars = getViewSite().getActionBars();
+		bars.setGlobalActionHandler(IWorkbenchActionConstants.SELECT_ALL, selectAllAction);
+		bars.setGlobalActionHandler(IWorkbenchActionConstants.DELETE, deleteItemAction);
+		viewer.getControl().addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent event) {
+				if (event.character == SWT.DEL && 
+					event.stateMask == 0 && 
+					deleteItemAction.isEnabled()) 
+				{
+					deleteItemAction.run();
+				}
+			}
+		});
+	}
+		
+	private void fillContextMenu(IMenuManager mgr) {
+		mgr.add(addItemAction);
+		mgr.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+		mgr.add(deleteItemAction);
+		mgr.add(new Separator());
+		mgr.add(selectAllAction);
+	}
+
+	private void updateActionEnablement() {
+		IStructuredSelection sel = 
+			(IStructuredSelection)viewer.getSelection();
+		deleteItemAction.setEnabled(sel.size() > 0);
+	}
+	
+	/**
+	 * Add item to list.
+	 */
+	private void addItem() {
+		String name = promptForValue("Enter name:", null);
+		if (name != null) {
+			Word word = new Word(name);
+			input.add(word);
+			viewer.setSelection(new StructuredSelection(word));
+		}
+	}
+	
+	/**
+	 * Remove item from list.
+	 */
+	private void deleteItem() {
+		IStructuredSelection sel = 
+			(IStructuredSelection)viewer.getSelection();
+		Iterator iter = sel.iterator();
+		while (iter.hasNext()) {
+			Word word = (Word)iter.next();
+			input.remove(word);
+		}
+	}
+
+	/**
+	 * Select all items.
+	 */
+	private void selectAll() {
+		viewer.getList().selectAll();
+		updateActionEnablement();
+	}
+		
+	/**
+	 * Ask user for value.
+	 */
+	private String promptForValue(String text, String oldValue) {
+		InputDialog dlg = new InputDialog(getSite().getShell(), 
+			"List View", text, oldValue, null);
+		if (dlg.open() != Window.OK)
+			return null;
+		return dlg.getValue();
+	}
+	
+	/**
+	 * Saves the object state within a memento.
+	 */
+	public void saveState(IMemento memento){
+		IStructuredSelection sel = (IStructuredSelection)viewer.getSelection();
+		if (sel.isEmpty())
+			return;
+		memento = memento.createChild("selection");
+		Iterator iter = sel.iterator();
+		while (iter.hasNext()) {
+			Word word = (Word)iter.next();
+			memento.createChild("descriptor", word.toString());
+		}
+	}
+
+	/**
+	 * Restores the viewer state from the memento.
+	 */
+	private void restoreState() {
+		if (memento == null)
+			return;
+		memento = memento.getChild("selection");
+		if (memento != null) {
+			IMemento descriptors [] = memento.getChildren("descriptor");
+			if (descriptors.length > 0) {
+				ArrayList objList = new ArrayList(descriptors.length);
+				for (int nX = 0; nX < descriptors.length; nX ++) {
+					String id = descriptors[nX].getID();
+					Word word = input.find(id);
+					if (word != null)
+						objList.add(word);		
+				}
+				viewer.setSelection(new StructuredSelection(objList));
+			}
+		}
+		memento = null;
+		updateActionEnablement();
+	}	
 }

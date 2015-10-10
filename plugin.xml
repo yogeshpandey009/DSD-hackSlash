@@ -15,6 +15,13 @@
             class="com.asu.score.hackslash.views.TaskView"
             id="com.asu.score.hackslash.views.TaskView">
       </view>
+      <view
+            category="com.asu.score.hackslash"
+            class="com.asu.score.hackslash.views.UsersView"
+            icon="icons/sample.gif"
+            id="com.asu.score.hackslash.views.UsersView"
+            name="Users View">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -27,9 +34,24 @@
                id="com.asu.score.hackslash.views.TaskView">
          </view>
       </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="com.asu.score.hackslash.views.UsersView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
    </extension>
    <extension
          point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+      <contexts
+            file="contexts.xml">
+      </contexts>
       <contexts
             file="contexts.xml">
       </contexts>
