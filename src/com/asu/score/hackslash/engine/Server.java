@@ -27,7 +27,7 @@ public class Server {
 		    config.setDebuggerEnabled(true);
 		    config.setSocketFactory(SocketFactory.getDefault());
 		    
-		    XMPPTCPConnection mConnection = new XMPPTCPConnection(config.build());
+		    mConnection = new XMPPTCPConnection(config.build());
 		    try {
 		        mConnection.connect();
 		        if (mConnection.isConnected()) {
@@ -53,5 +53,6 @@ public class Server {
 	
 	public static void main(String[] args) throws Exception{
 		createConnection();
+		login("bharat", "hello");
 	}
 }
