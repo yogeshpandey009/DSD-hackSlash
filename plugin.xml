@@ -64,7 +64,7 @@
             visible="true">
          <menu
                id="sampleMenu"
-               label="DSD &amp;Menu">
+               label="hackSlash">
             <separator
                   name="sampleGroup">
             </separator>
@@ -73,7 +73,7 @@
                class="com.asu.score.hackslash.actions.DSDAction"
                icon="icons/sample.gif"
                id="com.asu.score.hackslash.actions.DSDAction"
-               label="&amp;DSD Action"
+               label="&amp;Login to DSD"
                menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
                tooltip="Hello, Eclipse world">
