@@ -44,19 +44,23 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 		// get the new values from the dialog
 		if (dialog.open() == Window.OK) {
 			try {
-				Server.createConnection();
+				if (!Server.getServerStatus()){
+					Server.createConnection();
+				}
 			} catch (SmackException | IOException | XMPPException e) {
 				message = "Failed to Login to Server";
 			}
 			String user = dialog.getUser();
 			String pwrd = dialog.getPassword();
-			try {
-				Server.login(user, pwrd);
-				message = "Hello " + user + ", Welcome to DSD work enviroment";
-			} catch (XMPPException | SmackException | IOException e) {
-				message = "UnAuthorized Username or Password!";
+			if (!user.equals("")){
+				try {
+					Server.login(user, pwrd);
+					message = "Hello " + user + ", Welcome to DSD work enviroment";
+				} catch (XMPPException | SmackException | IOException e) {
+					message = "UnAuthorized Username or Password!";
+				}
+				MessageDialog.openInformation(window.getShell(), "Hackslash", message);
 			}
-			MessageDialog.openInformation(window.getShell(), "Hackslash", message);
 		}
 	}
 

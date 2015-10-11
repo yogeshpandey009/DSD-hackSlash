@@ -51,6 +51,28 @@ public class Server {
 		}
 	}
 	
+	public static boolean getServerStatus(){
+		if (mConnection != null && mConnection.isConnected()){
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean getUserStatus(){
+		if (mConnection != null && mConnection.isAuthenticated()){
+			return true;
+		}
+		return false;
+	}
+	
+	public static String getCurrentUser(){
+		return mConnection.getUser();
+	}
+	
+	public static void disconnect(){
+		mConnection.disconnect();
+	}
+	
 	public static void main(String[] args) throws Exception{
 		createConnection();
 		login("admin", "yashu");
