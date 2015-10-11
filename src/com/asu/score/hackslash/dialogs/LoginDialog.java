@@ -14,6 +14,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.asu.score.hackslash.engine.Server;
+
 public class LoginDialog extends Dialog {
 	  private Text txtUser;
 	  private Text txtPassword;
@@ -31,53 +33,62 @@ public class LoginDialog extends Dialog {
 	    layout.marginRight = 5;
 	    layout.marginLeft = 10;
 	    container.setLayout(layout);
+	    
+	    if (Server.getUserStatus()){
+	    	Label lblUser = new Label(container, SWT.NONE);
+		    lblUser.setText("You are Logged In as :- " + Server.getCurrentUser());
+	    } else {
+	    	Label lblUser = new Label(container, SWT.NONE);
+		    lblUser.setText("User:");
+	    	txtUser = new Text(container, SWT.BORDER);
+		    txtUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+		        1, 1));
+		    txtUser.setText(user);
+		    txtUser.addModifyListener(new ModifyListener() {
 
-	    Label lblUser = new Label(container, SWT.NONE);
-	    lblUser.setText("User:");
+		      @Override
+		      public void modifyText(ModifyEvent e) {
+		        Text textWidget = (Text) e.getSource();
+		        String userText = textWidget.getText();
+		        user = userText;
+		      }
+		    });
 
-	    txtUser = new Text(container, SWT.BORDER);
-	    txtUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-	        1, 1));
-	    txtUser.setText(user);
-	    txtUser.addModifyListener(new ModifyListener() {
+		    Label lblPassword = new Label(container, SWT.NONE);
+		    GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
+		        false, 1, 1);
+		    gd_lblNewLabel.horizontalIndent = 1;
+		    lblPassword.setLayoutData(gd_lblNewLabel);
+		    lblPassword.setText("Password:");
 
-	      @Override
-	      public void modifyText(ModifyEvent e) {
-	        Text textWidget = (Text) e.getSource();
-	        String userText = textWidget.getText();
-	        user = userText;
-	      }
-	    });
+		    txtPassword = new Text(container, SWT.BORDER| SWT.PASSWORD);
+		    txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+		        false, 1, 1));
+		    txtPassword.setText(password);
+		    txtPassword.addModifyListener(new ModifyListener() {
 
-	    Label lblPassword = new Label(container, SWT.NONE);
-	    GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
-	        false, 1, 1);
-	    gd_lblNewLabel.horizontalIndent = 1;
-	    lblPassword.setLayoutData(gd_lblNewLabel);
-	    lblPassword.setText("Password:");
-
-	    txtPassword = new Text(container, SWT.BORDER| SWT.PASSWORD);
-	    txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-	        false, 1, 1));
-	    txtPassword.setText(password);
-	    txtPassword.addModifyListener(new ModifyListener() {
-
-	      @Override
-	      public void modifyText(ModifyEvent e) {
-	        Text textWidget = (Text) e.getSource();
-	        String passwordText = textWidget.getText();
-	        password = passwordText;
-	      }
-	    });
+		      @Override
+		      public void modifyText(ModifyEvent e) {
+		        Text textWidget = (Text) e.getSource();
+		        String passwordText = textWidget.getText();
+		        password = passwordText;
+		      }
+		    });
+	    }
+	    
 	    return container;
 	  }
 
 	  // override method to use "Login" as label for the OK button
 	  @Override
 	  protected void createButtonsForButtonBar(Composite parent) {
-	    createButton(parent, IDialogConstants.OK_ID, "Login", true);
-	    createButton(parent, IDialogConstants.CANCEL_ID,
-	        IDialogConstants.CANCEL_LABEL, false);
+		  if (Server.getUserStatus()){
+			  createButton(parent, IDialogConstants.CLOSE_ID, "Logout", true);
+		  } else {
+			  createButton(parent, IDialogConstants.OK_ID, "Login", true);
+			  createButton(parent, IDialogConstants.CANCEL_ID,
+			  IDialogConstants.CANCEL_LABEL, false);
+		  }
 	  }
 
 	  @Override
@@ -90,6 +101,18 @@ public class LoginDialog extends Dialog {
 	    user = txtUser.getText();
 	    password = txtPassword.getText();
 	    super.okPressed();
+	  }
+	  
+	  @Override
+	  protected void buttonPressed(int buttonId) {
+	    if (buttonId == IDialogConstants.OK_ID){
+	    	user = txtUser.getText();
+		    password = txtPassword.getText();
+		    super.okPressed();
+	    } else if (buttonId == IDialogConstants.CLOSE_ID){
+	    	Server.disconnect();
+	    	super.close();
+	    }
 	  }
 
 	  public String getUser() {
