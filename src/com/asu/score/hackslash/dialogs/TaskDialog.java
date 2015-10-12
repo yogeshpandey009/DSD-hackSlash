@@ -114,15 +114,6 @@ public class TaskDialog extends Dialog {
 		super.okPressed();
 	}
 
-	@Override
-	protected void buttonPressed(int buttonId) {
-		if (buttonId == IDialogConstants.OK_ID) {
-			okPressed();
-		} else if (buttonId == IDialogConstants.CLOSE_ID || buttonId == IDialogConstants.CANCEL_ID) {
-			super.close();
-		}
-	}
-
 	public String getName() {
 		return name;
 	}

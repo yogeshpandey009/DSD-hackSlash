@@ -8,6 +8,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 
@@ -40,11 +41,12 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		LoginDialog dialog = new LoginDialog(window.getShell());
 		String message = "";
-		
+
 		// get the new values from the dialog
-		if (dialog.open() == Window.OK) {
+		int result = dialog.open();
+		if (result == IDialogConstants.OK_ID) {
 			try {
-				if (!Server.getServerStatus()){
+				if (!Server.getServerStatus()) {
 					Server.createConnection();
 				}
 			} catch (SmackException | IOException | XMPPException e) {
@@ -52,15 +54,19 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 			}
 			String user = dialog.getUser();
 			String pwrd = dialog.getPassword();
-			if (!user.equals("")){
+			if (!user.equals("")) {
 				try {
 					Server.login(user, pwrd);
-					message = "Hello " + user + ", Welcome to DSD work enviroment";
+					message = "Hello " + user
+							+ ", Welcome to DSD work enviroment";
 				} catch (XMPPException | SmackException | IOException e) {
 					message = "UnAuthorized Username or Password!";
 				}
-				MessageDialog.openInformation(window.getShell(), "Hackslash", message);
+				MessageDialog.openInformation(window.getShell(), "Hackslash",
+						message);
 			}
+		} else if (result == IDialogConstants.CLOSE_ID) {
+			Server.disconnect();
 		}
 	}
 
