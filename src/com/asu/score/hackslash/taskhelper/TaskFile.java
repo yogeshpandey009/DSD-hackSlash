@@ -3,21 +3,21 @@ package com.asu.score.hackslash.taskhelper;
 import java.io.*;
 import java.util.*;
 
-public class WordFile {
+public class TaskFile {
 
 	private File file;
-	private ArrayList list = new ArrayList();
+	private ArrayList<Task> list = new ArrayList<Task>();
 	private Listener listener;
 	
 	public interface Listener {
-		public void added(Word w);
-		public void removed(Word w);
+		public void added(Task w);
+		public void removed(Task w);
 	}
 	
 	/**
 	 * Constructor for FileList
 	 */
-	public WordFile(File file) {
+	public TaskFile(File file) {
 		this.file = file;
 		if (file.exists()) {
 			readFile();
@@ -30,24 +30,24 @@ public class WordFile {
 		listener = l;
 	}
 	
-	public void add(Word word) {
+	public void add(Task word) {
 		list.add(word);
 		writeFile();
 		if (listener != null)
 			listener.added(word);
 	}
 	
-	public void remove(Word word) {
+	public void remove(Task word) {
 		list.remove(word);
 		writeFile();
 		if (listener != null)
 			listener.removed(word);
 	}
 	
-	public Word find(String str) {
+	public Task find(String str) {
 		Iterator iter = list.iterator();
 		while (iter.hasNext()) {
-			Word word = (Word)iter.next();
+			Task word = (Task)iter.next();
 			if (str.equals(word.toString()))
 				return word;
 		}
@@ -65,7 +65,7 @@ public class WordFile {
 			data.writeInt(list.size());
 			Iterator iter = list.iterator();
 			while (iter.hasNext()) {
-				Word word = (Word)iter.next();
+				Task word = (Task)iter.next();
 				data.writeUTF(word.toString());
 			}
 			data.close();
@@ -81,7 +81,8 @@ public class WordFile {
 			int size = data.readInt();
 			for (int nX = 0; nX < size; nX ++) {
 				String str = data.readUTF();
-				list.add(new Word(str));
+				String [] taskElems = str.split(":", 3);
+				list.add(new Task(taskElems[0], taskElems[1], taskElems[2]));
 			}
 			data.close();
 		} catch (Exception e) {

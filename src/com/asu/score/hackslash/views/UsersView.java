@@ -37,7 +37,7 @@ public class UsersView extends ViewPart {/**
 		public void dispose() {
 		}
 		public Object[] getElements(Object parent) {
-			return new String[] { "Task 1", "Task 2", "Task 3" };
+			return new String[] { "User 1", "User 2", "User 3" };
 		}
 	}
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
