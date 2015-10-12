@@ -2,10 +2,10 @@ package com.asu.score.hackslash.taskhelper;
 
 import org.eclipse.jface.viewers.*;
 
-public class WordContentProvider 
-	implements IStructuredContentProvider, WordFile.Listener
+public class TaskContentProvider 
+	implements IStructuredContentProvider, TaskFile.Listener
 {
-	WordFile input;
+	TaskFile input;
 	ListViewer viewer;
 
 	/**
@@ -34,8 +34,8 @@ public class WordContentProvider
 		if (viewer instanceof ListViewer) {
 			this.viewer = (ListViewer)viewer;
 		}
-		if (newInput instanceof WordFile) {
-			input = (WordFile)newInput;
+		if (newInput instanceof TaskFile) {
+			input = (TaskFile)newInput;
 			input.setListener(this);
 		}
 	}
@@ -43,7 +43,7 @@ public class WordContentProvider
 	/**
 	 * @see Listener#added()
 	 */
-	public void added(Word e) {
+	public void added(Task e) {
 		if (viewer != null)
 			viewer.add(e);
 	}
@@ -51,7 +51,7 @@ public class WordContentProvider
 	/**
 	 * @see Listener#removed()
 	 */
-	public void removed(Word e) {
+	public void removed(Task e) {
 		if (viewer != null) {
 			viewer.setSelection(null);
 			viewer.remove(e);

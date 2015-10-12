@@ -8,10 +8,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.ViewPart;
 
+import com.asu.score.hackslash.dialogs.TaskDialog;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
-import com.asu.score.hackslash.taskhelper.Word;
-import com.asu.score.hackslash.taskhelper.WordContentProvider;
-import com.asu.score.hackslash.taskhelper.WordFile;
+import com.asu.score.hackslash.taskhelper.Task;
+import com.asu.score.hackslash.taskhelper.TaskContentProvider;
+import com.asu.score.hackslash.taskhelper.TaskFile;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ import org.eclipse.swt.widgets.Menu;
 
 public class TaskView extends ViewPart {
 
-	WordFile input;
+	TaskFile input;
 	ListViewer viewer;
 	Action addItemAction, deleteItemAction, selectAllAction;
 	IMemento memento;
@@ -53,7 +54,7 @@ public class TaskView extends ViewPart {
 	 */
 	public TaskView() {
 		super();
-		input = new WordFile(new File("users.txt"));
+		input = new TaskFile(new File("tasks.txt"));
 	}
 
 	/**
@@ -79,7 +80,7 @@ public class TaskView extends ViewPart {
 	public void createPartControl(Composite parent) {
 		// Create viewer.
 		viewer = new ListViewer(parent);
-		viewer.setContentProvider(new WordContentProvider());
+		viewer.setContentProvider(new TaskContentProvider());
 		viewer.setLabelProvider(new LabelProvider());
 		viewer.setInput(input);
 		getSite().setSelectionProvider(viewer);
@@ -207,11 +208,10 @@ public class TaskView extends ViewPart {
 	 * Add item to list.
 	 */
 	private void addItem() {
-		String name = promptForValue("Enter name:", null);
-		if (name != null) {
-			Word word = new Word(name);
-			input.add(word);
-			viewer.setSelection(new StructuredSelection(word));
+		Task task = promptForValue(null);
+		if (task != null) {
+			input.add(task);
+			viewer.setSelection(new StructuredSelection(task));
 		}
 	}
 	
@@ -223,8 +223,8 @@ public class TaskView extends ViewPart {
 			(IStructuredSelection)viewer.getSelection();
 		Iterator iter = sel.iterator();
 		while (iter.hasNext()) {
-			Word word = (Word)iter.next();
-			input.remove(word);
+			Task task = (Task)iter.next();
+			input.remove(task);
 		}
 	}
 
@@ -239,12 +239,14 @@ public class TaskView extends ViewPart {
 	/**
 	 * Ask user for value.
 	 */
-	private String promptForValue(String text, String oldValue) {
-		InputDialog dlg = new InputDialog(getSite().getShell(), 
-			"List View", text, oldValue, null);
-		if (dlg.open() != Window.OK)
-			return null;
-		return dlg.getValue();
+	private Task promptForValue(String oldValue) {
+		//TODO: old value in case of edit
+//		InputDialog dlg = new InputDialog(getSite().getShell(), 
+//			"List View", text, oldValue, null);
+		TaskDialog dlg = new TaskDialog(getSite().getShell());
+		if (dlg.open() == Window.OK)
+			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo());
+		return null;
 	}
 	
 	/**
@@ -257,8 +259,8 @@ public class TaskView extends ViewPart {
 		memento = memento.createChild("selection");
 		Iterator iter = sel.iterator();
 		while (iter.hasNext()) {
-			Word word = (Word)iter.next();
-			memento.createChild("descriptor", word.toString());
+			Task task = (Task)iter.next();
+			memento.createChild("descriptor", task.toString());
 		}
 	}
 
@@ -275,9 +277,9 @@ public class TaskView extends ViewPart {
 				ArrayList objList = new ArrayList(descriptors.length);
 				for (int nX = 0; nX < descriptors.length; nX ++) {
 					String id = descriptors[nX].getID();
-					Word word = input.find(id);
-					if (word != null)
-						objList.add(word);		
+					Task task = input.find(id);
+					if (task != null)
+						objList.add(task);		
 				}
 				viewer.setSelection(new StructuredSelection(objList));
 			}

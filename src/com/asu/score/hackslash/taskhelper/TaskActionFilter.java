@@ -2,15 +2,15 @@ package com.asu.score.hackslash.taskhelper;
 
 import org.eclipse.ui.IActionFilter;
 
-public class WordActionFilter implements IActionFilter {
+public class TaskActionFilter implements IActionFilter {
 
 	public static final String NAME = "name";
 	
-	private static WordActionFilter singleton;
+	private static TaskActionFilter singleton;
 
-	public static WordActionFilter getSingleton() {
+	public static TaskActionFilter getSingleton() {
 		if (singleton == null)
-			singleton = new WordActionFilter();
+			singleton = new TaskActionFilter();
 		return singleton;
 	}
 		
@@ -19,7 +19,7 @@ public class WordActionFilter implements IActionFilter {
 	 */
 	public boolean testAttribute(Object target, String name, String value) {
 		if (name.equals(NAME)) {
-			Word le = (Word)target;
+			Task le = (Task)target;
 			return value.equals(le.toString());
 		}	
 		return false;
