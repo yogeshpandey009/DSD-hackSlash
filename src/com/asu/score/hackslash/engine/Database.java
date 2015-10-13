@@ -8,7 +8,7 @@ import com.asu.score.hackslash.properties.Constants;
 
 public class Database {
 	
-	public void setConnection(final String USER, final String PASS){
+	public static void setConnection(final String USER, final String PASS){
 		Connection conn = null;
 		Statement stmt = null;
 		
@@ -24,6 +24,6 @@ public class Database {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("Hi");
+		setConnection("root", "1qaz2wsx");
 	}
 }
