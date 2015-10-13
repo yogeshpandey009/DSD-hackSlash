@@ -5,6 +5,7 @@ import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
 
 import com.asu.score.hackslash.engine.Server;
 
@@ -28,6 +29,9 @@ public class ChatController {
 			System.out.println("The User is no more online.");
 			e.printStackTrace();
 		}
+	}
+	
+	public static void getPresence(){
 	}
 	
 }

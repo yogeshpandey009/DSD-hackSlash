@@ -14,6 +14,8 @@ import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.Presence.Type;
 import org.jivesoftware.smack.packet.Session;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
@@ -92,15 +94,21 @@ public class Server {
 		createConnection();
 		login("bharat", "hello");
 		ChatManager cm = ChatManager.getInstanceFor(mConnection);
+	    Presence presence = new Presence(Type.available);
+	    presence.setStatus("HIII");
+	    mConnection.sendPacket(presence);
+
 		Roster ros = Roster.getInstanceFor(mConnection);
 		Collection<RosterEntry> entries = ros.getEntries();
+		ros.createEntry("yp", "yp", null);
 		 
 	    System.out.println("\n\n" + entries.size() + " buddy(ies):");
 	    for(RosterEntry r:entries)
 	    {
 	    System.out.println(r.getUser());
 	    }
-	    ChatController.startChat("bharat");
+	    ChatController.startChat("yp@bks-pc");
+	    
 		
 	}
 }
