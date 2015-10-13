@@ -1,7 +1,6 @@
 package com.asu.score.hackslash.engine;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import javax.net.SocketFactory;
 
@@ -9,15 +8,10 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.packet.Presence.Type;
-import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import com.asu.score.hackslash.actions.im.ChatController;
-import com.asu.score.hackslash.actions.im.XmppManager;
 import com.asu.score.hackslash.properties.Constants;
 
 public class Server {
@@ -86,39 +80,20 @@ public class Server {
 	}
 	
 	public static void main(String[] args) throws Exception{
-		/*
+		
 		createConnection();
 		login("yp", "qwe");
-		ChatManager cm = ChatManager.getInstanceFor(mConnection);
-	    Presence presence = new Presence(Type.available);
-	    presence.setStatus("HIII");
-	    mConnection.sendPacket(presence);
-
-		Roster ros = Roster.getInstanceFor(mConnection);
-		Collection<RosterEntry> entries = ros.getEntries();
-		ros.createEntry("bharat", "bharat", null);
-		 
-	    System.out.println("\n\n" + entries.size() + " buddy(ies):");
-	    for(RosterEntry r:entries)
-	    {
-	    System.out.println(r.getUser());
-	    }
-	    ChatController.startChat("bharat@bks-pc");
-	    */
-		String username = "yashu";
-        String password = "yashu";
+		
+		ChatController chatCtrl = new ChatController(mConnection);
         
-        XmppManager xmppManager = new XmppManager(Constants.SERVER_IP_ADDRESS, Constants.SERVER_PORT, Constants.SERVICE_NAME);
-        
-        xmppManager.init();
-        xmppManager.performLogin(username, password);
-        xmppManager.setStatus(true, "Hello everyone");
+        chatCtrl.init();
+        chatCtrl.setStatus(true, "Hello everyone");
         
         String buddyJID = "temp";
         String buddyName = "temp";
-        xmppManager.createEntry(buddyJID, buddyName);
+        chatCtrl.createEntry(buddyJID, buddyName);
         
-        xmppManager.sendMessage("Hello mate", "temp@yashu.local");
+        chatCtrl.sendMessage("Hello mate", "temp@yashu.local");
         
         boolean isRunning = true;
         
@@ -126,6 +101,6 @@ public class Server {
             Thread.sleep(50);
         }
         
-        xmppManager.destroy();
+        chatCtrl.destroy();
 	}
 }
