@@ -66,5 +66,6 @@
 	<classpathentry kind="lib" path="libs/smack-tcp-4.1.4-javadoc.jar"/>
 	<classpathentry kind="lib" path="libs/smack-tcp-4.1.4-sources.jar"/>
 	<classpathentry kind="lib" path="libs/smack-tcp-4.1.4.jar"/>
+	<classpathentry kind="lib" path="libs/mysql.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
