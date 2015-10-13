@@ -19,13 +19,13 @@ public class Database {
 			System.out.println("Connecting to database...");
 			conn = DriverManager.getConnection(Constants.DB_URL, USER, PASS);
 			System.out.println("Check!!");
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			conn.close();
 		}
+
 
 	}
 
@@ -43,6 +43,18 @@ public class Database {
 			ex.printStackTrace();
 		}
 		return conn;
+	}
+
+
+	
+	public static void main(String[] args) {
+		Database db = new Database();
+		try {
+			db.setConnection("root", "1qaz2wsx");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
