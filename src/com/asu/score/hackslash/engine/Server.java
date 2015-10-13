@@ -13,6 +13,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import com.asu.score.hackslash.actions.im.ChatController;
+import com.asu.score.hackslash.actions.im.Users;
 import com.asu.score.hackslash.properties.Constants;
 
 public class Server {
@@ -96,7 +97,7 @@ public class Server {
         
         chatCtrl.sendMessage("Hello mate", "temp@yashu.local");
         Roster roster = Roster.getInstanceFor(mConnection);
-        System.out.println("Yo" + roster.getEntries().size());
+        Users.getAllUser(roster);
         
         boolean isRunning = true;
         

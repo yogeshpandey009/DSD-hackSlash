@@ -3,8 +3,6 @@ package com.asu.score.hackslash.views;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.ui.part.ViewPart;
 
-import com.asu.score.hackslash.engine.UsersDAO;
-
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -12,7 +10,6 @@ import org.eclipse.ui.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import java.util.*;
 
 
 public class UsersView extends ViewPart {/**
@@ -41,10 +38,7 @@ public class UsersView extends ViewPart {/**
 		public void dispose() {
 		}
 		public Object[] getElements(Object parent) {
-			//return new String[] { "User 1", "User 2", "User 3" };
-			ArrayList<String> user_list = new UsersDAO().getUsers();
-			String[] user_list_array =  user_list.toArray(new String[user_list.size()]);
-			return user_list_array;
+			return new String[] { "User 1", "User 2", "User 3" };
 		}
 	}
 	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
