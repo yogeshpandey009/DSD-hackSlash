@@ -8,25 +8,26 @@ import com.asu.score.hackslash.properties.Constants;
 
 public class Database {
 	
-	public void setConnection(final String USER, final String PASS){
+	public Connection setConnection(final String USER, final String PASS) {
 		Connection conn = null;
 		Statement stmt = null;
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			System.out.println("Connecting to database...");
-		    conn = DriverManager.getConnection(Constants.DB_URL,USER,PASS);
+		    conn = DriverManager.getConnection(Constants.DB_URL,USER,PASS);		    
+		    System.out.println("Connected...");
 		    
-		    System.out.println("Check!!");
 		    
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return conn;
 	}
 	
-	//public static void main(String[] args) {
-		//Database db = new Database();
-		//db.setConnection("root", "1qaz2wsx");
-	//}
+	public static void main(String[] args) {
+		Database db = new Database();
+		System.out.println(db.setConnection("root", "1qaz2wsx"));
+	}
 }
