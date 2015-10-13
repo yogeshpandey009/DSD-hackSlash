@@ -12,6 +12,7 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
@@ -35,6 +36,7 @@ public class XmppManager {
 
 	private ChatManager chatManager;
 	private ChatMessageListener messageListener;
+	private ChatManagerListener managerListener;
 
 	public XmppManager(String server, int port, String service) {
 		this.server = server;
@@ -68,7 +70,8 @@ public class XmppManager {
 		System.out.println("Connected: " + connection.isConnected());
 
 		chatManager = ChatManager.getInstanceFor(connection);
-		messageListener = new MyMessageListener();
+		managerListener = new MyManagerListener();
+		chatManager.addChatListener(managerListener);
 
 	}
 
@@ -120,6 +123,17 @@ public class XmppManager {
 			System.out.println(String.format(
 					"Received message '%1$s' from %2$s", body, from));
 		}
+
+	}
+	
+	class MyManagerListener implements ChatManagerListener {
+
+		@Override
+		public void chatCreated(final Chat chat, final boolean createdLocally)
+	    {
+			messageListener = new MyMessageListener();
+			chat.addMessageListener(messageListener);
+	    }
 
 	}
 
