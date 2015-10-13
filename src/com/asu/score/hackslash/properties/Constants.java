@@ -8,4 +8,7 @@ public class Constants {
 	public static final String SERVER_IP_ADDRESS = "127.0.0.1";
 	public static final int SERVER_PORT = 5222;
 	public static final String SERVICE_NAME = "hackSlash";
+	public static final String DB_USER_NAME = "";
+	public static final String DB_PASSWORD = "";
+
 }
