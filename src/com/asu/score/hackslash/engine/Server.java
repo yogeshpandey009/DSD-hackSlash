@@ -8,6 +8,7 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
@@ -94,12 +95,16 @@ public class Server {
         chatCtrl.createEntry(buddyJID, buddyName);
         
         chatCtrl.sendMessage("Hello mate", "temp@yashu.local");
+        Roster roster = Roster.getInstanceFor(mConnection);
+        System.out.println("Yo" + roster.getEntries().size());
         
         boolean isRunning = true;
         
         while (isRunning) {
             Thread.sleep(50);
         }
+        
+        
         
         chatCtrl.destroy();
 	}

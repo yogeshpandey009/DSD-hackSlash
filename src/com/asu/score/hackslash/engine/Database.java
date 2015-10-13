@@ -22,4 +22,8 @@ public class Database {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void main(String[] args) {
+		System.out.println("Hi");
+	}
 }
