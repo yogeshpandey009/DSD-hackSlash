@@ -3,6 +3,7 @@ package com.asu.score.hackslash.databaseaccess;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.asu.score.hackslash.properties.Constants;
@@ -37,6 +38,11 @@ public class Task {
 	public static void main(String[] args) {
 		Database db = new Database();
 		Task t = new Task();
-		t.setTask(db.setConnection("root", "1qaz2wsx"), "", "");
+		try {
+			t.setTask(db.getConnection(), "", "");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
