@@ -24,6 +24,6 @@ public class Database {
 	}
 	
 	public static void main(String[] args) {
-		setConnection("root", "1qaz2wsx");
+		setConnection("root", "1qaz2ws");
 	}
 }
