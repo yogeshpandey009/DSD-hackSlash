@@ -1,0 +1,14 @@
+CREATE DATABASE hackslash;
+
+USE hackslash;
+
+CREATE TABLE Profile(userID int NOT NULL AUTO_INCREMENT PRIMARY KEY, FirstName varchar(15), LastName varchar(15), Password varchar(32), Location varchar(30), WorkingStart DATETIME, WorkingEnd DATETIME, GithubID varchar(25));
+
+CREATE TABLE Task(TaskID int NOT NULL AUTO_INCREMENT PRIMARY KEY, TaskName varchar(50), TaskDscription varchar(200));
+
+CREATE TABLE Allocation(TaskAllocationID int NOT NULL AUTO_INCREMENT PRIMARY KEY, TaskID int , UserID int, FOREIGN KEY (TaskID) REFERENCES Task(TaskID), FOREIGN KEY (UserID) REFERENCES Profile(userID))
+
+CREATE TABLE TaskLog(IdentityKey int PRIMARY KEY AUTO_INCREMENT, TaskAllocationID int, StartDate DateTime, EndDate DateTime, FOREIGN KEY (TaskAllocationID) REFERENCES Allocation(TaskAllocationID))
+
+INSERT INTO profile(FirstName, LastName, Password, Location, WorkingStart, WorkingEnd, GithubID) values('Mitikaa', 'Sama', 'mitikaa', 'Crossroads', '2015-09-14 12:00:00', '2015-09-14 20:00:00', 'Mitikaa');
+INSERT INTO profile(FirstName, LastName, Password, Location, WorkingStart, WorkingEnd, GithubID) values('Mihir', 'Bhatt', 'mitikaa', 'UniPark', '2015-09-14 20:00:00', '2015-09-15 4:00:00', 'mbbhatt');
