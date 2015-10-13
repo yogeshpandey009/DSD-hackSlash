@@ -66,5 +66,24 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/bcpg-jdk15on.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/bcpkix-jdk15on.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/bcprov-jdk15on.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/commons-el.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/hsqldb.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/jasper-compiler.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/jasper-runtime.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/javax.websocket-api.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/jdic.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/jetty-schemas.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/jtds.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/mail.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/mysql.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/npn-boot.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/openfire.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/postgres.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/slf4j-log4j12.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files (x86)/Openfire/lib/startup.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
