@@ -3,17 +3,18 @@ package com.asu.score.hackslash.actions;
 import java.io.IOException;
 
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.window.Window;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.dialogs.LoginDialog;
-import com.asu.score.hackslash.engine.Server;
+import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.SessionManager;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -41,32 +42,42 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		LoginDialog dialog = new LoginDialog(window.getShell());
 		String message = "";
-
+		SessionManager session = SessionManager.getInstance();
+		
 		// get the new values from the dialog
 		int result = dialog.open();
 		if (result == IDialogConstants.OK_ID) {
 			try {
-				if (!Server.getServerStatus()) {
-					Server.createConnection();
+				if (!session.isAuthenticated()) {					
+					XMPPTCPConnection conn = ConnectionManger.getConnection();
+					String user = dialog.getUser();
+					String pwrd = dialog.getPassword();
+
+					try {
+						ConnectionManger.login(user, pwrd);
+						message = "Hello " + user
+								+ ", Welcome to DSD work enviroment";
+						session.setServerAddress(conn.getServiceName());
+						session.initializeSession(conn, user, pwrd);
+						session.setJID(conn.getUser());
+						
+					} catch (XMPPException | SmackException | IOException e) {
+						message = "UnAuthorized Username or Password!";
+					}
+					MessageDialog.openInformation(window.getShell(), "Hackslash",
+							message);
+				
 				}
 			} catch (SmackException | IOException | XMPPException e) {
 				message = "Failed to Login to Server";
 			}
-			String user = dialog.getUser();
-			String pwrd = dialog.getPassword();
-			if (!user.equals("")) {
-				try {
-					Server.login(user, pwrd);
-					message = "Hello " + user
-							+ ", Welcome to DSD work enviroment";
-				} catch (XMPPException | SmackException | IOException e) {
-					message = "UnAuthorized Username or Password!";
-				}
-				MessageDialog.openInformation(window.getShell(), "Hackslash",
-						message);
-			}
 		} else if (result == IDialogConstants.CLOSE_ID) {
-			Server.disconnect();
+			try {
+				ConnectionManger.disconnect();
+			} catch (SmackException | IOException | XMPPException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

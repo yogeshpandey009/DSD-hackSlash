@@ -1,27 +1,42 @@
 package com.asu.score.hackslash.views;
 
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.viewers.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.GroupMarker;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.ui.*;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewSite;
+import org.eclipse.ui.IWorkbenchActionConstants;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.part.WorkbenchPart;
 
 import com.asu.score.hackslash.dialogs.TaskDialog;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
 import com.asu.score.hackslash.taskhelper.Task;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
 import com.asu.score.hackslash.taskhelper.TaskFile;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.*;
-import org.eclipse.swt.events.KeyAdapter;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.widgets.Menu;
 
 /**
  * This sample class demonstrates how to plug-in a new
