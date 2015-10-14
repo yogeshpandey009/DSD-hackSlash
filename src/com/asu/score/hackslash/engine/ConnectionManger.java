@@ -18,10 +18,20 @@ import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.actions.im.Users;
 import com.asu.score.hackslash.properties.Constants;
 
+/**
+ * Singleton Class manages connection to the server.
+ */
 public class ConnectionManger {
 
 	private static XMPPTCPConnection mConnection = null;
-
+	
+	/**
+	 * Creates a connection to the Openfire server using Smack APIs
+	 * @return Connection Object
+	 * @throws SmackException
+	 * @throws IOException
+	 * @throws XMPPException
+	 */
 	private static XMPPTCPConnection createConnection() throws SmackException,
 			IOException, XMPPException {
 		System.out.println("Starting Client");
@@ -48,7 +58,14 @@ public class ConnectionManger {
 		}
 		return mConnection;
 	}
-
+	
+	/**
+	 * A thread safe method to get the object of connection
+	 * @return Connection object
+	 * @throws SmackException
+	 * @throws IOException
+	 * @throws XMPPException
+	 */
 	public static synchronized XMPPTCPConnection getConnection()
 			throws SmackException, IOException, XMPPException {
 		if (mConnection == null || mConnection.isConnected() == false) {
@@ -57,6 +74,15 @@ public class ConnectionManger {
 		return mConnection;
 	}
 
+	/**
+	 * Logs into the user account using user ID and password
+	 * Throws exceptions in case of login errors
+	 * @param user username
+	 * @param pwrd Password
+	 * @throws XMPPException
+	 * @throws SmackException
+	 * @throws IOException
+	 */
 	public static void login(final String user, final String pwrd)
 			throws XMPPException, SmackException, IOException {
 		try {
@@ -74,18 +100,38 @@ public class ConnectionManger {
 		}
 	}
 
+	/**
+	 * Returns the currently logged in User
+	 * @return Current User
+	 * @throws SmackException
+	 * @throws IOException
+	 * @throws XMPPException
+	 */
 	public static String getCurrentUser() throws SmackException, IOException,
 			XMPPException {
 		mConnection = getConnection();
 		return mConnection.getUser();
 	}
 
+	/**
+	 * Disconnects the connection to server.
+	 * @throws SmackException
+	 * @throws IOException
+	 * @throws XMPPException
+	 */
 	public static void disconnect() throws SmackException, IOException,
 			XMPPException {
 		mConnection = getConnection();
 		mConnection.disconnect();
 	}
-
+	
+	/**
+	 * Gets an instance of ChatManager from the server.
+	 * @return ChatManager Object
+	 * @throws SmackException
+	 * @throws IOException
+	 * @throws XMPPException
+	 */
 	public static ChatManager getChatManager() throws SmackException,
 			IOException, XMPPException {
 		mConnection = getConnection();

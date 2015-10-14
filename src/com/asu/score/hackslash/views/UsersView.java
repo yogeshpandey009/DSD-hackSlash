@@ -40,6 +40,7 @@ import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.dialogs.ChatDialog;
+import com.asu.score.hackslash.properties.Constants;
 
 public class UsersView extends ViewPart {
 	/**
@@ -203,7 +204,7 @@ public class UsersView extends ViewPart {
 					try {
 						chatController.createEntry(obj.toString(), obj.toString());
 						chatController.sendMessage(dialog.getMsg().trim(),
-								obj.toString() + "@yashu.local");
+								obj.toString() + Constants.SERVER_NAME);
 					} catch (NotConnectedException | NotLoggedInException | NoResponseException | XMPPErrorException e) {
 						showMessage("Unable to send Chat");
 						e.printStackTrace();

@@ -2,7 +2,6 @@ package com.asu.score.hackslash.actions.im;
 
 import java.io.IOException;
 
-import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -21,6 +20,9 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.engine.SessionManager;
 
+/**
+ * Controls the chat commands and messages exchanged between users.
+ */
 public class ChatController {
 
 	private static ChatController controller;
@@ -34,6 +36,13 @@ public class ChatController {
     private ChatController() {
     }
     
+    /**
+     * Returns the on and only chat controller instance of this class.
+     * @return
+     * @throws XMPPException
+     * @throws SmackException
+     * @throws IOException
+     */
 	public static synchronized ChatController getInstance()
 			throws XMPPException, SmackException, IOException {
 		// Synchronize to ensure that we don't end up creating two singletons
@@ -43,6 +52,12 @@ public class ChatController {
 		return controller;
 	}
 
+	/**
+	 * Initializes chat environment
+	 * @throws XMPPException
+	 * @throws SmackException
+	 * @throws IOException
+	 */
 	public void init() throws XMPPException, SmackException, IOException {
 		connection = SessionManager.getInstance().getConnection();
 		chatManager = ChatManager.getInstanceFor(connection);
@@ -50,6 +65,12 @@ public class ChatController {
 		chatManager.addChatListener(managerListener);
 	}
 	
+	/**
+	 * Sets status of the user visible to other users in the roster.
+	 * @param available
+	 * @param status
+	 * @throws NotConnectedException
+	 */
 	public void setStatus(boolean available, String status)
 			throws NotConnectedException {
 

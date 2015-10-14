@@ -14,12 +14,15 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.properties.Constants;
 
 
 public class ChatDialog extends Dialog {
 	private Text txtMsg;
 	private String msg = "";
+	private SessionManager session = SessionManager.getInstance();
 
 	public ChatDialog(Shell parentShell) {
 		super(parentShell);
@@ -34,26 +37,29 @@ public class ChatDialog extends Dialog {
 		layout.marginBottom = 10;
 		layout.marginTop = 10;
 		container.setLayout(layout);
-
+		
 		Label lblMsg = new Label(container, SWT.NONE);
-		lblMsg.setText("Enter Message:");
-		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1);
-		gd_lblNewLabel.horizontalIndent = 1;
-
-		txtMsg = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP
-				| SWT.V_SCROLL);
-		txtMsg.setLayoutData(new GridData(GridData.FILL_BOTH));
-		txtMsg.setText(msg);
-		txtMsg.addModifyListener(new ModifyListener() {
-
-			@Override
-			public void modifyText(ModifyEvent e) {
-				Text textWidget = (Text) e.getSource();
-				msg = textWidget.getText();
-			}
-		});
-
+		if (session.isAuthenticated()) {
+			lblMsg.setText("Enter Message:");
+			GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
+					false, 1, 1);
+			gd_lblNewLabel.horizontalIndent = 1;
+	
+			txtMsg = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP
+					| SWT.V_SCROLL);
+			txtMsg.setLayoutData(new GridData(GridData.FILL_BOTH));
+			txtMsg.setText(msg);
+			txtMsg.addModifyListener(new ModifyListener() {
+	
+				@Override
+				public void modifyText(ModifyEvent e) {
+					Text textWidget = (Text) e.getSource();
+					msg = textWidget.getText();
+				}
+			});
+		} else {
+			lblMsg.setText("Kindly Login to start the chat!");
+		}
 		return container;
 	}
 
