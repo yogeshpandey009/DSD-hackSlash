@@ -1,13 +1,11 @@
-package com.asu.score.hackslash.databaseaccess;
+package com.asu.score.hackslash.dao;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.asu.score.hackslash.properties.Constants;
-import com.asu.score.hackslash.engine.Database;;
+import com.asu.score.hackslash.engine.Database;
 
 public class Task {
 	public void setTask(Connection con, String taskName, String taskDesc) 

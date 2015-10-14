@@ -14,13 +14,16 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.asu.score.hackslash.engine.Server;
+import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.SessionManager;
 
 public class LoginDialog extends Dialog {
 	private Text txtUser;
 	private Text txtPassword;
 	private String user = "";
 	private String password = "";
+	private SessionManager session = SessionManager.getInstance();
+	
 
 	public LoginDialog(Shell parentShell) {
 		super(parentShell);
@@ -33,11 +36,11 @@ public class LoginDialog extends Dialog {
 		layout.marginRight = 5;
 		layout.marginLeft = 10;
 		container.setLayout(layout);
-
-		if (Server.getUserStatus()) {
+		
+		if (session.isAuthenticated()) {
 			Label lblUser = new Label(container, SWT.NONE);
 			lblUser.setText("You are Logged In as :- "
-					+ Server.getCurrentUser());
+					+ session.getUsername());
 		} else {
 			Label lblUser = new Label(container, SWT.NONE);
 			lblUser.setText("User:");
@@ -83,7 +86,7 @@ public class LoginDialog extends Dialog {
 	// override method to use "Login" as label for the OK button
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		if (Server.getUserStatus()) {
+		if (session.isAuthenticated()) {
 			createButton(parent, IDialogConstants.CLOSE_ID, "Logout", true);
 		} else {
 			createButton(parent, IDialogConstants.OK_ID, "Login", true);
