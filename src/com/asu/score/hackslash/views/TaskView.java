@@ -1,7 +1,6 @@
 package com.asu.score.hackslash.views;
 
 import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;

@@ -3,8 +3,8 @@ package com.asu.score.hackslash.views;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.ui.part.ViewPart;
 
-import com.asu.score.hackslash.dao.UsersDAO;
 
+import com.asu.score.hackslash.dao.UsersDAO;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -12,8 +12,10 @@ import org.eclipse.ui.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
+
 import java.util.List;
 import java.util.ArrayList;
+
 
 public class UsersView extends ViewPart {
 	/**
@@ -42,6 +44,7 @@ public class UsersView extends ViewPart {
 		}
 
 		public Object[] getElements(Object parent) {
+
 			List<String> user_list = new UsersDAO().getUsers();
 			String[] user_list_array = user_list.toArray(new String[user_list.size()]);
 			return user_list_array;

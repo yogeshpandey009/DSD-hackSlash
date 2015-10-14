@@ -1,6 +1,7 @@
 package com.asu.score.hackslash.engine;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import javax.net.SocketFactory;
 
@@ -13,6 +14,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import com.asu.score.hackslash.actions.im.ChatController;
+import com.asu.score.hackslash.actions.im.Users;
 import com.asu.score.hackslash.properties.Constants;
 
 public class Server {
@@ -83,20 +85,26 @@ public class Server {
 	public static void main(String[] args) throws Exception{
 		
 		createConnection();
-		login("yp", "qwe");
+		login("bharat", "hello");
 		
 		ChatController chatCtrl = new ChatController(mConnection);
         
         chatCtrl.init();
         chatCtrl.setStatus(true, "Hello everyone");
         
-        String buddyJID = "temp";
-        String buddyName = "temp";
+        String buddyJID = "yp";
+        String buddyName = "yp";
         chatCtrl.createEntry(buddyJID, buddyName);
         
-        chatCtrl.sendMessage("Hello mate", "temp@yashu.local");
+        chatCtrl.sendMessage("Hello mate", "yp@bks-pc");
         Roster roster = Roster.getInstanceFor(mConnection);
-        System.out.println("Yo" + roster.getEntries().size());
+        Users.getAllUser(roster);
+        
+        Scanner sc = new Scanner(System.in);
+        for (int x = 0; x< 10; x++){
+        	String s  = sc.nextLine();
+        	chatCtrl.sendMessage(s, "temp@yashu.local");
+        }
         
         boolean isRunning = true;
         
