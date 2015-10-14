@@ -11,6 +11,7 @@ public class Constants {
 	public static final String SERVICE_NAME = "hackSlash";
 	public static final String DB_USER_NAME = "root";
 	public static final String DB_PASSWORD = "1qaz2wsx";
+	public static final String SERVER_NAME = "@bks-pc";
 
 	// Button Labels
 	public static final String SEND_LABEL = "Send";
