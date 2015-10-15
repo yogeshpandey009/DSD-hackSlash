@@ -1,3 +1,5 @@
+CREATE DATABASE hackslash;
+
 USE hackslash;
 
 CREATE TABLE Profile(userID int NOT NULL AUTO_INCREMENT PRIMARY KEY, FirstName varchar(15), LastName varchar(15), Password varchar(32), Location varchar(30), WorkingStart DATETIME, WorkingEnd DATETIME, GithubID varchar(25));
@@ -10,3 +12,4 @@ CREATE TABLE TaskLog(IdentityKey int PRIMARY KEY AUTO_INCREMENT, TaskAllocationI
 
 INSERT INTO profile(FirstName, LastName, Password, Location, WorkingStart, WorkingEnd, GithubID) values('Mitikaa', 'Sama', 'mitikaa', 'Crossroads', '2015-09-14 12:00:00', '2015-09-14 20:00:00', 'Mitikaa');
 INSERT INTO profile(FirstName, LastName, Password, Location, WorkingStart, WorkingEnd, GithubID) values('Mihir', 'Bhatt', 'mitikaa', 'UniPark', '2015-09-14 20:00:00', '2015-09-15 4:00:00', 'mbbhatt');
+INSERT INTO task(taskname, taskdscription) values('TestCon', 'This task is to test the connection to the database from application');
