@@ -41,6 +41,7 @@ import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.actions.im.Users;
 import com.asu.score.hackslash.dialogs.ChatDialog;
 import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.helper.ImageProviderHelper;
 import com.asu.score.hackslash.properties.Constants;
 
 public class UsersView extends ViewPart {
@@ -167,14 +168,13 @@ public class UsersView extends ViewPart {
 	private void makeActions() {
 		action1 = new Action() {
 			public void run() {
-				showMessage("Refreshing!!");
+				System.out.println("Refreshing User List....");
 				viewer.setInput(getSite());
 			}
 		};
 		action1.setText("Refresh");
 		action1.setToolTipText("Refresh View");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		action1.setImageDescriptor(ImageProviderHelper.getImageDescriptor("refresh.gif"));
 
 		action2 = new Action() {
 			public void run() {
