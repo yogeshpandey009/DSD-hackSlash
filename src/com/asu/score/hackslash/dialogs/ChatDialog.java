@@ -66,10 +66,16 @@ public class ChatDialog extends Dialog {
 	// override method to use "Login" as label for the OK button
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		createButton(parent, IDialogConstants.OK_ID, Constants.SEND_LABEL,
-				true);
-		createButton(parent, IDialogConstants.CANCEL_ID,
-				IDialogConstants.CANCEL_LABEL, false);
+		if (session.isAuthenticated()) {
+			createButton(parent, IDialogConstants.OK_ID, Constants.SEND_LABEL,
+					true);
+			createButton(parent, IDialogConstants.CANCEL_ID,
+					IDialogConstants.CANCEL_LABEL, false);
+		} else {
+			createButton(parent, IDialogConstants.BACK_ID, IDialogConstants.OK_LABEL,
+					true);
+		}
+		
 	}
 
 	@Override
