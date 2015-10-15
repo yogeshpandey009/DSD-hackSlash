@@ -74,10 +74,13 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 		} else if (result == IDialogConstants.CLOSE_ID) {
 			try {
 				ConnectionManger.disconnect();
+				message = "User Logged Out Successfully.";
 			} catch (SmackException | IOException | XMPPException e) {
-				// TODO Auto-generated catch block
+				message = "Unable to Log out User!";
 				e.printStackTrace();
 			}
+			MessageDialog.openInformation(window.getShell(), "Hackslash",
+					message);
 		}
 	}
 

@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.asu.score.hackslash.engine.ConnectionManger;
 import com.asu.score.hackslash.engine.SessionManager;
 
 public class LoginDialog extends Dialog {
