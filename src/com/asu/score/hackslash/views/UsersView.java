@@ -1,8 +1,7 @@
 package com.asu.score.hackslash.views;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -39,7 +38,9 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 
 import com.asu.score.hackslash.actions.im.ChatController;
+import com.asu.score.hackslash.actions.im.Users;
 import com.asu.score.hackslash.dialogs.ChatDialog;
+import com.asu.score.hackslash.engine.ConnectionManger;
 import com.asu.score.hackslash.properties.Constants;
 
 public class UsersView extends ViewPart {
@@ -70,16 +71,12 @@ public class UsersView extends ViewPart {
 		}
 
 		public Object[] getElements(Object parent) {
-
-			// List<String> user_list = new UsersDAO().getUsers();
-			List<String> user_list = new ArrayList<String>() {{
-				add("temp");
-				add("admin");
-			}};
-			String[] user_list_array = user_list.toArray(new String[user_list
-					.size()]);
-			return user_list_array;
-
+			if (ConnectionManger.isUserLoggedIn()){
+				Set<String> users = Users.getAllUser(); 
+				String[] user_list_array = users.toArray(new String[users.size()]);
+				return user_list_array;
+			}
+			return new String[]{"Log In To Start"};
 		}
 	}
 
@@ -170,11 +167,12 @@ public class UsersView extends ViewPart {
 	private void makeActions() {
 		action1 = new Action() {
 			public void run() {
-				showMessage("Action 1 executed");
+				showMessage("Refreshing!!");
+				viewer.setInput(getSite());
 			}
 		};
-		action1.setText("Action 1");
-		action1.setToolTipText("Action 1 tooltip");
+		action1.setText("Refresh");
+		action1.setToolTipText("Refresh View");
 		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
 				.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 

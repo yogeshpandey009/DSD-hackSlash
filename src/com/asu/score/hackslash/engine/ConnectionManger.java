@@ -6,7 +6,6 @@ import java.util.Scanner;
 import javax.net.SocketFactory;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.ChatManager;
@@ -57,6 +56,17 @@ public class ConnectionManger {
 			throw e;
 		}
 		return mConnection;
+	}
+	
+	/**
+	 * Returns true or false based on the logged in status of the user.
+	 * @return flag
+	 */
+	public static boolean isUserLoggedIn(){
+		if (mConnection != null && mConnection.isAuthenticated()){
+			return true;
+		} 
+		return false;
 	}
 	
 	/**
@@ -112,6 +122,14 @@ public class ConnectionManger {
 		mConnection = getConnection();
 		return mConnection.getUser();
 	}
+	
+	/**
+	 * Returns the instanse of Roster
+	 * @return Roster
+	 */
+	public static Roster getRoster(){
+		return Roster.getInstanceFor(mConnection);
+	}
 
 	/**
 	 * Disconnects the connection to server.
@@ -123,6 +141,7 @@ public class ConnectionManger {
 			XMPPException {
 		mConnection = getConnection();
 		mConnection.disconnect();
+		System.out.println("User Logged Out. Server Connection Closed!");
 	}
 	
 	/**
@@ -151,8 +170,8 @@ public class ConnectionManger {
 		chatCtrl.createEntry(buddyJID, buddyName);
 
 		chatCtrl.sendMessage("Hello mate", "yp@yashu.local");
-		Roster roster = Roster.getInstanceFor(mConnection);
-		Users.getAllUser(roster);
+		
+		Users.getAllUser();
 
 		Scanner sc = new Scanner(System.in);
 		for (int x = 0; x < 10; x++) {
