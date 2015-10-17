@@ -3,6 +3,7 @@ package com.asu.score.hackslash.actions.im;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
@@ -24,7 +25,11 @@ public class Users {
 		Set<RosterEntry> entries = ros.getEntries();
 		Set<String> users = new HashSet<String>();
 		for (RosterEntry entry : entries) {
-			System.out.println(String.format("Buddy:%1$s - Status:%2$s", entry.getName(), entry.getStatus()));
+			Presence entryPresence = ros.getPresence(entry.getUser());
+
+            Presence.Type type = entryPresence.getType();       
+
+			System.out.println(String.format("Buddy:%1$s - Status:%2$s", entry.getName(), type.toString()));
 			users.add(entry.getName());
 		}
 		return users;

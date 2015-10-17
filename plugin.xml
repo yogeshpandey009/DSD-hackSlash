@@ -76,7 +76,16 @@
                label="&amp;Login to DSD"
                menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
-               tooltip="Hello, Eclipse world">
+               tooltip="HackSlash DSD">
+         </action>
+         <action
+               class="com.asu.score.hackslash.actions.ContactAction"
+               icon="icons/sample.gif"
+               id="com.asu.score.hackslash.actions.ContactAction"
+               label="&amp;Add Contact"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Add Contact">
          </action>
       </actionSet>
    </extension>
