@@ -75,7 +75,11 @@ public class UsersView extends ViewPart {
 			if (ConnectionManger.isUserLoggedIn()){
 				Set<String> users = Users.getAllUser(); 
 				String[] user_list_array = users.toArray(new String[users.size()]);
-				return user_list_array;
+				if (user_list_array != null){
+					return user_list_array;
+				}else{
+					return new Object[]{};
+				}
 			}
 			return new String[]{"Log In To Start"};
 		}
@@ -92,8 +96,13 @@ public class UsersView extends ViewPart {
 		}
 
 		public Image getImage(Object obj) {
-			return PlatformUI.getWorkbench().getSharedImages()
-					.getImage(ISharedImages.IMG_OBJ_ELEMENT);
+			if (ConnectionManger.isUserLoggedIn()){
+				String type = Users.getUserPresenceType(obj.toString());
+				if ("available".equals(type)){
+					return ImageProviderHelper.getImageDescriptor("Online.gif").createImage();
+				}
+			}
+			return ImageProviderHelper.getImageDescriptor("Offline.gif").createImage();
 		}
 	}
 
