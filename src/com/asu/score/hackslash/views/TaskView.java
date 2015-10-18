@@ -222,7 +222,7 @@ public class TaskView extends ViewPart {
 				editItem();
 			}
 		};
-		editItemAction.setImageDescriptor(ImageProviderHelper.getImageDescriptor("add.gif"));
+		editItemAction.setImageDescriptor(ImageProviderHelper.getImageDescriptor("edit.gif"));
 
 		deleteItemAction.setImageDescriptor(ImageProviderHelper.getImageDescriptor("delete.gif"));
 		selectAllAction = new Action("Select All") {
