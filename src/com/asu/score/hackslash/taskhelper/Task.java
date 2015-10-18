@@ -15,6 +15,15 @@ public class Task implements IAdaptable {
 		this.desc = desc;
 		this.assignedTo = assignedTo;
 	}
+	public String getName() {
+        return name;
+    }
+	public String getDesc() {
+        return desc;
+    }
+	public String getAssignTo() {
+        return assignedTo;
+    }
 	
 	public String toString() {
 		return name + ":" + desc + ":" + assignedTo;
@@ -26,17 +35,8 @@ public class Task implements IAdaptable {
 		}
 		return null;
 	}
-
-	public String getName() {
-		return name;
-	}
-
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getDesc() {
-		return desc;
 	}
 
 	public void setDesc(String desc) {

@@ -1,6 +1,5 @@
 package com.asu.score.hackslash.views;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -14,7 +13,6 @@ import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -43,6 +41,7 @@ import com.asu.score.hackslash.helper.ImageProviderHelper;
 import com.asu.score.hackslash.taskhelper.Task;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
 import com.asu.score.hackslash.taskhelper.TaskFile;
+
 
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
@@ -133,13 +132,13 @@ public class TaskView extends ViewPart {
 	public TableViewer getViewer() {
 		return viewer;
 	}
-
+		
 	/**
 	 * Constructor
 	 */
 	public TaskView() {
 		super();
-		input = new TaskFile(new File("tasks.txt"));
+		input = new TaskFile();
 	}
 
 	/**
@@ -316,9 +315,7 @@ public class TaskView extends ViewPart {
 		Task task = promptForValue(null);
 		if (task != null) {
 			input.add(task);
-
 			viewer.setSelection(new StructuredSelection(task));
-
 		}
 	}
 

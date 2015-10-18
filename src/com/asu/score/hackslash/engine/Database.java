@@ -10,7 +10,7 @@ import com.asu.score.hackslash.properties.Constants;
 
 public class Database {
 
-	public Database() {
+	static {
         try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -19,7 +19,7 @@ public class Database {
 		}
     }
 	
-	public Connection getConnection() throws SQLException {
+	public static Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(Constants.DB_URL, Constants.DB_USER_NAME, Constants.DB_PASSWORD);
 	}
 
@@ -28,7 +28,7 @@ public class Database {
     * @return a ResultSet object containing the results or null if not available
     * @throws SQLException
     */
-   public ResultSet query(String query) throws SQLException{
+   public static ResultSet query(String query) throws SQLException{
 	   Connection conn = getConnection();
        Statement statement = conn.createStatement();
        ResultSet res = statement.executeQuery(query);
@@ -41,7 +41,7 @@ public class Database {
     * @return boolean
     * @throws SQLException
     */
-   public int insert(String insertQuery) throws SQLException {
+   public static int insert(String insertQuery) throws SQLException {
 	   Connection conn = getConnection();
        Statement statement = conn.createStatement();
        int result = statement.executeUpdate(insertQuery);

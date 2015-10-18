@@ -1,20 +1,16 @@
 package com.asu.score.hackslash.taskhelper;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.asu.score.hackslash.dao.TaskDao;
+
 public class TaskFile {
 
-	private File file;
-	private ArrayList<Task> list = new ArrayList<Task>();
+	//private File file;
+	TaskDao taskDao = new TaskDao();
+	private List<Task> list = new ArrayList<Task>();
 	private Listener listener;
 	
 	public interface Listener {
@@ -22,32 +18,24 @@ public class TaskFile {
 		public void removed(Task w);
 	}
 	
-	/**
-	 * Constructor for FileList
-	 */
-	public TaskFile(File file) {
-		this.file = file;
-		if (file.exists()) {
-			readFile();
-		} else {
-			writeFile();
-		}
+	public TaskFile() {
+		getTasks();
 	}
-	
+		
 	public void setListener(Listener l) {
 		listener = l;
 	}
 	
-	public void add(Task word) {
-		list.add(word);
-		writeFile();
+	public void add(Task task) {
+		System.out.println("inside add");
+		addTask(task);		
 		if (listener != null)
-			listener.added(word);
+			listener.added(task);
 	}
 	
 	public void remove(Task word) {
 		list.remove(word);
-		writeFile();
+		//addTasks(word);
 		if (listener != null)
 			listener.removed(word);
 	}
@@ -66,34 +54,21 @@ public class TaskFile {
 		return list;
 	}
 	
-	private void writeFile() {
+	private void addTask(Task task) {
+		System.out.println("adding in DB");
 		try {
-			OutputStream os = new FileOutputStream(file);
-			DataOutputStream data = new DataOutputStream(os);
-			data.writeInt(list.size());
-			Iterator iter = list.iterator();
-			while (iter.hasNext()) {
-				Task word = (Task)iter.next();
-				data.writeUTF(word.toString());
-			}
-			data.close();
+			taskDao.addTask(task);
+			list.add(task);
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
-	private void readFile() {
+	private void getTasks() {
 		try {
-			InputStream is = new FileInputStream(file);
-			DataInputStream data = new DataInputStream(is);
-			int size = data.readInt();
-			for (int nX = 0; nX < size; nX ++) {
-				String str = data.readUTF();
-				String [] taskElems = str.split(":", 3);
-				list.add(new Task(taskElems[0], taskElems[1], taskElems[2]));
-			}
-			System.out.println(list.size());
-			data.close();
+			list = taskDao.getTasks();
+			System.out.println(list);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
