@@ -22,15 +22,17 @@ public class Users {
 	 * @return
 	 */
 	public static Set<String> getAllUser(){
-		Set<RosterEntry> entries = ros.getEntries();
 		Set<String> users = new HashSet<String>();
-		for (RosterEntry entry : entries) {
-			Presence entryPresence = ros.getPresence(entry.getUser());
-
-            Presence.Type type = entryPresence.getType();       
-
-			System.out.println(String.format("Buddy:%1$s - Status:%2$s", entry.getName(), type.toString()));
-			users.add(entry.getName());
+		if (ros != null){
+			Set<RosterEntry> entries = ros.getEntries();
+			for (RosterEntry entry : entries) {
+				Presence entryPresence = ros.getPresence(entry.getUser());
+				
+				Presence.Type type = entryPresence.getType();       
+				
+				System.out.println(String.format("Buddy:%1$s - Status:%2$s", entry.getName(), type.toString()));
+				users.add(entry.getName());
+			}
 		}
 		return users;
 	}
