@@ -6,7 +6,7 @@ public class TaskContentProvider
 	implements IStructuredContentProvider, TaskFile.Listener
 {
 	TaskFile input;
-	ListViewer viewer;
+	TableViewer viewer;
 
 	/**
 	 * @see IStructuredContentProvider#getElements(Object)
@@ -31,8 +31,8 @@ public class TaskContentProvider
 	 * @see IContentProvider#inputChanged(Viewer, Object, Object)
 	 */
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		if (viewer instanceof ListViewer) {
-			this.viewer = (ListViewer)viewer;
+		if (viewer instanceof TableViewer) {
+			this.viewer = (TableViewer)viewer;
 		}
 		if (newInput instanceof TaskFile) {
 			input = (TaskFile)newInput;

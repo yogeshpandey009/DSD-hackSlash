@@ -92,6 +92,7 @@ public class TaskFile {
 				String [] taskElems = str.split(":", 3);
 				list.add(new Task(taskElems[0], taskElems[1], taskElems[2]));
 			}
+			System.out.println(list.size());
 			data.close();
 		} catch (Exception e) {
 			e.printStackTrace();
