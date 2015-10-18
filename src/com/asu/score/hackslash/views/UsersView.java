@@ -9,6 +9,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -36,11 +37,15 @@ import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.SmackException.NotLoggedInException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.XMPPException.XMPPErrorException;
+import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.actions.im.Users;
+import com.asu.score.hackslash.dialogs.AddContactDialog;
 import com.asu.score.hackslash.dialogs.ChatDialog;
+import com.asu.score.hackslash.dialogs.LoginDialog;
 import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
 import com.asu.score.hackslash.properties.Constants;
 
@@ -51,8 +56,9 @@ public class UsersView extends ViewPart {
 	public static final String ID = "com.asu.score.hackslash.views.TaskView";
 
 	private TableViewer viewer;
-	private Action action1;
-	private Action action2;
+	private Action refreshAction;
+	private Action loginAction;
+	private Action addContactAction;
 	private Action doubleClickAction;
 	private ChatController chatController;
 
@@ -72,16 +78,19 @@ public class UsersView extends ViewPart {
 		}
 
 		public Object[] getElements(Object parent) {
-			if (ConnectionManger.isUserLoggedIn()){
-				Set<String> users = Users.getAllUser(); 
-				String[] user_list_array = users.toArray(new String[users.size()]);
-				if (user_list_array != null){
+			if (SessionManager.getInstance().isAuthenticated()) {
+				System.out.println("fetching all users");
+				Set<String> users = Users.getAllUser();
+				System.out.println(users.size() + " contacts founds");
+				String[] user_list_array = users.toArray(new String[users
+						.size()]);
+				if (user_list_array != null) {
 					return user_list_array;
-				}else{
-					return new Object[]{};
+				} else {
+					return new Object[] {};
 				}
 			}
-			return new String[]{"Log In To Start"};
+			return new String[] { "Log In To Start" };
 		}
 	}
 
@@ -96,13 +105,15 @@ public class UsersView extends ViewPart {
 		}
 
 		public Image getImage(Object obj) {
-			if (ConnectionManger.isUserLoggedIn()){
+			if (ConnectionManger.isUserLoggedIn()) {
 				String type = Users.getUserPresenceType(obj.toString());
-				if ("available".equals(type)){
-					return ImageProviderHelper.getImageDescriptor("Online.gif").createImage();
+				if ("available".equals(type)) {
+					return ImageProviderHelper.getImageDescriptor("Online.gif")
+							.createImage();
 				}
 			}
-			return ImageProviderHelper.getImageDescriptor("Offline.gif").createImage();
+			return ImageProviderHelper.getImageDescriptor("Offline.gif")
+					.createImage();
 		}
 	}
 
@@ -157,43 +168,123 @@ public class UsersView extends ViewPart {
 	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(new Separator());
-		manager.add(action2);
+		manager.add(addContactAction);
 	}
 
 	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(action2);
+		manager.add(refreshAction);
+		manager.add(loginAction);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
 
 	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
-		manager.add(action2);
+		manager.add(refreshAction);
+		manager.add(loginAction);
 	}
 
 	private void makeActions() {
-		action1 = new Action() {
+		refreshAction = new Action() {
 			public void run() {
 				System.out.println("Refreshing User List....");
 				viewer.setInput(getSite());
 			}
 		};
-		action1.setText("Refresh");
-		action1.setToolTipText("Refresh View");
-		action1.setImageDescriptor(ImageProviderHelper.getImageDescriptor("refresh.gif"));
+		refreshAction.setText("Refresh");
+		refreshAction.setToolTipText("Refresh View");
+		refreshAction.setImageDescriptor(ImageProviderHelper
+				.getImageDescriptor("refresh.gif"));
 
-		action2 = new Action() {
+		loginAction = new Action() {
 			public void run() {
-				showMessage("Action 2 executed");
+				LoginDialog dialog = new LoginDialog(getSite().getShell());
+				String message = "";
+				SessionManager session = SessionManager.getInstance();
+
+				// get the new values from the dialog
+				int result = dialog.open();
+				if (result == IDialogConstants.OK_ID) {
+					try {
+						if (!session.isAuthenticated()) {
+							XMPPTCPConnection conn = ConnectionManger
+									.getConnection();
+							String user = dialog.getUser();
+							String pwrd = dialog.getPassword();
+
+							try {
+								ConnectionManger.login(user, pwrd);
+								message = "Hello " + user
+										+ ", Welcome to DSD work enviroment";
+								session.setServerAddress(conn.getServiceName());
+								session.initializeSession(conn, user, pwrd);
+								session.setJID(conn.getUser());
+								viewer.setInput(getSite());
+
+							} catch (XMPPException | SmackException
+									| IOException e) {
+								message = "UnAuthorized Username or Password!";
+							}
+							showMessage(message);
+
+						}
+					} catch (SmackException | IOException | XMPPException e) {
+						message = "Failed to Login to Server";
+					}
+				} else if (result == IDialogConstants.CLOSE_ID) {
+					try {
+						ConnectionManger.disconnect();
+						message = "User Logged Out Successfully.";
+						viewer.setInput(getSite());
+					} catch (SmackException | IOException | XMPPException e) {
+						message = "Unable to Log out User!";
+						e.printStackTrace();
+					}
+					showMessage(message);
+				}
 			}
 		};
-		action2.setText("Action 2");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages()
-				.getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		loginAction.setText("Login");
+		loginAction.setToolTipText("Login");
+		loginAction.setImageDescriptor(PlatformUI.getWorkbench()
+				.getSharedImages()
+				.getImageDescriptor(ISharedImages.IMG_ETOOL_HOME_NAV));
+
+		addContactAction = new Action() {
+			public void run() {
+				AddContactDialog dialog = new AddContactDialog(getSite()
+						.getShell());
+				String message = "";
+				SessionManager session = SessionManager.getInstance();
+
+				// get the new values from the dialog
+				int result = dialog.open();
+				if (result == IDialogConstants.OK_ID) {
+					if (session.isAuthenticated()) {
+						String buddyJID = dialog.getUser();
+						String buddyName = dialog.getPassword();
+						try {
+							ChatController chatCtrl = ChatController
+									.getInstance();
+							chatCtrl.createEntry(buddyJID, buddyName);
+							message = "Buddy - " + buddyName
+									+ " - added successfully";
+							viewer.setInput(getSite());
+						} catch (XMPPException | SmackException | IOException e) {
+							message = "Unable to add Buddy. Chat Controller not Available.";
+							e.printStackTrace();
+						}
+						showMessage(message);
+					}
+				} else if (result == IDialogConstants.CLOSE_ID) {
+					dialog.close();
+				}
+			}
+		};
+		addContactAction.setText("Add Contact");
+		addContactAction.setToolTipText("Add Contact");
+		addContactAction.setImageDescriptor(ImageProviderHelper
+				.getImageDescriptor("add.gif"));
+
 		doubleClickAction = new Action() {
 			public void run() {
 				ISelection selection = viewer.getSelection();
@@ -209,10 +300,12 @@ public class UsersView extends ViewPart {
 
 				if (dialog.open() == Window.OK)
 					try {
-						chatController.createEntry(obj.toString(), obj.toString());
+						chatController.createEntry(obj.toString(),
+								obj.toString());
 						chatController.sendMessage(dialog.getMsg().trim(),
 								obj.toString() + Constants.SERVER_NAME);
-					} catch (NotConnectedException | NotLoggedInException | NoResponseException | XMPPErrorException e) {
+					} catch (NotConnectedException | NotLoggedInException
+							| NoResponseException | XMPPErrorException e) {
 						showMessage("Unable to send Chat");
 						e.printStackTrace();
 					}
