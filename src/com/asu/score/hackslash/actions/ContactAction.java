@@ -13,7 +13,6 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.dialogs.AddContactDialog;
-import com.asu.score.hackslash.engine.ConnectionManger;
 import com.asu.score.hackslash.engine.SessionManager;
 
 /**

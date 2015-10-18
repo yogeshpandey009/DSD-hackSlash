@@ -34,4 +34,27 @@ public class Users {
 		}
 		return users;
 	}
+	
+	/**
+	 * Gets presence (available/ unavailable) of a user.
+	 * @param user - username
+	 * @return String
+	 */
+	public static String getUserPresenceType(String user){
+		String retVal = "";
+		if (ros != null){
+			Set<RosterEntry> entries = ros.getEntries();
+			for (RosterEntry entry : entries) {
+				Presence entryPresence = ros.getPresence(entry.getUser());
+
+	            Presence.Type type = entryPresence.getType();       
+	            if (user.equals(entry.getName())){
+	            	retVal = type.toString();
+	            }
+			}
+		}
+		
+		return retVal;
+	}
+
 }
