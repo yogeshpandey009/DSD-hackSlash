@@ -42,7 +42,7 @@ public class TaskDao {
 
 	private String getTaskID(Connection con) throws SQLException {
 		Statement stmt = null;
-		String query = "Select max(TaskID) tskid from Task";
+		String query = "Select max(TaskID) tskid from Task;";
 		String taskid = null;
 		try {
 			con = Database.getConnection();
@@ -68,7 +68,8 @@ public class TaskDao {
 		System.out.println("getting from DB");
 		Connection con = null;
 		Statement stmt = null;
-		String query = "Select * from Task";
+		//String query = "Select * from Task";
+		String query = "Select t.taskname, t.TaskDscription, a.userid from Task t, allocation a where t.taskid = a.taskid and enddate = timestamp(0);";
 		// where taskid in (Select max(TaskID) tskid from Task)
 		List<Task> tasks = new ArrayList<Task>();
 		try {
@@ -76,7 +77,7 @@ public class TaskDao {
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
-				tasks.add(new Task(rs.getString("TaskName"), rs.getString("TaskDscription"), "dfsdfsd"));
+				tasks.add(new Task(rs.getString("TaskName"), rs.getString("TaskDscription"), rs.getString("userid")));
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
