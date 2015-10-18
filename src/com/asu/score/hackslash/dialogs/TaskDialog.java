@@ -1,5 +1,7 @@
 package com.asu.score.hackslash.dialogs;
 
+import java.util.Set;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -14,6 +16,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+
+import com.asu.score.hackslash.actions.im.Users;
+import com.asu.score.hackslash.engine.ConnectionManger;
 
 
 public class TaskDialog extends Dialog {
@@ -79,7 +84,12 @@ public class TaskDialog extends Dialog {
 		comboAssignedTo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
 		comboAssignedTo.setBounds(50, 50, 150, 65);
-		String items[] = { "Unassigned", "User 1", "User 2", "User 3" };
+		String items[] = {};
+		if (ConnectionManger.isUserLoggedIn()){
+			Set<String> users = Users.getAllUser(); 
+			users.add("Unassigned");
+			items = users.toArray(new String[users.size()]);
+		}
 		comboAssignedTo.setItems(items);
 		comboAssignedTo.addModifyListener(new ModifyListener() {
 
