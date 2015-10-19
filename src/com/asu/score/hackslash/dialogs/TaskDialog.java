@@ -1,5 +1,6 @@
 package com.asu.score.hackslash.dialogs;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -17,7 +18,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.asu.score.hackslash.actions.im.Users;
+import com.asu.score.hackslash.actions.im.UsersService;
 import com.asu.score.hackslash.engine.ConnectionManger;
 
 
@@ -86,7 +87,7 @@ public class TaskDialog extends Dialog {
 		comboAssignedTo.setBounds(50, 50, 150, 65);
 		String items[] = {};
 		if (ConnectionManger.isUserLoggedIn()){
-			Set<String> users = Users.getAllUser(); 
+			List<String> users = UsersService.getAllUsernames(); 
 			users.add("Unassigned");
 			items = users.toArray(new String[users.size()]);
 		}

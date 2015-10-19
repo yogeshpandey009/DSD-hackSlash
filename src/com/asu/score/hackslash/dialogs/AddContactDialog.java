@@ -19,9 +19,7 @@ import com.asu.score.hackslash.properties.Constants;
 
 public class AddContactDialog extends Dialog {
 	private Text txtBuddyJID;
-	private Text txtBuddyName;
 	private String buddyJID = "";
-	private String buddyName = "";
 	private SessionManager session = SessionManager.getInstance();
 	
 
@@ -57,22 +55,6 @@ public class AddContactDialog extends Dialog {
 				}
 			});
 
-			Label budName = new Label(container, SWT.NONE);
-			budName.setText("Buddy Name:");
-
-			txtBuddyName = new Text(container, SWT.BORDER);
-			txtBuddyName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-					false, 1, 1));
-			txtBuddyName.setText(buddyName);
-			txtBuddyName.addModifyListener(new ModifyListener() {
-
-				@Override
-				public void modifyText(ModifyEvent e) {
-					Text textWidget = (Text) e.getSource();
-					String passwordText = textWidget.getText();
-					buddyName = passwordText;
-				}
-			});
 		}
 
 		return container;
@@ -99,7 +81,6 @@ public class AddContactDialog extends Dialog {
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
 			buddyJID = txtBuddyJID.getText() + Constants.SERVER_NAME;
-			buddyName = txtBuddyName.getText();
 		}
 		setReturnCode(buttonId);
 		close();
@@ -113,11 +94,4 @@ public class AddContactDialog extends Dialog {
 		this.buddyJID = user;
 	}
 
-	public String getPassword() {
-		return buddyName;
-	}
-
-	public void setPassword(String buddyName) {
-		this.buddyName = buddyName;
-	}
 }

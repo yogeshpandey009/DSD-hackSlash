@@ -42,25 +42,25 @@ public class ContactAction implements IWorkbenchWindowActionDelegate {
 		AddContactDialog dialog = new AddContactDialog(window.getShell());
 		String message = "";
 		SessionManager session = SessionManager.getInstance();
-		
+
 		// get the new values from the dialog
 		int result = dialog.open();
 		if (result == IDialogConstants.OK_ID) {
-			if (session.isAuthenticated()) {					
+			if (session.isAuthenticated()) {
 				String buddyJID = dialog.getUser();
-				String buddyName = dialog.getPassword();
+				// String buddyName = dialog.getPassword();
 				try {
 					ChatController chatCtrl = ChatController.getInstance();
-					chatCtrl.createEntry(buddyJID, buddyName);
-					message  = "Buddy - " + buddyName + " - added successfully";
+					chatCtrl.createEntry(buddyJID, buddyJID);
+					message = "Buddy - " + buddyJID + " - added successfully";
 				} catch (XMPPException | SmackException | IOException e) {
 					message = "Unable to add Buddy. Chat Controller not Available.";
 					e.printStackTrace();
 				}
-				
+
 				MessageDialog.openInformation(window.getShell(), "Hackslash",
 						message);
-			
+
 			}
 		} else if (result == IDialogConstants.CLOSE_ID) {
 			dialog.close();
