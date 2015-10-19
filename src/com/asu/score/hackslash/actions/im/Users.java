@@ -31,7 +31,7 @@ public class Users {
 				Presence.Type type = entryPresence.getType();       
 				
 				System.out.println(String.format("Buddy:%1$s - Status:%2$s", entry.getName(), type.toString()));
-				users.add(entry.getName());
+				users.add(entry.getUser());
 			}
 		}
 		return users;
