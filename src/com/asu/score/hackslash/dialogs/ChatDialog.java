@@ -84,9 +84,13 @@ public class ChatDialog extends Dialog {
 	}
 
 	@Override
-	protected void okPressed() {
-		msg = txtMsg.getText();
-		super.okPressed();
+	protected void buttonPressed(int buttonId) {
+		if (buttonId == IDialogConstants.OK_ID) {
+			msg = txtMsg.getText();
+			super.okPressed();
+		}
+		setReturnCode(buttonId);
+		close();
 	}
 
 	public String getMsg() {

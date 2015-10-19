@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.asu.score.hackslash.engine.SessionManager;
+import com.asu.score.hackslash.properties.Constants;
 
 public class AddContactDialog extends Dialog {
 	private Text txtBuddyJID;
@@ -97,7 +98,7 @@ public class AddContactDialog extends Dialog {
 	@Override
 	protected void buttonPressed(int buttonId) {
 		if (buttonId == IDialogConstants.OK_ID) {
-			buddyJID = txtBuddyJID.getText();
+			buddyJID = txtBuddyJID.getText() + Constants.SERVER_NAME;
 			buddyName = txtBuddyName.getText();
 		}
 		setReturnCode(buttonId);
