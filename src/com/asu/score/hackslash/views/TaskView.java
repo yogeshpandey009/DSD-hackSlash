@@ -61,7 +61,7 @@ import com.asu.score.hackslash.taskhelper.TaskFile;
 public class TaskView extends ViewPart {
 
 	private TaskFile input;
-	private Action addItemAction, deleteItemAction, selectAllAction, editItemAction;
+	private Action addItemAction, deleteItemAction, selectAllAction, editItemAction, refreshAction;
 	private IMemento memento;
 	private TableViewer viewer;
 
@@ -205,6 +205,13 @@ public class TaskView extends ViewPart {
 	 * Create the actions.
 	 */
 	public void createActions() {
+		refreshAction = new Action("Refreshing...") {
+			public void run() {
+				refresh();
+			}
+		};
+		refreshAction.setImageDescriptor(ImageProviderHelper.getImageDescriptor("refresh.gif"));
+
 		addItemAction = new Action("Add...") {
 			public void run() {
 				addItem();
@@ -252,6 +259,7 @@ public class TaskView extends ViewPart {
 	 */
 	private void createToolbar() {
 		IToolBarManager mgr = getViewSite().getActionBars().getToolBarManager();
+		mgr.add(refreshAction);
 		mgr.add(addItemAction);
 		mgr.add(deleteItemAction);
 		mgr.add(editItemAction);
@@ -295,6 +303,7 @@ public class TaskView extends ViewPart {
 	}
 
 	private void fillContextMenu(IMenuManager mgr) {
+		mgr.add(refreshAction);
 		mgr.add(addItemAction);
 		mgr.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
 		mgr.add(editItemAction);
@@ -306,6 +315,13 @@ public class TaskView extends ViewPart {
 	private void updateActionEnablement() {
 		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 		deleteItemAction.setEnabled(sel.size() > 0);
+	}
+
+	/**
+	 * Add item to list.
+	 */
+	private void refresh() {
+		input.refresh();
 	}
 
 	/**

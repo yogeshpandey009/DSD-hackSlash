@@ -57,5 +57,12 @@ public class TaskContentProvider
 			viewer.remove(e);
 		}
 	}
+
+	@Override
+	public void refresh() {
+		if (viewer != null) {
+			viewer.refresh();
+		}
+	}
 }
 
