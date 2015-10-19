@@ -117,7 +117,7 @@ public class TaskView extends ViewPart {
 			public String getText(Object element) {
 				if (element instanceof  Task){
 					Task p = (Task) element;
-					return p.getName();
+					return p.getAssignedTo();
 				}
 				return "";
 			}
