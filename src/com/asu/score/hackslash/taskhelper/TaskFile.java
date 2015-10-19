@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.asu.score.hackslash.dao.TaskDao;
+import com.asu.score.hackslash.engine.SessionManager;
 
 public class TaskFile {
 
@@ -59,7 +60,12 @@ public class TaskFile {
 	}
 	
 	public List elements() {
-		return list;
+		if (SessionManager.getInstance().isAuthenticated()){
+			return list;
+		}
+		List<String> lis = new ArrayList<String>();
+		lis.add("Login to Start");
+		return lis;
 	}
 	
 	private void addTask(Task task) {

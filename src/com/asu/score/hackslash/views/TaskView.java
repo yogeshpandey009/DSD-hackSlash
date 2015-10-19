@@ -102,8 +102,11 @@ public class TaskView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				Task p = (Task) element;
-				return p.getName();
+				if (element instanceof  Task){
+					Task p = (Task) element;
+					return p.getName();
+				}
+				return element.toString();
 			}
 		});
 
@@ -112,8 +115,11 @@ public class TaskView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				Task p = (Task) element;
-				return p.getAssignedTo();
+				if (element instanceof  Task){
+					Task p = (Task) element;
+					return p.getName();
+				}
+				return "";
 			}
 		});
 
