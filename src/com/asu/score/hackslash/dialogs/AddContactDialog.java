@@ -60,7 +60,7 @@ public class AddContactDialog extends Dialog {
 			Label budName = new Label(container, SWT.NONE);
 			budName.setText("Buddy Name:");
 
-			txtBuddyName = new Text(container, SWT.BORDER | SWT.PASSWORD);
+			txtBuddyName = new Text(container, SWT.BORDER);
 			txtBuddyName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 					false, 1, 1));
 			txtBuddyName.setText(buddyName);
