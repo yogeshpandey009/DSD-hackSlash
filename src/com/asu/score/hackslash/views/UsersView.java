@@ -187,7 +187,7 @@ public class UsersView extends ViewPart {
 		refreshAction = new Action() {
 			public void run() {
 				System.out.println("Refreshing User List....");
-				viewer.setInput(getSite());
+				viewer.refresh();
 			}
 		};
 		refreshAction.setText("Refresh");
@@ -218,7 +218,7 @@ public class UsersView extends ViewPart {
 								session.setServerAddress(conn.getServiceName());
 								session.initializeSession(conn, user, pwrd);
 								session.setJID(conn.getUser());
-								viewer.setInput(getSite());
+								viewer.refresh();
 
 							} catch (XMPPException | SmackException
 									| IOException e) {
@@ -234,7 +234,7 @@ public class UsersView extends ViewPart {
 					try {
 						ConnectionManger.disconnect();
 						message = "User Logged Out Successfully.";
-						viewer.setInput(getSite());
+						viewer.refresh();
 					} catch (SmackException | IOException | XMPPException e) {
 						message = "Unable to Log out User!";
 						e.printStackTrace();
@@ -268,7 +268,7 @@ public class UsersView extends ViewPart {
 							chatCtrl.createEntry(buddyJID, buddyName);
 							message = "Buddy - " + buddyName
 									+ " - added successfully";
-							viewer.setInput(getSite());
+							viewer.refresh();
 						} catch (XMPPException | SmackException | IOException e) {
 							message = "Unable to add Buddy. Chat Controller not Available.";
 							e.printStackTrace();
