@@ -3,9 +3,9 @@ package com.asu.score.hackslash.taskhelper;
 import org.eclipse.jface.viewers.*;
 
 public class TaskContentProvider 
-	implements IStructuredContentProvider, TaskFile.Listener
+	implements IStructuredContentProvider, TaskInput.Listener
 {
-	TaskFile input;
+	TaskInput input;
 	TableViewer viewer;
 
 	/**
@@ -34,8 +34,8 @@ public class TaskContentProvider
 		if (viewer instanceof TableViewer) {
 			this.viewer = (TableViewer)viewer;
 		}
-		if (newInput instanceof TaskFile) {
-			input = (TaskFile)newInput;
+		if (newInput instanceof TaskInput) {
+			input = (TaskInput)newInput;
 			input.setListener(this);
 		}
 	}

@@ -40,7 +40,7 @@ import com.asu.score.hackslash.dialogs.TaskDialog;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
 import com.asu.score.hackslash.taskhelper.Task;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
-import com.asu.score.hackslash.taskhelper.TaskFile;
+import com.asu.score.hackslash.taskhelper.TaskInput;
 
 
 /**
@@ -60,7 +60,7 @@ import com.asu.score.hackslash.taskhelper.TaskFile;
 
 public class TaskView extends ViewPart {
 
-	private TaskFile input;
+	private TaskInput input;
 	private Action addItemAction, deleteItemAction, selectAllAction, editItemAction, refreshAction;
 	private IMemento memento;
 	private TableViewer viewer;
@@ -144,7 +144,7 @@ public class TaskView extends ViewPart {
 	 */
 	public TaskView() {
 		super();
-		input = new TaskFile();
+		input = new TaskInput();
 	}
 
 	/**

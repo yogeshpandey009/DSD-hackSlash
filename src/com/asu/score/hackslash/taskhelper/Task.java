@@ -21,9 +21,9 @@ public class Task implements IAdaptable {
 	public String getDesc() {
         return desc;
     }
-	public String getAssignTo() {
-        return assignedTo;
-    }
+	public String getAssignedTo() {
+		return assignedTo;
+	}
 	
 	public String toString() {
 		return name + ":" + desc + ":" + assignedTo;
@@ -41,10 +41,6 @@ public class Task implements IAdaptable {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
-	}
-
-	public String getAssignedTo() {
-		return assignedTo;
 	}
 
 	public void setAssignedTo(String assignedTo) {

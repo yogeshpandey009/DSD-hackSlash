@@ -30,7 +30,7 @@ public class TaskDao {
 			System.out.println(query);
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
-			allo.setAllocation(con, tsk.getTaskID(con), task.getAssignTo(), startDate);
+			allo.setAllocation(con, tsk.getTaskID(con), task.getAssignedTo(), startDate);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

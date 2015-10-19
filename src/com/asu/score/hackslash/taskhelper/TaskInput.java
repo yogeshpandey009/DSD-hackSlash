@@ -7,10 +7,9 @@ import java.util.List;
 import com.asu.score.hackslash.dao.TaskDao;
 import com.asu.score.hackslash.engine.SessionManager;
 
-public class TaskFile {
+public class TaskInput {
 
-	//private File file;
-	TaskDao taskDao = new TaskDao();
+	private TaskDao taskDao = new TaskDao();
 	private List<Task> list = new ArrayList<Task>();
 	private Listener listener;
 	
@@ -20,7 +19,7 @@ public class TaskFile {
 		public void refresh();
 	}
 	
-	public TaskFile() {
+	public TaskInput() {
 		getTasks();
 	}
 		
@@ -63,9 +62,9 @@ public class TaskFile {
 		if (SessionManager.getInstance().isAuthenticated()){
 			return list;
 		}
-		List<String> lis = new ArrayList<String>();
-		lis.add("Login to Start");
-		return lis;
+		return new ArrayList<String>() {{
+			add("Login to Start");
+		}};
 	}
 	
 	private void addTask(Task task) {

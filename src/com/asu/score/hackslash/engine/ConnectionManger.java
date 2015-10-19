@@ -14,7 +14,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import com.asu.score.hackslash.actions.im.ChatController;
-import com.asu.score.hackslash.actions.im.Users;
+import com.asu.score.hackslash.actions.im.UsersService;
 import com.asu.score.hackslash.properties.Constants;
 
 /**
@@ -171,7 +171,7 @@ public class ConnectionManger {
 
 		chatCtrl.sendMessage("Hello mate", "yp@yashu.local");
 		
-		Users.getAllUser();
+		UsersService.getAllUsers();
 
 		Scanner sc = new Scanner(System.in);
 		for (int x = 0; x < 10; x++) {
