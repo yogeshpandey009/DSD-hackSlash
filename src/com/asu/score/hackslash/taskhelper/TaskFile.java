@@ -16,6 +16,7 @@ public class TaskFile {
 	public interface Listener {
 		public void added(Task w);
 		public void removed(Task w);
+		public void refresh();
 	}
 	
 	public TaskFile() {
@@ -40,6 +41,13 @@ public class TaskFile {
 			listener.removed(word);
 	}
 	
+	public void refresh() {
+		System.out.println("inside refresh");
+		getTasks();
+		if (listener != null)
+			listener.refresh();
+	}
+
 	public Task find(String str) {
 		Iterator iter = list.iterator();
 		while (iter.hasNext()) {
