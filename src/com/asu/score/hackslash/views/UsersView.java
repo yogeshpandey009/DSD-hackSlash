@@ -1,6 +1,7 @@
 package com.asu.score.hackslash.views;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
@@ -30,6 +31,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.actions.im.ChatController;
@@ -145,6 +149,30 @@ public class UsersView extends ViewPart {
 		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
 	}
+	
+	private void hookRosterListeners() {
+		Roster roster = ConnectionManger.getRoster();
+		
+		roster.addRosterListener(new RosterListener() {
+			@Override
+			public void entriesAdded(Collection<String> addresses) {
+				input.refresh();
+			}
+			@Override
+			public void entriesUpdated(Collection<String> addresses) {
+				input.refresh();
+				
+			}
+			@Override
+			public void entriesDeleted(Collection<String> addresses) {
+				input.refresh();
+			}
+			@Override
+			public void presenceChanged(Presence presence) {
+				input.refresh();
+			}
+		});
+	}
 
 	private void fillLocalPullDown(IMenuManager manager) {
 		manager.add(addContactAction);
@@ -236,13 +264,11 @@ public class UsersView extends ViewPart {
 						session.setServerAddress(conn.getServiceName());
 						session.initializeSession(conn, user, pwrd);
 						session.setJID(conn.getUser());
-						input.refresh();
-
+						hookRosterListeners();
 					} catch (XMPPException | SmackException | IOException e) {
 						message = "UnAuthorized Username or Password!";
 					}
 					showMessage(message);
-
 				}
 			} catch (SmackException | IOException | XMPPException e) {
 				message = "Failed to Login to Server";
@@ -251,7 +277,7 @@ public class UsersView extends ViewPart {
 			try {
 				ConnectionManger.disconnect();
 				message = "User Logged Out Successfully.";
-				input.refresh();
+				//input.refresh();
 			} catch (SmackException | IOException | XMPPException e) {
 				message = "Unable to Log out User!";
 				e.printStackTrace();
