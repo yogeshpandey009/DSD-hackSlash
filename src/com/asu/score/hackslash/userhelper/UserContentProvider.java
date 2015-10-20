@@ -4,6 +4,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Display;
 
 /*
  * The content provider class is responsible for providing objects to the
@@ -52,8 +53,12 @@ public class UserContentProvider implements IStructuredContentProvider,
 
 	@Override
 	public void refresh() {
-		if (viewer != null) {
-			viewer.refresh();
-		}
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				if (viewer != null) {
+					viewer.refresh();
+				}
+			}
+		});
 	}
 }
