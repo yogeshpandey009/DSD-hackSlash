@@ -310,12 +310,12 @@ public class UsersView extends ViewPart {
 			performLogin();
 			return;
 		}
-
-		ChatDialog dialog = new ChatDialog(getSite().getShell());
+		
+		User user = (User)obj;
+		ChatDialog dialog = new ChatDialog(getSite().getShell(), user.getName());
 		if (dialog.open() == Window.OK)
 			try {
 				ChatController chatController = ChatController.getInstance();
-				chatController.createEntry(obj.toString(), obj.toString());
 				chatController.sendMessage(dialog.getMsg().trim(),
 						obj.toString() + Constants.SERVER_NAME);
 			} catch (XMPPException | SmackException | IOException e) {

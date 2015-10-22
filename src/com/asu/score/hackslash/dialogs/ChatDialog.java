@@ -14,7 +14,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import com.asu.score.hackslash.engine.ConnectionManger;
 import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.properties.Constants;
 
@@ -22,14 +21,17 @@ import com.asu.score.hackslash.properties.Constants;
 public class ChatDialog extends Dialog {
 	private Text txtMsg;
 	private String msg = "";
+	private String user = "";
 	private SessionManager session = SessionManager.getInstance();
 
-	public ChatDialog(Shell parentShell) {
+	public ChatDialog(Shell parentShell, String user) {
 		super(parentShell);
+		this.user = user;
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		getShell().setText("Chat - " + user);
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginRight = 10;
