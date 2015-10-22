@@ -30,6 +30,7 @@ public class LoginDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
+		getShell().setText(" - Login to hackSlash DSD - ");
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginRight = 5;
