@@ -1,5 +1,6 @@
 package com.asu.score.hackslash.views;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -12,11 +13,15 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -35,12 +40,19 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.part.WorkbenchPart;
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 
+import com.asu.score.hackslash.actions.im.ChatController;
+import com.asu.score.hackslash.dialogs.ChatDialog;
 import com.asu.score.hackslash.dialogs.TaskDialog;
+import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
+import com.asu.score.hackslash.properties.Constants;
 import com.asu.score.hackslash.taskhelper.Task;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
 import com.asu.score.hackslash.taskhelper.TaskInput;
+import com.asu.score.hackslash.userhelper.User;
 
 
 /**
@@ -61,7 +73,8 @@ import com.asu.score.hackslash.taskhelper.TaskInput;
 public class TaskView extends ViewPart {
 
 	private TaskInput input;
-	private Action addItemAction, deleteItemAction, selectAllAction, editItemAction, refreshAction;
+	private Action addItemAction, deleteItemAction, selectAllAction, editItemAction, refreshAction,
+					doubleClickAction;
 	private IMemento memento;
 	private TableViewer viewer;
 
@@ -184,6 +197,7 @@ public class TaskView extends ViewPart {
 		createToolbar();
 		createContextMenu();
 		hookGlobalActions();
+		hookDoubleClickAction();
 
 	}
 
@@ -242,8 +256,13 @@ public class TaskView extends ViewPart {
 			public void run() {
 				selectAll();
 			}
+		
 		};
-
+		doubleClickAction = new Action() {
+			public void run() {
+				onDoubleClick();
+			}
+		};
 		// Add selection listener.
 		viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
@@ -251,7 +270,24 @@ public class TaskView extends ViewPart {
 			}
 		});
 	}
+	private void onDoubleClick() {
 
+		ISelection selection = viewer.getSelection();
+		Object obj = ((IStructuredSelection) selection).getFirstElement();
+		Task task = (Task)obj;
+		Task task1 = promptForValue(task);
+		//if (task != null) {
+			//input.add(task);
+			//viewer.setSelection(new StructuredSelection(task));
+		//}
+		String message = task.getName() + task.getDesc() + task.getAssignedTo();
+		showMessage(message);
+	}
+	
+	private void showMessage(String message) {
+		MessageDialog.openInformation(viewer.getControl().getShell(),
+				"DSD Task View", message);
+	}
 	/**
 	 * Create menu.
 	 */
@@ -304,6 +340,13 @@ public class TaskView extends ViewPart {
 				if (event.character == SWT.DEL && event.stateMask == 0 && deleteItemAction.isEnabled()) {
 					deleteItemAction.run();
 				}
+			}
+		});
+	}
+	private void hookDoubleClickAction() {
+		viewer.addDoubleClickListener(new IDoubleClickListener() {
+			public void doubleClick(DoubleClickEvent event) {
+				doubleClickAction.run();
 			}
 		});
 	}
@@ -375,11 +418,11 @@ public class TaskView extends ViewPart {
 	/**
 	 * Ask user for value.
 	 */
-	private Task promptForValue(String oldValue) {
+	private Task promptForValue(Task oldTask) {
 		// TODO: old value in case of edit
 		// InputDialog dlg = new InputDialog(getSite().getShell(),
 		// "List View", text, oldValue, null);
-		TaskDialog dlg = new TaskDialog(getSite().getShell());
+		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
 		if (dlg.open() == Window.OK)
 			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo());
 		return null;

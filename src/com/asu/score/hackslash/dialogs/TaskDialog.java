@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.asu.score.hackslash.actions.im.UsersService;
 import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.taskhelper.Task;
 
 
 public class TaskDialog extends Dialog {
@@ -29,8 +30,11 @@ public class TaskDialog extends Dialog {
 	private String desc = "";
 	private String assignedTo;
 
-	public TaskDialog(Shell parentShell) {
+	public TaskDialog(Shell parentShell, Task task) {
 		super(parentShell);
+		name = task.getName();
+		desc = task.getDesc();
+		assignedTo = task.getAssignedTo();
 	}
 
 	@Override
