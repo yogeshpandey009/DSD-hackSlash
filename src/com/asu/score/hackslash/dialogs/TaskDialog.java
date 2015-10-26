@@ -32,9 +32,11 @@ public class TaskDialog extends Dialog {
 
 	public TaskDialog(Shell parentShell, Task task) {
 		super(parentShell);
-		name = task.getName();
-		desc = task.getDesc();
-		assignedTo = task.getAssignedTo();
+		if (task != null){
+			name = task.getName();
+			desc = task.getDesc();
+			assignedTo = task.getAssignedTo();
+		}
 	}
 
 	@Override
@@ -96,6 +98,17 @@ public class TaskDialog extends Dialog {
 			items = users.toArray(new String[users.size()]);
 		}
 		comboAssignedTo.setItems(items);
+		if (assignedTo != null){
+			int index = 200;
+			for (int i=0; i< items.length ; i++){
+				if (assignedTo.equals(items[i])){
+					index = i;
+				}
+			}
+			if (index != 200){
+			comboAssignedTo.select(index);
+			}
+		}
 		comboAssignedTo.addModifyListener(new ModifyListener() {
 
 			@Override
