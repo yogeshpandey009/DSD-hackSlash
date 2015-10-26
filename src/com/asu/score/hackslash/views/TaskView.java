@@ -275,12 +275,12 @@ public class TaskView extends ViewPart {
 		ISelection selection = viewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		Task task = (Task)obj;
-		Task task1 = promptForValue(task);
+		Task task1 = promptForUpdateTask(task);
 		//if (task != null) {
 			//input.add(task);
 			//viewer.setSelection(new StructuredSelection(task));
 		//}
-		String message = task.getName() + task.getDesc() + task.getAssignedTo();
+		String message = task.getTaskID() + task.getName() + task.getDesc() + task.getAssignedTo();
 		showMessage(message);
 	}
 	
@@ -379,7 +379,7 @@ public class TaskView extends ViewPart {
 	private void addItem() {
 		Task task = promptForValue(null);
 		if (task != null) {
-			input.add(task);
+			task = input.add(task);
 			viewer.setSelection(new StructuredSelection(task));
 		}
 	}
@@ -424,7 +424,17 @@ public class TaskView extends ViewPart {
 		// "List View", text, oldValue, null);
 		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
 		if (dlg.open() == Window.OK)
-			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo());
+			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), null);
+		return null;
+	}
+	
+	private Task promptForUpdateTask(Task oldTask) {
+		// TODO: old value in case of edit
+		// InputDialog dlg = new InputDialog(getSite().getShell(),
+		// "List View", text, oldValue, null);
+		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
+		//if (dlg.open() == Window.OK)
+			//return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo());
 		return null;
 	}
 

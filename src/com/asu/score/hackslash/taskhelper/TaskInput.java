@@ -27,11 +27,13 @@ public class TaskInput {
 		listener = l;
 	}
 	
-	public void add(Task task) {
+	public Task add(Task task) {
 		System.out.println("inside add");
-		addTask(task);		
+		String taskID = addTask(task);
+		task.setTaskID(taskID);
 		if (listener != null)
 			listener.added(task);
+		return task;
 	}
 	
 	public void remove(Task word) {
@@ -67,15 +69,17 @@ public class TaskInput {
 		}};
 	}
 	
-	private void addTask(Task task) {
-		System.out.println("adding in DB");
+	private String addTask(Task task) {
+		//System.out.println("adding in DB");
+		String taskID = null;
 		try {
-			taskDao.addTask(task);
+			taskID = taskDao.addTask(task);
 			list.add(task);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return taskID;
 	}
 	
 	private void getTasks() {

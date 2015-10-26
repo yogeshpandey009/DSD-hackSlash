@@ -4,19 +4,25 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.ui.IActionFilter;
 
 public class Task implements IAdaptable {
-
+	
+	private String taskID;
 	private String name;
 	private String desc;
 	private String assignedTo;
 	
-	public Task(String name, String desc, String assignedTo) {
+	public Task(String name, String desc, String assignedTo, String taskID) {
 		super();
+		
 		this.name = name;
 		this.desc = desc;
 		this.assignedTo = assignedTo;
+		this.taskID = taskID;
 	}
 	public String getName() {
         return name;
+    }
+	public String getTaskID() {
+        return taskID;
     }
 	public String getDesc() {
         return desc;
@@ -38,7 +44,10 @@ public class Task implements IAdaptable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	
+	public void setTaskID(String taskID) {
+		this.taskID = taskID;
+	}
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
