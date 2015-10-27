@@ -309,17 +309,23 @@ public class UsersView extends ViewPart {
 		}
 		
 		User user = (User)obj;
-		ChatDialog dialog = new ChatDialog(getSite().getShell(), user.getName());
+		createChatDialog(user, "");
+
+	}
+
+	private void createChatDialog(User user, String msg) {
+		ChatDialog dialog = new ChatDialog(getSite().getShell(), user.getName(), msg);
 		if (dialog.open() == Window.OK)
 			try {
 				ChatController chatController = ChatController.getInstance();
 				chatController.sendMessage(dialog.getMsg().trim(),
-						obj.toString() + Constants.SERVER_NAME);
+						user.getName());
+				msg += "\n" + dialog.getMsg().trim();
+				createChatDialog(user, msg);
 			} catch (XMPPException | SmackException | IOException e) {
 				showMessage("Unable to send Chat");
 				e.printStackTrace();
 			}
-
 	}
 
 	/**

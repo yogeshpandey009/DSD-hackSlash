@@ -10,6 +10,17 @@ public class Message {
 	private String msg;
 	
 	/**
+	 * Constructor for Message
+	 * @param sender
+	 * @param msg
+	 */
+	public Message(String sender, String msg){
+		this.sender = sender;
+		this.msg = msg;
+	}
+	
+	
+	/**
 	 * Getter for Sender
 	 * @return
 	 */

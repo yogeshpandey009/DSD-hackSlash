@@ -22,23 +22,28 @@ public class ChatDialog extends Dialog {
 	private Text txtMsg;
 	private String msg = "";
 	private String user = "";
+	private String messages= "";
 	private SessionManager session = SessionManager.getInstance();
 
-	public ChatDialog(Shell parentShell, String user) {
+	public ChatDialog(Shell parentShell, String user, String msg) {
 		super(parentShell);
 		this.user = user;
+		this.messages = msg;
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText("Chat - " + user);
 		Composite container = (Composite) super.createDialogArea(parent);
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(1, false);
 		layout.marginRight = 10;
 		layout.marginLeft = 10;
-		layout.marginBottom = 10;
+		layout.marginBottom = 30;
 		layout.marginTop = 10;
 		container.setLayout(layout);
+		
+		Label msgs = new Label(container, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		msgs.setText(messages);
 		
 		Label lblMsg = new Label(container, SWT.NONE);
 		if (session.isAuthenticated()) {
@@ -90,6 +95,7 @@ public class ChatDialog extends Dialog {
 		if (buttonId == IDialogConstants.OK_ID) {
 			msg = txtMsg.getText();
 			super.okPressed();
+			messages += msg;
 		}
 		setReturnCode(buttonId);
 		close();

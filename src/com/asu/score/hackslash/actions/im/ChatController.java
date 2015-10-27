@@ -18,6 +18,8 @@ import org.jivesoftware.smack.packet.Presence.Type;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
+import com.asu.score.hackslash.chathelper.ActiveChats;
+import com.asu.score.hackslash.chathelper.LocalChat;
 import com.asu.score.hackslash.engine.SessionManager;
 
 /**
@@ -107,6 +109,17 @@ public class ChatController {
 			String body = message.getBody();
 			System.out.println(String.format(
 					"Received message '%1$s' from %2$s", body, from));
+			boolean flag = false;
+			for (LocalChat c: ActiveChats.activeChats){
+				if (c.getBuddy().equals(from)){
+					flag = true;
+					c.receivedChat(body);
+				}
+			}
+			if (!flag){
+				LocalChat lChat = new LocalChat(from);
+				lChat.receivedChat(body);
+			}
 		}
 
 	}

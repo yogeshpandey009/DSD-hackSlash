@@ -8,6 +8,6 @@ import java.util.ArrayList;
  */
 public class ActiveChats {
 
-	public static ArrayList<Chat> activeChats = new ArrayList<Chat>();
+	public static ArrayList<LocalChat> activeChats = new ArrayList<LocalChat>();
 	
 }
