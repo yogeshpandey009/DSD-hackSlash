@@ -21,16 +21,13 @@ public class LocalChat {
 	private String buddy;
 	private ArrayList<Message> conversation;
 	private ChatDialog chatDialog;
-	private static Display display;
+	private Display display;
 	
-	public LocalChat(String buddy){
+	public LocalChat(String buddy, Display display){
 		this.buddy = buddy;
+		this.display = display;
 		ActiveChats.activeChats.add(this);
 		conversation = new ArrayList<Message>();
-	}
-	
-	static{
-		display = new Display();
 	}
 	
 	
@@ -103,7 +100,7 @@ public class LocalChat {
 			try {
 				ChatController chatController = ChatController.getInstance();
 				chatController.sendMessage(chatDialog.getMsg().trim(),
-						ConnectionManger.getCurrentUser());
+						buddy);
 				Message message = new Message(ConnectionManger.getCurrentUser(), chatDialog.getMsg().trim());
 				conversation.add(message);
 				displayChat();
@@ -131,5 +128,12 @@ public class LocalChat {
 			body.append("\n");
 		}
 		return body.toString();
+	}
+	
+	/**
+	 * Called to send message to a Buddy.
+	 */
+	public void sendMessege(){
+		displayChat();
 	}
 }

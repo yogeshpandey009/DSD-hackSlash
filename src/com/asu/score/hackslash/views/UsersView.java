@@ -39,6 +39,7 @@ import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.actions.im.ChatController;
+import com.asu.score.hackslash.chathelper.LocalChat;
 import com.asu.score.hackslash.dao.UsersDAO;
 import com.asu.score.hackslash.dialogs.AddContactDialog;
 import com.asu.score.hackslash.dialogs.ChatDialog;
@@ -309,7 +310,9 @@ public class UsersView extends ViewPart {
 		}
 		
 		User user = (User)obj;
-		createChatDialog(user, "");
+		LocalChat lChat = new LocalChat(user.getName(), getSite().getShell().getDisplay());
+		lChat.sendMessege();
+		//createChatDialog(user, "");
 
 	}
 
