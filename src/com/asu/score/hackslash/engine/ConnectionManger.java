@@ -12,6 +12,8 @@ import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.jivesoftware.smackx.iqlast.LastActivityManager;
+import org.jivesoftware.smackx.iqlast.packet.LastActivity;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.actions.im.UsersService;
@@ -159,19 +161,18 @@ public class ConnectionManger {
 
 	public static void main(String[] args) throws Exception {
 
-		login("yashu", "yashu");
+		login("bharat", "bharat");
+		
 
 		ChatController chatCtrl = ChatController.getInstance();
 
-		chatCtrl.setStatus(true, "Hello everyone");
+		chatCtrl.setStatus(true, "Yoooo Hello everyone");
 
-		String buddyJID = "yp";
-		String buddyName = "yp";
-		chatCtrl.createEntry(buddyJID, buddyName);
-
-		chatCtrl.sendMessage("Hello mate", "yp@yashu.local");
 		
-		UsersService.getAllUsers();
+
+		chatCtrl.sendMessage("Hello mate", "mihir@bks-pc");
+		
+		/*UsersService.getAllUsers();
 
 		Scanner sc = new Scanner(System.in);
 		for (int x = 0; x < 10; x++) {
@@ -184,7 +185,7 @@ public class ConnectionManger {
 
 		while (isRunning) {
 			Thread.sleep(50);
-		}
+		}*/
 
 		disconnect();
 	}
