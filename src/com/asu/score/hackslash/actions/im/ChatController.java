@@ -111,16 +111,11 @@ public class ChatController {
 			System.out.println(String.format(
 					"Received message '%1$s' from %2$s", body, from));
 			boolean flag = false;
-			for (LocalChat c: ActiveChats.activeChats){
-				if (c.getBuddy().equals(from)){
-					flag = true;
-					c.receivedChat(body);
-				}
+			LocalChat lChat = ActiveChats.getChatIfAlreadyExist(from);
+			if(lChat == null){
+				lChat = new LocalChat(from, new Display());
 			}
-			if (!flag){
-				LocalChat lChat = new LocalChat(from, new Display());
-				lChat.receivedChat(body);
-			}
+			lChat.receivedChat(body);
 		}
 
 	}

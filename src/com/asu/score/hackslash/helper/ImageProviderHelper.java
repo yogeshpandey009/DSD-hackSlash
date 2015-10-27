@@ -22,4 +22,17 @@ public class ImageProviderHelper {
         URL url = FileLocator.find(bundle, path, null);
         return ImageDescriptor.createFromURL(url);
 	}
+	
+	/**
+	 * Returns the url of the image in the file system.
+	 * 
+	 * @param relativePath
+	 * @return
+	 */
+	public static String getImagePath(String relativePath){
+		Bundle bundle = Platform.getBundle(Constants.PLUGIN_ID);
+        IPath path = new Path("images/" + relativePath);
+        URL url = FileLocator.find(bundle, path, null);
+        return url.getPath();
+	}
 }

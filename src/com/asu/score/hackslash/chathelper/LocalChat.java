@@ -22,10 +22,12 @@ public class LocalChat {
 	private ArrayList<Message> conversation;
 	private ChatDialog chatDialog;
 	private Display display;
+	private Shell shell;
 	
 	public LocalChat(String buddy, Display display){
 		this.buddy = buddy;
 		this.display = display;
+		shell = new Shell(this.display);
 		ActiveChats.activeChats.add(this);
 		conversation = new ArrayList<Message>();
 	}
@@ -94,7 +96,6 @@ public class LocalChat {
 			chatDialog.close();
 		}
 		
-		final Shell shell = new Shell(display);
 		chatDialog = new ChatDialog(shell, buddy, createMessageBody());
 		if (chatDialog.open() == Window.OK){
 			try {
