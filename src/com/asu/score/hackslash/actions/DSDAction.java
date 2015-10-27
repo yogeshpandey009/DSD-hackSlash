@@ -72,13 +72,8 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 				message = "Failed to Login to Server";
 			}
 		} else if (result == IDialogConstants.CLOSE_ID) {
-			try {
-				ConnectionManger.disconnect();
-				message = "User Logged Out Successfully.";
-			} catch (SmackException | IOException | XMPPException e) {
-				message = "Unable to Log out User!";
-				e.printStackTrace();
-			}
+			session.logout();
+			message = "User Logged Out Successfully.";
 			MessageDialog.openInformation(window.getShell(), "Hackslash",
 					message);
 		}

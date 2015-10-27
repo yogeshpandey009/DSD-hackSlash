@@ -16,7 +16,6 @@ public class TaskDao {
 	public String addTask(Task task) throws Exception {
 
 		System.out.println("adding in DB");
-		TaskDao tsk = new TaskDao();
 		Connection con = null;
 		String taskId = null;
 		AllocationDAO allo = new AllocationDAO();
@@ -33,8 +32,8 @@ public class TaskDao {
 			System.out.println(query);
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
-			taskId = tsk.getTaskID(con);
-			allo.setAllocation(con, tsk.getTaskID(con), task.getAssignedTo(), startDate);
+			taskId = getTaskID(con);
+			allo.setAllocation(con, getTaskID(con), task.getAssignedTo(), startDate);
 			String unlockQuery = "Unlock tables;";
 			stmt = con.createStatement();
 			stmt.executeUpdate(unlockQuery);
@@ -99,7 +98,6 @@ public class TaskDao {
 	}
 
 	public static void main(String[] args) throws Exception {
-		Database db = new Database();
 		TaskDao t = new TaskDao();
 		try {
 			// t.setTask(db.getConnection(),"Task 1", "Task Desc 1");

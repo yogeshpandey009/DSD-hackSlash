@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.asu.score.hackslash.engine.Database;
@@ -20,8 +23,7 @@ public class UsersDAO {
 	public List<String> getUsers() {
 
 		try {
-
-			conn = new Database().getConnection();
+			conn = Database.getConnection();
 			pst = conn.prepareStatement(SQLQueries.SQL_GET_USERS);
 			rs = pst.executeQuery();
 			while (rs.next()) {
@@ -30,10 +32,25 @@ public class UsersDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// finally {
-		// conn.close();
-		// }
 		return users_list;
+	}
+
+	public void addUserSessionTime(String username, Date loginTime) {
+		Connection conn = null;
+		Statement stmt = null;
+		Timestamp login = new Timestamp(loginTime.getTime());
+		Timestamp logout = new Timestamp(System.currentTimeMillis());
+		try {
+			conn = Database.getConnection();
+			stmt = conn.createStatement();
+			String query = "Insert into UsersSessionLog(UserName, LoginTime, LogoutTime) values(\"" + username + "\",\""
+					+ login + "\",\"" + logout + "\");";
+			System.out.println(query);
+			stmt.executeUpdate(query);
+		} catch(SQLException se) {
+			System.out.println("Unable to add user Session Time");
+			se.printStackTrace();
+		}
 	}
 
 	public static void main(String... args) {

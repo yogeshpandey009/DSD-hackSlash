@@ -13,7 +13,7 @@ import com.asu.score.hackslash.engine.Database;
 public class AllocationDAO {
 	static Connection con = null;
 	
-	public static void setAllocation(Connection con, String TaskId, String UserId, java.sql.Timestamp StartDate) throws SQLException
+	public void setAllocation(Connection con, String TaskId, String UserId, java.sql.Timestamp StartDate) throws SQLException
 	{
 		Statement stmt = null;
 		String query = "Insert into Allocation(TaskID, UserID, StartDate) values (\"" + TaskId + "\",\"" + UserId + "\",'" + StartDate + "')";
@@ -36,7 +36,7 @@ public class AllocationDAO {
 	    }
 	}
 	
-	public static void getAllocation(Connection con) throws SQLException
+	public void getAllocation(Connection con) throws SQLException
 	{
 		Statement stmt = null;
 		String query = "Select TaskAllocationID, TaskID, UserID from Allocation";
@@ -64,13 +64,12 @@ public class AllocationDAO {
 	    }
 	}
 	public static void main(String[] args){
-		Database db = new Database();
 		AllocationDAO t = new AllocationDAO();
 		try {
 			Calendar calendar = Calendar.getInstance();
 		    java.sql.Timestamp startDate = new java.sql.Timestamp(calendar.getTime().getTime());
-			t.setAllocation(db.getConnection(),"2", "USER 2", startDate);
-			t.getAllocation(db.getConnection());
+			t.setAllocation(Database.getConnection(),"2", "USER 2", startDate);
+			t.getAllocation(Database.getConnection());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

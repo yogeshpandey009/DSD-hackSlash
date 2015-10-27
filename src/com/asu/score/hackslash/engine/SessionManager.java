@@ -1,5 +1,7 @@
 package com.asu.score.hackslash.engine;
 
+import java.util.Date;
+
 import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -19,7 +21,7 @@ public class SessionManager {
     private String serverAddress;
     private String username;
     private String password;
-    
+    private Date loginTime;
     private String JID;
 
     private SessionManager() {
@@ -44,6 +46,7 @@ public class SessionManager {
         this.connection = connection;
         this.username = username;
         this.password = password;
+        this.loginTime = new Date();
 		setServerAddress(connection.getServiceName());
 		setJID(connection.getUser());
     }
@@ -134,8 +137,16 @@ public class SessionManager {
     public void setJID(String jid) {
         this.JID = jid;
     }
+    
+    public Date getLoginTime() {
+		return loginTime;
+	}
 
-    public void setConnection(XMPPTCPConnection conn) {
+	public void setLoginTime(Date loginTime) {
+		this.loginTime = loginTime;
+	}
+
+	public void setConnection(XMPPTCPConnection conn) {
         this.connection = conn;
     }
     
@@ -150,6 +161,7 @@ public class SessionManager {
 		if (connection != null) {
 			connection.disconnect();
 		}
+		loginTime = null;
 	}
 
 }

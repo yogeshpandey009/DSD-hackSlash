@@ -16,7 +16,7 @@ public class TaskLogDAO {
 		String query = "Insert into TaskLog(TaskAllocationID, StartDate, EndDate) values (" +TaskAllocationID + "," + StartDate + "," + EndDate + ")";
 		try
 		{
-			con = new Database().getConnection();
+			con = Database.getConnection();
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
 		}
@@ -39,7 +39,7 @@ public class TaskLogDAO {
 		String query = "Select TaskAllocationID, StartDate, EndDate from TaskLog";
 		try
 		{
-			con = new Database().getConnection();
+			con = Database.getConnection();
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next())
