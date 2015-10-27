@@ -171,6 +171,9 @@ public class ConnectionManger {
 		
 
 		chatCtrl.sendMessage("Hello mate", "mihir@bks-pc");
+		Thread.sleep(1050);
+		chatCtrl.sendMessage("Hello mate 2", "mihir@bks-pc");
+		
 		
 		/*UsersService.getAllUsers();
 
