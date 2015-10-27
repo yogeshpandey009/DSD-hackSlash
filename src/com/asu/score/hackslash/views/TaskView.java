@@ -1,6 +1,5 @@
 package com.asu.score.hackslash.views;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -11,17 +10,17 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
@@ -40,19 +39,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.part.WorkbenchPart;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPException;
 
-import com.asu.score.hackslash.actions.im.ChatController;
-import com.asu.score.hackslash.dialogs.ChatDialog;
 import com.asu.score.hackslash.dialogs.TaskDialog;
-import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
-import com.asu.score.hackslash.properties.Constants;
 import com.asu.score.hackslash.taskhelper.Task;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
 import com.asu.score.hackslash.taskhelper.TaskInput;
-import com.asu.score.hackslash.userhelper.User;
 
 
 /**

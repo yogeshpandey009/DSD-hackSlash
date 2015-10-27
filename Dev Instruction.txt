@@ -20,3 +20,7 @@ and restart the server
 ----
 Note : Openfire is compatible upto Java 1.8 v52. Make sure you install that or earlier version.
 Latest version of Java available is v60.
+----
+export PATH=${PATH}:/usr/local/mysql/bin/
+mysql --user=root mysql
+GRANT ALL PRIVILEGES ON *.* TO 'USERNAME'@'%' IDENTIFIED BY 'PASSWORD' WITH GRANT OPTION;

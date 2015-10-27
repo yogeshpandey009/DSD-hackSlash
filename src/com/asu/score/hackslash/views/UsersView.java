@@ -29,7 +29,9 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
@@ -37,6 +39,7 @@ import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.actions.im.ChatController;
+import com.asu.score.hackslash.dao.UsersDAO;
 import com.asu.score.hackslash.dialogs.AddContactDialog;
 import com.asu.score.hackslash.dialogs.ChatDialog;
 import com.asu.score.hackslash.dialogs.LoginDialog;
@@ -58,12 +61,14 @@ public class UsersView extends ViewPart {
 	private Action refreshAction, loginAction, addContactAction,
 			doubleClickAction;
 	private UserInput input;
+	
+	private SessionManager session = SessionManager.getInstance();
+
 
 	class ViewLabelProvider extends LabelProvider implements
 			ITableLabelProvider {
 
 		public String getColumnText(Object obj, int index) {
-			SessionManager session = SessionManager.getInstance();
 			String txt = "";
 			if (session.isAuthenticated()) {
 				if (obj instanceof User) {
@@ -81,7 +86,6 @@ public class UsersView extends ViewPart {
 		}
 
 		public Image getImage(Object obj) {
-			SessionManager session = SessionManager.getInstance();
 			if (session.isAuthenticated()) {
 				if (obj instanceof User) {
 					User u = (User) obj;
@@ -246,7 +250,6 @@ public class UsersView extends ViewPart {
 	private void performLogin() {
 		LoginDialog dialog = new LoginDialog(getSite().getShell());
 		String message = "";
-		SessionManager session = SessionManager.getInstance();
 
 		// get the new values from the dialog
 		int result = dialog.open();
@@ -261,9 +264,7 @@ public class UsersView extends ViewPart {
 						ConnectionManger.login(user, pwrd);
 						message = "Hello " + user
 								+ ", Welcome to DSD work enviroment";
-						session.setServerAddress(conn.getServiceName());
 						session.initializeSession(conn, user, pwrd);
-						session.setJID(conn.getUser());
 						hookRosterListeners();
 					} catch (XMPPException | SmackException | IOException e) {
 						message = "UnAuthorized Username or Password!";
@@ -274,15 +275,12 @@ public class UsersView extends ViewPart {
 				message = "Failed to Login to Server";
 			}
 		} else if (result == IDialogConstants.CLOSE_ID) {
-			try {
-				ConnectionManger.disconnect();
-				message = "User Logged Out Successfully.";
-				//input.refresh();
-			} catch (SmackException | IOException | XMPPException e) {
-				message = "Unable to Log out User!";
-				e.printStackTrace();
-			}
+			UsersDAO usersDao = new UsersDAO();
+			usersDao.addUserSessionTime(session.getUsername(), session.getLoginTime());
+			session.logout();
+			message = "User Logged Out Successfully.";
 			showMessage(message);
+			input.refresh();
 		}
 	}
 
@@ -305,7 +303,6 @@ public class UsersView extends ViewPart {
 
 		ISelection selection = viewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		SessionManager session = SessionManager.getInstance();
 		if (!session.isAuthenticated()) {
 			performLogin();
 			return;

@@ -14,7 +14,6 @@ public class Database {
         try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
@@ -51,10 +50,8 @@ public class Database {
 
 	
 	public static void main(String[] args) {
-		Database db;
 		try {
-			db = new Database();
-			db.getConnection();
+			Database.getConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
