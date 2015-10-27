@@ -2,6 +2,7 @@ package com.asu.score.hackslash.actions.im;
 
 import java.io.IOException;
 
+import org.eclipse.swt.widgets.Display;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -117,7 +118,7 @@ public class ChatController {
 				}
 			}
 			if (!flag){
-				LocalChat lChat = new LocalChat(from);
+				LocalChat lChat = new LocalChat(from, new Display());
 				lChat.receivedChat(body);
 			}
 		}
