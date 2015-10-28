@@ -49,6 +49,14 @@ public class TaskContentProvider
 	}
 	
 	/**
+	 * @see Listener#updated()
+	 */
+	public void updated(Task e) {
+		if (viewer != null)
+			viewer.update(e, null);
+	}
+	
+	/**
 	 * @see Listener#removed()
 	 */
 	public void removed(Task e) {

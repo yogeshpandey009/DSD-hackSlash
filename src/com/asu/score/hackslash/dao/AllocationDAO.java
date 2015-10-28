@@ -16,7 +16,31 @@ public class AllocationDAO {
 	public void setAllocation(Connection con, String TaskId, String UserId, java.sql.Timestamp StartDate) throws SQLException
 	{
 		Statement stmt = null;
-		String query = "Insert into Allocation(TaskID, UserID, StartDate) values (\"" + TaskId + "\",\"" + UserId + "\",'" + StartDate + "')";
+		String query = "Insert into Allocation(TaskID, UserID, StartDate) values (\"" + TaskId + "\",\"" + UserId + "\",'" + StartDate + "');";
+		System.out.println(query);
+		try
+		{
+			stmt = con.createStatement();
+			stmt.executeUpdate(query);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+		finally 
+		{
+	        if (stmt != null) 
+	        { 
+	        	stmt.close(); 
+	        }
+	    }
+	}
+	
+	public void updateAllocation(Connection con, String TaskId, String UserId, java.sql.Timestamp date) throws SQLException
+	{
+		Statement stmt = null;
+		//String query = "Insert into Allocation(TaskID, UserID, StartDate) values (\"" + TaskId + "\",\"" + UserId + "\",'" + StartDate + "')";
+		String query = "Update Allocation set UserID=\"" + UserId + "\", EndDate='" + date + "' where TaskID = \"" + TaskId + "\" and EndDate = timestamp(0)";
 		System.out.println(query);
 		try
 		{
