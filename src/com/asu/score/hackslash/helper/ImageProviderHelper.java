@@ -7,6 +7,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.Bundle;
 
 import com.asu.score.hackslash.properties.Constants;
@@ -29,10 +30,11 @@ public class ImageProviderHelper {
 	 * @param relativePath
 	 * @return
 	 */
-	public static String getImagePath(String relativePath){
+	public static Image getImage(String relativePath){
 		Bundle bundle = Platform.getBundle(Constants.PLUGIN_ID);
         IPath path = new Path("images/" + relativePath);
         URL url = FileLocator.find(bundle, path, null);
-        return url.getPath();
+        ImageDescriptor descriptor = ImageDescriptor.createFromURL(url);
+        return descriptor.createImage();
 	}
 }
