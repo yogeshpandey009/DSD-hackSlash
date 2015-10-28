@@ -1,6 +1,5 @@
 package com.asu.score.hackslash.dialogs;
 
-import javax.swing.ImageIcon;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -9,7 +8,6 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageFileNameProvider;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
@@ -38,7 +36,7 @@ public class LoginDialog extends Dialog {
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		getShell().setText(" - Login to hackSlash DSD - ");
-		Image img = new Image(getShell().getDisplay(), "hs.png");
+		Image img = ImageProviderHelper.getImage("hs.png");
 		getShell().setBackgroundImage(img);
 		getShell().setBackgroundMode(SWT.INHERIT_FORCE);  
 		getShell().setBounds(300, 200, img.getBounds().width, img.getBounds().height+40);
@@ -59,7 +57,7 @@ public class LoginDialog extends Dialog {
 		} else {
 			Label lblUser = new Label(container, SWT.NONE);
 			lblUser.setText("User:");
-			lblUser.setBackground(color);
+			//lblUser.setBackground(color);
 			txtUser = new Text(container, SWT.BORDER);
 			txtUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 					false, 1, 1));
@@ -80,7 +78,7 @@ public class LoginDialog extends Dialog {
 					false, 1, 1);
 			gd_lblNewLabel.horizontalIndent = 1;
 			lblPassword.setLayoutData(gd_lblNewLabel);
-			lblPassword.setBackground(color);
+			//lblPassword.setBackground(color);
 			lblPassword.setText("Password:");
 
 			txtPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
