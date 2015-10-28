@@ -46,7 +46,6 @@ import com.asu.score.hackslash.taskhelper.Task;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
 import com.asu.score.hackslash.taskhelper.TaskInput;
 
-
 /**
  * This sample class demonstrates how to plug-in a new workbench view. The view
  * shows data obtained from the model. The sample creates a dummy model on the
@@ -65,8 +64,7 @@ import com.asu.score.hackslash.taskhelper.TaskInput;
 public class TaskView extends ViewPart {
 
 	private TaskInput input;
-	private Action addItemAction, deleteItemAction, selectAllAction, editItemAction, refreshAction,
-					doubleClickAction;
+	private Action addItemAction, deleteItemAction, selectAllAction, editItemAction, refreshAction, doubleClickAction;
 	private IMemento memento;
 	private TableViewer viewer;
 
@@ -99,15 +97,15 @@ public class TaskView extends ViewPart {
 
 	private void createColumns(final Composite parent, final TableViewer viewer) {
 
-		String[] titles = { "Task Name", "Assigned To" };
-		int[] bounds = { 100, 100 };
+		String[] titles = { "Task Name", "Assigned To", "Status" };
+		int[] bounds = { 150, 150, 150 };
 
 		// first column is for the Task Name
 		TableViewerColumn col = createTableViewerColumn(titles[0], bounds[0], 0);
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				if (element instanceof  Task){
+				if (element instanceof Task) {
 					Task p = (Task) element;
 					return p.getName();
 				}
@@ -120,9 +118,22 @@ public class TaskView extends ViewPart {
 		col.setLabelProvider(new ColumnLabelProvider() {
 			@Override
 			public String getText(Object element) {
-				if (element instanceof  Task){
+				if (element instanceof Task) {
 					Task p = (Task) element;
 					return p.getAssignedTo();
+				}
+				return "";
+			}
+		});
+
+		// Third column is for the Task Description
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof Task) {
+					Task p = (Task) element;
+					return "";
 				}
 				return "";
 			}
@@ -143,7 +154,7 @@ public class TaskView extends ViewPart {
 	public TableViewer getViewer() {
 		return viewer;
 	}
-		
+
 	/**
 	 * Constructor
 	 */
@@ -248,7 +259,7 @@ public class TaskView extends ViewPart {
 			public void run() {
 				selectAll();
 			}
-		
+
 		};
 		doubleClickAction = new Action() {
 			public void run() {
@@ -262,24 +273,26 @@ public class TaskView extends ViewPart {
 			}
 		});
 	}
+
 	private void onDoubleClick() {
 
 		ISelection selection = viewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		Task task = (Task)obj;
+		Task task = (Task) obj;
 		task = promptForUpdateTask(task);
 		if (task != null) {
 			input.update(task);
 			viewer.setSelection(new StructuredSelection(task));
 		}
-		//String message = task.getTaskID() + task.getName() + task.getDesc() + task.getAssignedTo();
-		//showMessage(message);
+		// String message = task.getTaskID() + task.getName() + task.getDesc() +
+		// task.getAssignedTo();
+		// showMessage(message);
 	}
-	
+
 	private void showMessage(String message) {
-		MessageDialog.openInformation(viewer.getControl().getShell(),
-				"DSD Task View", message);
+		MessageDialog.openInformation(viewer.getControl().getShell(), "DSD Task View", message);
 	}
+
 	/**
 	 * Create menu.
 	 */
@@ -335,6 +348,7 @@ public class TaskView extends ViewPart {
 			}
 		});
 	}
+
 	private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
@@ -419,10 +433,10 @@ public class TaskView extends ViewPart {
 			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), null);
 		return null;
 	}
-	
+
 	private Task promptForUpdateTask(Task oldTask) {
 		// TODO: old value in case of edit
-		
+
 		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
 		if (dlg.open() == Window.OK)
 			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), oldTask.getTaskID());
