@@ -26,9 +26,11 @@ public class TaskDialog extends Dialog {
 	private Text txtName;
 	private Text txtDesc;
 	private Combo comboAssignedTo;
+	private Combo comboStatus;
 	private String name = "";
 	private String desc = "";
 	private String assignedTo;
+	private String status;
 
 	public TaskDialog(Shell parentShell, Task task) {
 		super(parentShell);
@@ -41,7 +43,7 @@ public class TaskDialog extends Dialog {
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
-		getShell().setText(" - Add Task - ");
+		getShell().setText(" - Add / Edit Task - ");
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginRight = 5;
@@ -91,7 +93,7 @@ public class TaskDialog extends Dialog {
 		comboAssignedTo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
 		comboAssignedTo.setBounds(50, 50, 150, 65);
-		String items[] = {};
+		String[] items = {};
 		if (ConnectionManger.isUserLoggedIn()){
 			List<String> users = UsersService.getAllUsernames(); 
 			users.add("Unassigned");
@@ -115,6 +117,34 @@ public class TaskDialog extends Dialog {
 			public void modifyText(ModifyEvent e) {
 				Combo comboWidget = (Combo) e.getSource();
 				assignedTo = comboWidget.getText();
+			}
+		});
+		
+		Label lblStatus = new Label(container, SWT.NONE);
+		lblStatus.setText("Status:");
+		comboStatus = new Combo(container, SWT.READ_ONLY);
+		comboStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		comboStatus.setBounds(50, 50, 150, 65);
+		String[] status_items = {"New", "In Progress", "Closed"};
+		comboStatus.setItems(status_items);
+		if (status != null){
+			int index = 200;
+			for (int i=0; i< status_items.length ; i++){
+				if (status.equals(items[i])){
+					index = i;
+				}
+			}
+			if (index != 200){
+				comboStatus.select(index);
+			}
+		}
+		comboStatus.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+				Combo comboWidget = (Combo) e.getSource();
+				status = comboWidget.getText();
 			}
 		});
 

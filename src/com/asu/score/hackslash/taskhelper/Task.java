@@ -9,6 +9,7 @@ public class Task implements IAdaptable {
 	private String name;
 	private String desc;
 	private String assignedTo;
+	private String status;
 	
 	public Task(String name, String desc, String assignedTo, String taskID) {
 		super();
@@ -54,6 +55,14 @@ public class Task implements IAdaptable {
 
 	public void setAssignedTo(String assignedTo) {
 		this.assignedTo = assignedTo;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+	
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	
 }
