@@ -15,6 +15,7 @@ public class TaskInput {
 	
 	public interface Listener {
 		public void added(Task w);
+		public void updated(Task w);
 		public void removed(Task w);
 		public void refresh();
 	}
@@ -33,6 +34,15 @@ public class TaskInput {
 		task.setTaskID(taskID);
 		if (listener != null)
 			listener.added(task);
+		return task;
+	}
+	
+	public Task update(Task task) {
+		System.out.println("inside update");
+		String taskID = updateTask(task);
+		//task.setTaskID(taskID);
+		if (listener != null)
+			listener.updated(task);
 		return task;
 	}
 	
@@ -74,6 +84,19 @@ public class TaskInput {
 		String taskID = null;
 		try {
 			taskID = taskDao.addTask(task);
+			list.add(task);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return taskID;
+	}
+	
+	private String updateTask(Task task) {
+		//System.out.println("adding in DB");
+		String taskID = null;
+		try {
+			taskID = taskDao.updateTask(task);
 			list.add(task);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

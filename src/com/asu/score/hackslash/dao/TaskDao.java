@@ -33,7 +33,7 @@ public class TaskDao {
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
 			taskId = getTaskID(con);
-			allo.setAllocation(con, getTaskID(con), task.getAssignedTo(), startDate);
+			allo.setAllocation(con, taskId, task.getAssignedTo(), startDate);
 			String unlockQuery = "Unlock tables;";
 			stmt = con.createStatement();
 			stmt.executeUpdate(unlockQuery);
@@ -46,7 +46,44 @@ public class TaskDao {
 		}
 		return taskId;
 	}
+	
+	public String updateTask(Task task) throws Exception {
 
+		System.out.println("updating a task in DB");
+		Connection con = null;
+		String taskId = null;
+		AllocationDAO allo = new AllocationDAO();
+		Calendar calendar = Calendar.getInstance();
+		Statement stmt = null;
+		java.sql.Timestamp date = new java.sql.Timestamp(calendar.getTime().getTime());
+		
+		try {
+			con = Database.getConnection();
+			String lockQuery = "Lock tables task write, allocation write;";
+			stmt = con.createStatement();
+			stmt.executeUpdate(lockQuery);
+			//String query = "Insert into Task(TaskName, TaskDscription, StartDate, Status) values(\"" + task.getName() + "\",\""
+					//+ task.getDesc() + "\",'" + startDate + "',\"N\");";
+			//System.out.println(query);
+			//stmt = con.createStatement();
+			//stmt.executeUpdate(query);
+			taskId = task.getTaskID();
+			allo.updateAllocation(con, taskId, task.getAssignedTo(), date);
+			allo.setAllocation(con, taskId, task.getAssignedTo(), date);
+			String unlockQuery = "Unlock tables;";
+			stmt = con.createStatement();
+			stmt.executeUpdate(unlockQuery);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new Exception("Unable to update Task");
+		} finally {
+			con.close();
+		}
+		return taskId;
+	}
+
+	
 	private String getTaskID(Connection con) throws SQLException {
 		Statement stmt = null;
 		String query = "Select max(TaskID) tskid from Task;";

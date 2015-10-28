@@ -267,13 +267,13 @@ public class TaskView extends ViewPart {
 		ISelection selection = viewer.getSelection();
 		Object obj = ((IStructuredSelection) selection).getFirstElement();
 		Task task = (Task)obj;
-		Task task1 = promptForUpdateTask(task);
-		//if (task != null) {
-			//input.add(task);
-			//viewer.setSelection(new StructuredSelection(task));
-		//}
-		String message = task.getTaskID() + task.getName() + task.getDesc() + task.getAssignedTo();
-		showMessage(message);
+		task = promptForUpdateTask(task);
+		if (task != null) {
+			input.update(task);
+			viewer.setSelection(new StructuredSelection(task));
+		}
+		//String message = task.getTaskID() + task.getName() + task.getDesc() + task.getAssignedTo();
+		//showMessage(message);
 	}
 	
 	private void showMessage(String message) {
@@ -422,11 +422,10 @@ public class TaskView extends ViewPart {
 	
 	private Task promptForUpdateTask(Task oldTask) {
 		// TODO: old value in case of edit
-		// InputDialog dlg = new InputDialog(getSite().getShell(),
-		// "List View", text, oldValue, null);
+		
 		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
-		//if (dlg.open() == Window.OK)
-			//return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo());
+		if (dlg.open() == Window.OK)
+			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), oldTask.getTaskID());
 		return null;
 	}
 
