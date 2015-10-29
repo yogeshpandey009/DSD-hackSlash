@@ -41,6 +41,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.part.WorkbenchPart;
 
 import com.asu.score.hackslash.dialogs.TaskDialog;
+import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
 import com.asu.score.hackslash.taskhelper.Task;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
@@ -275,14 +276,15 @@ public class TaskView extends ViewPart {
 	}
 
 	private void onDoubleClick() {
-
-		ISelection selection = viewer.getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		Task task = (Task) obj;
-		task = promptForUpdateTask(task);
-		if (task != null) {
-			input.update(task);
-			viewer.setSelection(new StructuredSelection(task));
+		if (SessionManager.getInstance().isAuthenticated()){
+			ISelection selection = viewer.getSelection();
+			Object obj = ((IStructuredSelection) selection).getFirstElement();
+			Task task = (Task) obj;
+			task = promptForUpdateTask(task);
+			if (task != null) {
+				input.update(task);
+				viewer.setSelection(new StructuredSelection(task));
+			}
 		}
 		// String message = task.getTaskID() + task.getName() + task.getDesc() +
 		// task.getAssignedTo();
@@ -447,14 +449,16 @@ public class TaskView extends ViewPart {
 	 * Saves the object state within a memento.
 	 */
 	public void saveState(IMemento memento) {
-		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-		if (sel.isEmpty())
-			return;
-		memento = memento.createChild("selection");
-		Iterator iter = sel.iterator();
-		while (iter.hasNext()) {
-			Task task = (Task) iter.next();
-			memento.createChild("descriptor", task.toString());
+		if (SessionManager.getInstance().isAuthenticated()){
+			IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+			if (sel.isEmpty())
+				return;
+			memento = memento.createChild("selection");
+			Iterator iter = sel.iterator();
+			while (iter.hasNext()) {
+				Task task = (Task) iter.next();
+				memento.createChild("descriptor", task.toString());
+			}
 		}
 	}
 
