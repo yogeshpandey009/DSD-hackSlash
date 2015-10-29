@@ -2,18 +2,22 @@ package com.asu.score.hackslash.actions.im;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.SmackException.NoResponseException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smackx.iqlast.LastActivityManager;
+import org.jivesoftware.smackx.iqlast.packet.LastActivity;
 
 import com.asu.score.hackslash.dao.TeamMembersDAO;
-import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.ConnectionManager;
 import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.userhelper.User;
 
@@ -27,12 +31,17 @@ public class UsersService {
 	 * 
 	 * @param ros
 	 * @return
+	 * @throws XMPPException 
+	 * @throws IOException 
+	 * @throws SmackException 
 	 */
-	public static List<User> getAllUsers() {
+	public static List<User> getAllUsers() throws SmackException, IOException, XMPPException {
 		List<User> users = new ArrayList<User>();
 		SessionManager session = SessionManager.getInstance();
 		if (session.isAuthenticated()) {
-			Roster ros = ConnectionManger.getRoster();
+			Roster ros = ConnectionManager.getRoster();
+			LastActivityManager lastactivityManager = null;
+			lastactivityManager = LastActivityManager.getInstanceFor(ConnectionManager.getConnection());
 			if (ros != null) {
 				Set<RosterEntry> entries = ros.getEntries();
 				for (RosterEntry entry : entries) {
@@ -43,12 +52,37 @@ public class UsersService {
 					System.out
 							.println(String.format("Buddy:%1$s - Status:%2$s",
 									entry.getName(), status));
-					users.add(new User(username, status));
-					// users.add(entry.getName());
+					String lastSeenTime = getLastSeenTime(lastactivityManager, username);
+					users.add(new User(username, status, lastSeenTime));
 				}
 			}
 		}
 		return users;
+	}
+	
+	private static String getLastSeenTime(LastActivityManager lastActivityManager, String username) {
+		String lastSeenTime = "";
+		LastActivity lastSeen = null;
+		if(lastActivityManager != null) {
+			try {
+				lastSeen = lastActivityManager.getLastActivity(username);
+				System.out.println(lastSeen);
+			} catch (NoResponseException | XMPPErrorException
+					| NotConnectedException e) {
+				//e.printStackTrace();
+				System.out.println("No last activity found");
+			}			
+		}
+		if(lastSeen != null) {
+			long duration = lastSeen.lastActivity;
+			if(duration != -1) {
+				long hours = duration / 3600;
+				long minutes = (duration % 3600) / 60;
+				long seconds = duration % 60;
+				lastSeenTime = String.format("%d hours %d mins %d secs ago", hours, minutes, seconds);
+			}
+		}
+		return lastSeenTime;
 	}
 
 	/**
@@ -61,7 +95,7 @@ public class UsersService {
 		List<String> usernames = new ArrayList<String>();
 		SessionManager session = SessionManager.getInstance();
 		if (session.isAuthenticated()) {
-			Roster ros = ConnectionManger.getRoster();
+			Roster ros = ConnectionManager.getRoster();
 			if (ros != null) {
 				Set<RosterEntry> entries = ros.getEntries();
 				for (RosterEntry entry : entries) {
@@ -84,7 +118,7 @@ public class UsersService {
 		SessionManager session = SessionManager.getInstance();
 		String retVal = "";
 		if (session.isAuthenticated()) {
-			Roster ros = ConnectionManger.getRoster();
+			Roster ros = ConnectionManager.getRoster();
 			if (ros != null) {
 				Set<RosterEntry> entries = ros.getEntries();
 				for (RosterEntry entry : entries) {

@@ -18,7 +18,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.asu.score.hackslash.actions.im.UsersService;
-import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.ConnectionManager;
 import com.asu.score.hackslash.taskhelper.Task;
 
 
@@ -95,7 +95,7 @@ public class TaskDialog extends Dialog {
 				false, 1, 1));
 		comboAssignedTo.setBounds(50, 50, 150, 65);
 		String[] items = {};
-		if (ConnectionManger.isUserLoggedIn()){
+		if (ConnectionManager.isUserLoggedIn()){
 			List<String> users = UsersService.getAllUsernames(); 
 			users.add("Unassigned");
 			items = users.toArray(new String[users.size()]);
