@@ -3,6 +3,7 @@ package com.asu.score.hackslash.dialogs;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -18,8 +19,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.asu.score.hackslash.actions.im.UsersService;
+import com.asu.score.hackslash.dao.ShowTasksDetailsDAO;
 import com.asu.score.hackslash.engine.ConnectionManger;
 import com.asu.score.hackslash.taskhelper.Task;
+
 
 
 public class TaskDialog extends Dialog {
@@ -154,10 +157,14 @@ public class TaskDialog extends Dialog {
 	// override method to use "Login" as label for the OK button
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		
+		createButton(parent, IDialogConstants.DETAILS_ID,
+				IDialogConstants.SHOW_DETAILS_LABEL, false);		
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
 				true);
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
+		
 	}
 
 	@Override
@@ -171,6 +178,18 @@ public class TaskDialog extends Dialog {
 		desc = txtDesc.getText();
 		super.okPressed();
 	}
+	
+	@Override
+	protected void buttonPressed(int DETAILS_ID) {
+			name = txtName.getText();
+			TaskDetailsDialog tdd = new TaskDetailsDialog();
+			ShowTasksDetailsDAO std =  new ShowTasksDetailsDAO();
+			std.setTaskName(name);
+			tdd.displayTable(std.getTaskDetails(),name);
+			
+			
+	}
+	
 
 	public String getName() {
 		return name;
