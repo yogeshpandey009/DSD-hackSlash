@@ -27,8 +27,18 @@ public class TaskDao {
 			String lockQuery = "Lock tables task write, allocation write;";
 			stmt = con.createStatement();
 			stmt.executeUpdate(lockQuery);
+			String status = null;
+			if (task.getStatus().equals("New")){
+				status = "N";
+			}
+			else if(task.getStatus().equals("In Progress")){
+				status = "I";
+			}
+			else {
+				status = "C";
+			}
 			String query = "Insert into Task(TaskName, TaskDscription, StartDate, Status) values(\"" + task.getName() + "\",\""
-					+ task.getDesc() + "\",'" + startDate + "',\"N\");";
+					+ task.getDesc() + "\",'" + startDate + "',\"" + status + "\");";
 			System.out.println(query);
 			stmt = con.createStatement();
 			stmt.executeUpdate(query);
@@ -62,11 +72,20 @@ public class TaskDao {
 			String lockQuery = "Lock tables task write, allocation write;";
 			stmt = con.createStatement();
 			stmt.executeUpdate(lockQuery);
-			//String query = "Insert into Task(TaskName, TaskDscription, StartDate, Status) values(\"" + task.getName() + "\",\""
-					//+ task.getDesc() + "\",'" + startDate + "',\"N\");";
-			//System.out.println(query);
-			//stmt = con.createStatement();
-			//stmt.executeUpdate(query);
+			String status = null;
+			if (task.getStatus().equals("New")){
+				status = "N";
+			}
+			else if(task.getStatus().equals("In Progress")){
+				status = "I";
+			}
+			else {
+				status = "C";
+			}
+			String updateQuery = "Update task set TaskName=\"" + task.getName() + "\", TaskDscription=\"" + task.getDesc() + "\", Status=\"" + status + "\" where TaskID = \"" + task.getTaskID() + "\";";
+			System.out.println(updateQuery);
+			stmt = con.createStatement();
+			stmt.executeUpdate(updateQuery);
 			taskId = task.getTaskID();
 			allo.updateAllocation(con, taskId, task.getAssignedTo(), date);
 			allo.setAllocation(con, taskId, task.getAssignedTo(), date);
@@ -113,7 +132,7 @@ public class TaskDao {
 		Connection con = null;
 		Statement stmt = null;
 		//String query = "Select * from Task";
-		String query = "Select t.taskid, t.taskname, t.TaskDscription, a.userid from Task t, allocation a where t.taskid = a.taskid and a.enddate = timestamp(0);";
+		String query = "Select t.taskid, t.taskname, t.TaskDscription, t.Status, a.userid from Task t, allocation a where t.taskid = a.taskid and a.enddate = timestamp(0);";
 		// where taskid in (Select max(TaskID) tskid from Task)
 		List<Task> tasks = new ArrayList<Task>();
 		try {
@@ -121,7 +140,15 @@ public class TaskDao {
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next()) {
-				tasks.add(new Task(rs.getString("TaskName"), rs.getString("TaskDscription"), rs.getString("userid"), rs.getString("TaskID")));
+				String status = null;
+				if ( rs.getString("Status").equals("N"))
+					status = "New";
+				else if ( rs.getString("Status").equals("I"))
+					status = "In Progress";
+				else
+					status = "Closed";
+				
+				tasks.add(new Task(rs.getString("TaskName"), rs.getString("TaskDscription"), rs.getString("userid"), rs.getString("TaskID"), status));
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
