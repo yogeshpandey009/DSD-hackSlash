@@ -17,6 +17,7 @@ import org.jivesoftware.smackx.iqlast.packet.LastActivity;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.actions.im.UsersService;
+import com.asu.score.hackslash.dao.TeamMembersDAO;
 import com.asu.score.hackslash.properties.Constants;
 
 /**
@@ -104,6 +105,7 @@ public class ConnectionManger {
 			SessionManager.getInstance().initializeSession(mConnection, user,
 					pwrd);
 			ChatController.getInstance().init();
+			ChatController.getInstance().updateRoster();
 		} catch (XMPPException | SmackException | IOException e) {
 			mConnection.disconnect();//otherwise login always fail after wrong attempt
 			System.out.println("Error while logging into Server. ->"

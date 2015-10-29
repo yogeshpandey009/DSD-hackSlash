@@ -12,6 +12,7 @@ import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
+import com.asu.score.hackslash.dao.TeamMembersDAO;
 import com.asu.score.hackslash.engine.ConnectionManger;
 import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.userhelper.User;
@@ -108,6 +109,8 @@ public class UsersService {
 				ChatController chatCtrl = ChatController.getInstance();
 				chatCtrl.createEntry(buddyJID, buddyName);
 				message = "Buddy - " + buddyJID + " - added successfully";
+				TeamMembersDAO tmDao = new TeamMembersDAO();
+				tmDao.addUser(buddyJID);
 			} catch (XMPPException | SmackException | IOException e) {
 				message = "Unable to add Buddy. Chat Controller not Available.";
 				e.printStackTrace();

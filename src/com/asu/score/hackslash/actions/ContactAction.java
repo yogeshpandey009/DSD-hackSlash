@@ -12,6 +12,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 
 import com.asu.score.hackslash.actions.im.ChatController;
+import com.asu.score.hackslash.dao.TeamMembersDAO;
 import com.asu.score.hackslash.dialogs.AddContactDialog;
 import com.asu.score.hackslash.engine.SessionManager;
 
@@ -53,6 +54,8 @@ public class ContactAction implements IWorkbenchWindowActionDelegate {
 					ChatController chatCtrl = ChatController.getInstance();
 					chatCtrl.createEntry(buddyJID, buddyJID);
 					message = "Buddy - " + buddyJID + " - added successfully";
+					TeamMembersDAO tmDao = new TeamMembersDAO();
+					tmDao.addUser(buddyJID);
 				} catch (XMPPException | SmackException | IOException e) {
 					message = "Unable to add Buddy. Chat Controller not Available.";
 					e.printStackTrace();
