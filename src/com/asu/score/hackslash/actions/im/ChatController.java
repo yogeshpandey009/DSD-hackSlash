@@ -1,6 +1,7 @@
 package com.asu.score.hackslash.actions.im;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Display;
@@ -22,6 +23,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.chathelper.ActiveChats;
 import com.asu.score.hackslash.chathelper.LocalChat;
+import com.asu.score.hackslash.dao.TMemberDAO;
 import com.asu.score.hackslash.dao.TeamMembersDAO;
 import com.asu.score.hackslash.engine.SessionManager;
 
@@ -104,12 +106,19 @@ public class ChatController {
 		roster.createEntry(user, name, null);
 	}
 	
+	/**
+	 * Updates rosters after getting all users from the database
+	 */
 	public void updateRoster(){
-		TeamMembersDAO tmDao = new TeamMembersDAO();
+		TMemberDAO tmDao = new TMemberDAO();
 		List<String> userList = tmDao.getUsers();
-			try {
+		List<String> uList = UsersService.getAllUsernames();
+		
+		try {
 				for (String user : userList){
-					createEntry(user, user);
+					if (!uList.contains(user)){
+						createEntry(user, user);
+					}
 				}
 			} catch (NotLoggedInException | NoResponseException | XMPPErrorException | NotConnectedException e) {
 				System.out.println("Problem while updating Roster!!");
