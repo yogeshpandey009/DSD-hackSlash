@@ -13,7 +13,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.dialogs.LoginDialog;
-import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.ConnectionManager;
 import com.asu.score.hackslash.engine.SessionManager;
 
 /**
@@ -49,12 +49,12 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 		if (result == IDialogConstants.OK_ID) {
 			try {
 				if (!session.isAuthenticated()) {					
-					XMPPTCPConnection conn = ConnectionManger.getConnection();
+					XMPPTCPConnection conn = ConnectionManager.getConnection();
 					String user = dialog.getUser();
 					String pwrd = dialog.getPassword();
 
 					try {
-						ConnectionManger.login(user, pwrd);
+						ConnectionManager.login(user, pwrd);
 						message = "Hello " + user
 								+ ", Welcome to DSD work enviroment";
 						session.setServerAddress(conn.getServiceName());

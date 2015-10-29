@@ -11,7 +11,7 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.dialogs.ChatDialog;
-import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.ConnectionManager;
 
 /**
  * Record of chats to a buddy.
@@ -102,7 +102,7 @@ public class LocalChat {
 				ChatController chatController = ChatController.getInstance();
 				chatController.sendMessage(chatDialog.getMsg().trim(),
 						buddy);
-				Message message = new Message(ConnectionManger.getCurrentUser(), chatDialog.getMsg().trim());
+				Message message = new Message(ConnectionManager.getCurrentUser(), chatDialog.getMsg().trim());
 				conversation.add(message);
 				displayChat();
 			} catch (XMPPException | SmackException | IOException e) {
