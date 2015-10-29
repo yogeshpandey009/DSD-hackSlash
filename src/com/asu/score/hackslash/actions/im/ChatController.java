@@ -1,6 +1,7 @@
 package com.asu.score.hackslash.actions.im;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Display;
 import org.jivesoftware.smack.SmackException;
@@ -21,6 +22,7 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.chathelper.ActiveChats;
 import com.asu.score.hackslash.chathelper.LocalChat;
+import com.asu.score.hackslash.dao.TeamMembersDAO;
 import com.asu.score.hackslash.engine.SessionManager;
 
 /**
@@ -100,6 +102,19 @@ public class ChatController {
 				"Creating entry for buddy '%1$s' with name %2$s", user, name));
 		Roster roster = Roster.getInstanceFor(connection);
 		roster.createEntry(user, name, null);
+	}
+	
+	public void updateRoster(){
+		TeamMembersDAO tmDao = new TeamMembersDAO();
+		List<String> userList = tmDao.getUsers();
+			try {
+				for (String user : userList){
+					createEntry(user, user);
+				}
+			} catch (NotLoggedInException | NoResponseException | XMPPErrorException | NotConnectedException e) {
+				System.out.println("Problem while updating Roster!!");
+				e.printStackTrace();
+			}
 	}
 
 	class MyMessageListener implements ChatMessageListener {
