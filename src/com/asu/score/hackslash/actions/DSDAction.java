@@ -10,7 +10,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.dialogs.LoginDialog;
 import com.asu.score.hackslash.engine.ConnectionManager;
@@ -43,33 +42,23 @@ public class DSDAction implements IWorkbenchWindowActionDelegate {
 		LoginDialog dialog = new LoginDialog(window.getShell());
 		String message = "";
 		SessionManager session = SessionManager.getInstance();
-		
+
 		// get the new values from the dialog
 		int result = dialog.open();
 		if (result == IDialogConstants.OK_ID) {
-			try {
-				if (!session.isAuthenticated()) {					
-					XMPPTCPConnection conn = ConnectionManager.getConnection();
-					String user = dialog.getUser();
-					String pwrd = dialog.getPassword();
+			if (!session.isAuthenticated()) {
+				String user = dialog.getUser();
+				String pwrd = dialog.getPassword();
 
-					try {
-						ConnectionManager.login(user, pwrd);
-						message = "Hello " + user
-								+ ", Welcome to DSD work enviroment";
-						session.setServerAddress(conn.getServiceName());
-						session.initializeSession(conn, user, pwrd);
-						session.setJID(conn.getUser());
-						
-					} catch (XMPPException | SmackException | IOException e) {
-						message = "UnAuthorized Username or Password!";
-					}
-					MessageDialog.openInformation(window.getShell(), "Hackslash",
-							message);
-				
+				try {
+					ConnectionManager.login(user, pwrd);
+					message = "Hello " + user
+							+ ", Welcome to DSD work enviroment";
+				} catch (XMPPException | SmackException | IOException e) {
+					message = "UnAuthorized Username or Password!";
 				}
-			} catch (SmackException | IOException | XMPPException e) {
-				message = "Failed to Login to Server";
+				MessageDialog.openInformation(window.getShell(), "Hackslash",
+						message);
 			}
 		} else if (result == IDialogConstants.CLOSE_ID) {
 			session.logout();

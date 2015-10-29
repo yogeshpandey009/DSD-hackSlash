@@ -63,9 +63,8 @@ public class UsersView extends ViewPart {
 	private Action refreshAction, loginAction, addContactAction,
 			doubleClickAction;
 	private UserInput input;
-	
-	private SessionManager session = SessionManager.getInstance();
 
+	private SessionManager session = SessionManager.getInstance();
 
 	class ViewLabelProvider extends LabelProvider implements
 			ITableLabelProvider {
@@ -75,16 +74,16 @@ public class UsersView extends ViewPart {
 			if (session.isAuthenticated()) {
 				if (obj instanceof User) {
 					User u = (User) obj;
-					if(index == 0) {
-						txt = u.getName();						
-					} else if(index == 1) {
-						if("unavailable".equals(u.getStatus())) {
-							txt = u.getLastSeen();							
+					if (index == 0) {
+						txt = u.getName();
+					} else if (index == 1) {
+						if ("unavailable".equals(u.getStatus())) {
+							txt = u.getLastSeen();
 						}
 					}
 				}
 			} else {
-				if(index == 0) {
+				if (index == 0) {
 					txt = obj.toString();
 				}
 			}
@@ -92,8 +91,8 @@ public class UsersView extends ViewPart {
 		}
 
 		public Image getColumnImage(Object obj, int index) {
-			if(index == 0) {
-				return getImage(obj);				
+			if (index == 0) {
+				return getImage(obj);
 			}
 			return null;
 		}
@@ -141,7 +140,7 @@ public class UsersView extends ViewPart {
 		user.setWidth(150);
 		TableColumn lastLogin = new TableColumn(viewer.getTable(), SWT.RIGHT);
 		lastLogin.setWidth(150);
-		
+
 		// Create the help context id for the viewer's control
 		PlatformUI.getWorkbench().getHelpSystem()
 				.setHelp(viewer.getControl(), "com.asu.score.hackslash.viewer");
@@ -170,24 +169,27 @@ public class UsersView extends ViewPart {
 		fillLocalPullDown(bars.getMenuManager());
 		fillLocalToolBar(bars.getToolBarManager());
 	}
-	
+
 	private void hookRosterListeners() {
 		Roster roster = ConnectionManager.getRoster();
-		
+
 		roster.addRosterListener(new RosterListener() {
 			@Override
 			public void entriesAdded(Collection<String> addresses) {
 				input.refresh();
 			}
+
 			@Override
 			public void entriesUpdated(Collection<String> addresses) {
 				input.refresh();
-				
+
 			}
+
 			@Override
 			public void entriesDeleted(Collection<String> addresses) {
 				input.refresh();
 			}
+
 			@Override
 			public void presenceChanged(Presence presence) {
 				input.refresh();
@@ -271,29 +273,23 @@ public class UsersView extends ViewPart {
 		// get the new values from the dialog
 		int result = dialog.open();
 		if (result == IDialogConstants.OK_ID) {
-			try {
-				if (!session.isAuthenticated()) {
-					XMPPTCPConnection conn = ConnectionManager.getConnection();
-					String user = dialog.getUser();
-					String pwrd = dialog.getPassword();
-
-					try {
-						ConnectionManager.login(user, pwrd);
-						message = "Hello " + user
-								+ ", Welcome to DSD work enviroment";
-						session.initializeSession(conn, user, pwrd);
-						hookRosterListeners();
-					} catch (XMPPException | SmackException | IOException e) {
-						message = "UnAuthorized Username or Password!";
-					}
-					showMessage(message);
+			if (!session.isAuthenticated()) {
+				String user = dialog.getUser();
+				String pwrd = dialog.getPassword();
+				try {
+					ConnectionManager.login(user, pwrd);
+					message = "Hello " + user
+							+ ", Welcome to DSD work enviroment";
+					hookRosterListeners();
+				} catch (XMPPException | SmackException | IOException e) {
+					message = "UnAuthorized Username or Password!";
 				}
-			} catch (SmackException | IOException | XMPPException e) {
-				message = "Failed to Login to Server";
+				showMessage(message);
 			}
 		} else if (result == IDialogConstants.CLOSE_ID) {
 			UsersDAO usersDao = new UsersDAO();
-			usersDao.addUserSessionTime(session.getUsername(), session.getLoginTime());
+			usersDao.addUserSessionTime(session.getUsername(),
+					session.getLoginTime());
 			session.logout();
 			message = "User Logged Out Successfully.";
 			showMessage(message);
@@ -324,19 +320,21 @@ public class UsersView extends ViewPart {
 			performLogin();
 			return;
 		}
-		
-		User user = (User)obj;
+
+		User user = (User) obj;
 		LocalChat lChat = ActiveChats.getChatIfAlreadyExist(user.getName());
-		if (lChat==null){
-			lChat = new LocalChat(user.getName(), getSite().getShell().getDisplay());
+		if (lChat == null) {
+			lChat = new LocalChat(user.getName(), getSite().getShell()
+					.getDisplay());
 		}
 		lChat.sendMessege();
-		//createChatDialog(user, "");
+		// createChatDialog(user, "");
 
 	}
 
 	private void createChatDialog(User user, String msg) {
-		ChatDialog dialog = new ChatDialog(getSite().getShell(), user.getName(), msg);
+		ChatDialog dialog = new ChatDialog(getSite().getShell(),
+				user.getName(), msg);
 		if (dialog.open() == Window.OK)
 			try {
 				ChatController chatController = ChatController.getInstance();

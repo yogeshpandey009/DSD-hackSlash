@@ -53,7 +53,7 @@ public class ContactAction implements IWorkbenchWindowActionDelegate {
 				// String buddyName = dialog.getPassword();
 				try {
 					ChatController chatCtrl = ChatController.getInstance();
-					chatCtrl.createEntry(buddyJID, buddyJID);
+					chatCtrl.createEntry(buddyJID);
 					message = "Buddy - " + buddyJID + " - added successfully";
 					TMemberDAO tmDao = new TMemberDAO();
 					tmDao.addUser(buddyJID);

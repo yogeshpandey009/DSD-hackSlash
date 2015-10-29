@@ -167,8 +167,7 @@ public class ConnectionManager {
 		chatCtrl.setStatus(true, "Hello everyone");
 
 		String buddyJID = "yp";
-		String buddyName = "yp";
-		chatCtrl.createEntry(buddyJID, buddyName);
+		chatCtrl.createEntry(buddyJID);
 
 		chatCtrl.sendMessage("Hello mate", "yp@yashu.local");
 		

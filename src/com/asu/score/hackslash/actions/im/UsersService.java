@@ -51,7 +51,7 @@ public class UsersService {
 					String status = type.toString();					
 					System.out
 							.println(String.format("Buddy:%1$s - Status:%2$s",
-									entry.getName(), status));
+									entry.getUser(), status));
 					String lastSeenTime = getLastSeenTime(lastactivityManager, username);
 					users.add(new User(username, status, lastSeenTime));
 				}
@@ -70,7 +70,7 @@ public class UsersService {
 			} catch (NoResponseException | XMPPErrorException
 					| NotConnectedException e) {
 				//e.printStackTrace();
-				System.out.println("No last activity found");
+				System.out.println("Could not get last activity " + e.getMessage());
 			}			
 		}
 		if(lastSeen != null) {
@@ -141,7 +141,7 @@ public class UsersService {
 		if (session.isAuthenticated()) {
 			try {
 				ChatController chatCtrl = ChatController.getInstance();
-				chatCtrl.createEntry(buddyJID, buddyName);
+				chatCtrl.createEntry(buddyJID);
 				message = "Buddy - " + buddyJID + " - added successfully";
 				TeamMembersDAO tmDao = new TeamMembersDAO();
 				tmDao.addUser(buddyJID);
