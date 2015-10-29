@@ -1,8 +1,12 @@
 package com.asu.score.hackslash.userhelper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPException;
 
 import com.asu.score.hackslash.actions.im.UsersService;
 import com.asu.score.hackslash.engine.SessionManager;
@@ -81,7 +85,12 @@ public class UserInput {
 
 	private void populateUsers() {
 		System.out.println("fetching all users");
-		list = UsersService.getAllUsers();
+		try {
+			list = UsersService.getAllUsers();
+		} catch (SmackException | IOException | XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println(list.size() + " contacts founds");
 	}
 }

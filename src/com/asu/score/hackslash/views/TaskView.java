@@ -489,7 +489,7 @@ public class TaskView extends ViewPart {
 		if (memento != null) {
 			IMemento descriptors[] = memento.getChildren("descriptor");
 			if (descriptors.length > 0) {
-				ArrayList objList = new ArrayList(descriptors.length);
+				ArrayList<Task> objList = new ArrayList<Task>(descriptors.length);
 				for (int nX = 0; nX < descriptors.length; nX++) {
 					String id = descriptors[nX].getID();
 					Task task = input.find(id);
