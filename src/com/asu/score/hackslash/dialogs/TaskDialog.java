@@ -38,6 +38,7 @@ public class TaskDialog extends Dialog {
 			name = task.getName();
 			desc = task.getDesc();
 			assignedTo = task.getAssignedTo();
+			status = task.getStatus();
 		}
 	}
 
@@ -131,7 +132,7 @@ public class TaskDialog extends Dialog {
 		if (status != null){
 			int index = 200;
 			for (int i=0; i< status_items.length ; i++){
-				if (status.equals(items[i])){
+				if (status.equals(status_items[i])){
 					index = i;
 				}
 			}
@@ -194,6 +195,13 @@ public class TaskDialog extends Dialog {
 
 	public void setAssignedTo(String assignedTo) {
 		this.assignedTo = assignedTo;
+	}
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }
