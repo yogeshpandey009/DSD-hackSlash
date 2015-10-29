@@ -181,11 +181,13 @@ public class TaskDialog extends Dialog {
 	
 	@Override
 	protected void buttonPressed(int DETAILS_ID) {
+			
 			name = txtName.getText();
+			System.out.println("DETAILS_ID button pressed+name"+name);
 			TaskDetailsDialog tdd = new TaskDetailsDialog();
 			ShowTasksDetailsDAO std =  new ShowTasksDetailsDAO();
 			std.setTaskName(name);
-			tdd.displayTable(std.getTaskDetails(),name);
+			//tdd.displayTable(std.getTaskDetails(),name);
 			
 			
 	}
