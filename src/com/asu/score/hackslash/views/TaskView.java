@@ -380,33 +380,37 @@ public class TaskView extends ViewPart {
 	 * Edit item to list.
 	 */
 	private void onDoubleClick() {
-
-		ISelection selection = viewer.getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		Task task = (Task)obj;
-		Task task_update = promptForUpdateTask(task);
-		//checking for any changes in task variables
-		int flag = 0;
-		boolean task_name = false;
-		boolean task_desc = false ;
-		boolean task_allocation = false;
-		boolean task_status = false;
-		if (task_update.getAssignedTo().equals(task.getAssignedTo()))
-			task_allocation = true;
-		if (task_update.getName().equals(task.getName()))
-			task_name = true;
-		if (task_update.getDesc().equals(task.getDesc()))
-			task_desc = true;
-		if (task_update.getStatus().equals(task.getStatus()))
-			task_status = true;
-		if (!task_name || !task_desc || !task_allocation || !task_status)
-			flag = 1;
-		System.out.println(flag);
-		// Update task, if there is any change in the task variables
-		if (task_update != null && flag == 1) {
-			task_update = input.update(task_update);
-			input.refresh();
-			viewer.setSelection(new StructuredSelection(task_update));
+		if (SessionManager.getInstance().isAuthenticated()){
+			ISelection selection = viewer.getSelection();
+			Object obj = ((IStructuredSelection) selection).getFirstElement();
+			Task task = (Task)obj;
+			Task task_update = promptForUpdateTask(task);
+			//checking for any changes in task variables
+			int flag = 0;
+			boolean task_name = false;
+			boolean task_desc = false ;
+			boolean task_allocation = false;
+			boolean task_status = false;
+			if (task_update!=null){
+				
+				if (task_update.getAssignedTo().equals(task.getAssignedTo()))
+					task_allocation = true;
+				if (task_update.getName().equals(task.getName()))
+					task_name = true;
+				if (task_update.getDesc().equals(task.getDesc()))
+					task_desc = true;
+				if (task_update.getStatus().equals(task.getStatus()))
+					task_status = true;
+				if (!task_name || !task_desc || !task_allocation || !task_status)
+					flag = 1;
+				System.out.println(flag);
+				// Update task, if there is any change in the task variables
+				if (flag == 1) {
+					task_update = input.update(task_update);
+					input.refresh();
+					viewer.setSelection(new StructuredSelection(task_update));
+				}
+			}
 		}
 		//String message = task.getTaskID() + task.getName() + task.getDesc() + task.getAssignedTo();
 		//showMessage(message);
