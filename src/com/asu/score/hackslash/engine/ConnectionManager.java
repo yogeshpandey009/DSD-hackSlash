@@ -102,6 +102,7 @@ public class ConnectionManager {
 			SessionManager.getInstance().initializeSession(mConnection, user,
 					pwrd);
 			ChatController.getInstance().init();
+			ChatController.getInstance().updateRoster();
 		} catch (XMPPException | SmackException | IOException e) {
 			mConnection.disconnect();//otherwise login always fail after wrong attempt
 			System.out.println("Error while logging into Server. ->"
