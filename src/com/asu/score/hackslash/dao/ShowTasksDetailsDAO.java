@@ -29,7 +29,9 @@ public class ShowTasksDetailsDAO {
 		try {
 			conn = Database.getConnection();
 			sql = "SELECT A.USERID,A.StartDate,A.EndDate FROM ALLOCATION AS A, TASK AS T WHERE T.TASKID = A.TASKID "
-					+ " AND T.TASKNAME = "+getTaskName();
+
+					+ " AND T.TASKNAME = '"+getTaskName()+"' ";
+
 			System.out.println("getTaskName()"+getTaskName());
 			pst = conn.prepareStatement(sql);
 			rs = pst.executeQuery();

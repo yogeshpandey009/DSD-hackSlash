@@ -12,7 +12,9 @@ import java.util.List;
 
 import com.asu.score.hackslash.engine.Database;
 import com.asu.score.hackslash.properties.SQLQueries;
+
 import com.asu.score.hackslash.sessionloghelper.UserSessionLog;
+
 
 public class UsersDAO {
 	Connection conn = null;
@@ -53,6 +55,7 @@ public class UsersDAO {
 			se.printStackTrace();
 		}
 	}
+
 	
 	public List<UserSessionLog> getUserSessionLog(String username) throws Exception {
 		System.out.println("getting from DB");
@@ -77,7 +80,7 @@ public class UsersDAO {
 		}
 		return sessionLog;
 	}
-
+	
 	public static void main(String... args) {
 		System.out.println("Hello DAO");
 		UsersDAO one = new UsersDAO();

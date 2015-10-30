@@ -14,6 +14,7 @@ public class Test {
 		String helper = currentDirFile.getAbsolutePath();
 		String currentDir = helper.substring(0, helper.length() - currentDirFile.getCanonicalPath().length());
 		
+
 		System.out.println(helper);
 	}
 }

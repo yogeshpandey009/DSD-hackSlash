@@ -76,6 +76,7 @@ public class TaskDialog extends Dialog {
 		lblDesc.setLayoutData(gd_lblNewLabel);
 		lblDesc.setText("Description:");
 
+
 		txtDesc = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP
 				| SWT.V_SCROLL);
 		txtDesc.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -102,6 +103,7 @@ public class TaskDialog extends Dialog {
 			items = users.toArray(new String[users.size()]);
 		}
 		comboAssignedTo.setItems(items);
+
 		if (assignedTo != null){
 			int index = 200;
 			for (int i=0; i< items.length ; i++){
@@ -121,6 +123,7 @@ public class TaskDialog extends Dialog {
 				assignedTo = comboWidget.getText();
 			}
 		});
+
 		
 		Label lblStatus = new Label(container, SWT.NONE);
 		lblStatus.setText("Status:");
@@ -151,6 +154,7 @@ public class TaskDialog extends Dialog {
 		});
 
 		return container;
+
 		}
 
 	// override method to use "Login" as label for the OK button
@@ -169,22 +173,26 @@ public class TaskDialog extends Dialog {
 	}
 
 	@Override
+
+	protected void buttonPressed(int DETAILS_ID) {
+
+		if (DETAILS_ID == IDialogConstants.DETAILS_ID) {
+			name = txtName.getText();
+			System.out.println("DETAILS_ID button pressed+name ->" + name);
+			ShowTasksDetailsDAO std = new ShowTasksDetailsDAO();
+			std.setTaskName(name);
+			TaskDetailsDialog tdd = new TaskDetailsDialog(getShell(), name, std.getTaskDetails());
+			tdd.open();
+		}
+		super.buttonPressed(DETAILS_ID);
+
+	}
+
+	@Override
 	protected void okPressed() {
 		name = txtName.getText();
 		desc = txtDesc.getText();
 		super.okPressed();
-	}
-
-	@Override
-	protected void buttonPressed(int DETAILS_ID) {
-
-		name = txtName.getText();
-		System.out.println("DETAILS_ID button pressed+name" + name);
-		TaskDetailsDialog tdd = new TaskDetailsDialog();
-		ShowTasksDetailsDAO std = new ShowTasksDetailsDAO();
-		std.setTaskName(name);
-		//tdd.displayTable(std.getTaskDetails(),name);
-
 	}
 
 	public String getName() {
@@ -210,6 +218,7 @@ public class TaskDialog extends Dialog {
 	public void setAssignedTo(String assignedTo) {
 		this.assignedTo = assignedTo;
 	}
+
 	public String getStatus() {
 		return status;
 	}
