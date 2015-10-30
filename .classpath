@@ -34,10 +34,10 @@
 	<classpathentry kind="lib" path="libs/smack-experimental-4.1.4.jar"/>
 	<classpathentry kind="lib" path="libs/smack-extensions-4.1.4-javadoc.jar"/>
 	<classpathentry kind="lib" path="libs/smack-extensions-4.1.4-sources.jar"/>
-	<classpathentry kind="lib" path="libs/smack-extensions-4.1.4.jar"/>
+	<classpathentry kind="lib" path="libs/smack-extensions-4.1.4.jar" sourcepath="libs/smack-extensions-4.1.4-sources.jar"/>
 	<classpathentry kind="lib" path="libs/smack-im-4.1.4-javadoc.jar"/>
 	<classpathentry kind="lib" path="libs/smack-im-4.1.4-sources.jar"/>
-	<classpathentry kind="lib" path="libs/smack-im-4.1.4.jar"/>
+	<classpathentry kind="lib" path="libs/smack-im-4.1.4.jar" sourcepath="libs/smack-im-4.1.4-sources.jar"/>
 	<classpathentry kind="lib" path="libs/smack-java7-4.1.4-javadoc.jar"/>
 	<classpathentry kind="lib" path="libs/smack-java7-4.1.4-sources.jar"/>
 	<classpathentry kind="lib" path="libs/smack-java7-4.1.4.jar"/>

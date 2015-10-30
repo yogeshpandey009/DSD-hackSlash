@@ -4,8 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-//import java.sql.Date;
-import java.util.Date;
 import java.util.Calendar;
 
 import com.asu.score.hackslash.engine.Database;
@@ -60,19 +58,18 @@ public class AllocationDAO {
 	    }
 	}
 	
-	public void getAllocation(Connection con) throws SQLException
+	public String getAllocation(Connection con, String TaskId) throws SQLException
 	{
 		Statement stmt = null;
-		String query = "Select TaskAllocationID, TaskID, UserID from Allocation";
+		String query = "Select UserID from Allocation where enddate=timestamp(0) and TaskId = \"" + TaskId+ "\";";
+		String taskid = null;
 		try
 		{
 			stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 			while (rs.next())
-			{
-				System.out.println(rs.getString("TaskAllocationID"));
-				System.out.println(rs.getString("TaskID"));
-				System.out.println(rs.getString("UserID"));
+			{				
+				taskid = rs.getString("UserID");
 			}
 		}
 		catch (Exception ex)
@@ -84,8 +81,9 @@ public class AllocationDAO {
 	        if (stmt != null) 
 	        { 
 	        	stmt.close(); 
-	        }
+	        }	        
 	    }
+		return taskid;
 	}
 	public static void main(String[] args){
 		AllocationDAO t = new AllocationDAO();
@@ -93,7 +91,7 @@ public class AllocationDAO {
 			Calendar calendar = Calendar.getInstance();
 		    java.sql.Timestamp startDate = new java.sql.Timestamp(calendar.getTime().getTime());
 			t.setAllocation(Database.getConnection(),"2", "USER 2", startDate);
-			t.getAllocation(Database.getConnection());
+			t.getAllocation(Database.getConnection(), null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
