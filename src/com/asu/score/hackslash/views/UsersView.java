@@ -22,7 +22,6 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
@@ -36,7 +35,6 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterListener;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.chathelper.ActiveChats;
@@ -45,10 +43,10 @@ import com.asu.score.hackslash.dao.UsersDAO;
 import com.asu.score.hackslash.dialogs.AddContactDialog;
 import com.asu.score.hackslash.dialogs.ChatDialog;
 import com.asu.score.hackslash.dialogs.LoginDialog;
+import com.asu.score.hackslash.dialogs.UserSessionLogDialog;
 import com.asu.score.hackslash.engine.ConnectionManager;
 import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
-import com.asu.score.hackslash.properties.Constants;
 import com.asu.score.hackslash.userhelper.User;
 import com.asu.score.hackslash.userhelper.UserContentProvider;
 import com.asu.score.hackslash.userhelper.UserInput;
@@ -61,7 +59,7 @@ public class UsersView extends ViewPart {
 
 	private TableViewer viewer;
 	private Action refreshAction, loginAction, addContactAction,
-			doubleClickAction;
+			doubleClickAction, userSessionLogAction;
 	private UserInput input;
 
 	private SessionManager session = SessionManager.getInstance();
@@ -130,7 +128,7 @@ public class UsersView extends ViewPart {
 	 * it.
 	 */
 	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
+		viewer = new TableViewer(parent, SWT.SINGLE | SWT.H_SCROLL
 				| SWT.V_SCROLL);
 		viewer.setContentProvider(new UserContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
@@ -204,6 +202,7 @@ public class UsersView extends ViewPart {
 	private void fillContextMenu(IMenuManager manager) {
 		manager.add(refreshAction);
 		manager.add(loginAction);
+		manager.add(userSessionLogAction);
 		// Other plug-ins can contribute there actions here
 		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 	}
@@ -211,6 +210,7 @@ public class UsersView extends ViewPart {
 	private void fillLocalToolBar(IToolBarManager manager) {
 		manager.add(refreshAction);
 		manager.add(loginAction);
+		manager.add(userSessionLogAction);
 	}
 
 	private void makeActions() {
@@ -251,6 +251,21 @@ public class UsersView extends ViewPart {
 				onDoubleClick();
 			}
 		};
+		
+		userSessionLogAction = new Action() {
+			public void run() {
+				ISelection sel = viewer.getSelection();
+				Object obj = ((IStructuredSelection) sel).getFirstElement();
+				if(obj != null) {
+					createUserSessionLogDialog((User) obj);					
+				}
+			}	
+		};
+		userSessionLogAction.setText("User Login History");
+		userSessionLogAction.setToolTipText("User Login History");
+		userSessionLogAction.setImageDescriptor(ImageProviderHelper
+				.getImageDescriptor("history.png"));
+
 	}
 
 	private void hookDoubleClickAction() {
@@ -288,7 +303,7 @@ public class UsersView extends ViewPart {
 			}
 		} else if (result == IDialogConstants.CLOSE_ID) {
 			UsersDAO usersDao = new UsersDAO();
-			usersDao.addUserSessionTime(session.getUsername(),
+			usersDao.addUserSessionTime(session.getUserJID(),
 					session.getLoginTime());
 			session.logout();
 			message = "User Logged Out Successfully.";
@@ -330,6 +345,12 @@ public class UsersView extends ViewPart {
 		lChat.sendMessege();
 		// createChatDialog(user, "");
 
+	}
+	
+	private void createUserSessionLogDialog(User user) {
+		UserSessionLogDialog dlg = new UserSessionLogDialog(getSite().getShell(),
+				user.getName());
+		dlg.open();
 	}
 
 	private void createChatDialog(User user, String msg) {

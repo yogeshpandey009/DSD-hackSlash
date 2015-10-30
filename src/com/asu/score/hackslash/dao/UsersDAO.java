@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.asu.score.hackslash.engine.Database;
 import com.asu.score.hackslash.properties.SQLQueries;
+import com.asu.score.hackslash.sessionloghelper.UserSessionLog;
 
 public class UsersDAO {
 	Connection conn = null;
@@ -51,6 +52,30 @@ public class UsersDAO {
 			System.out.println("Unable to add user Session Time");
 			se.printStackTrace();
 		}
+	}
+	
+	public List<UserSessionLog> getUserSessionLog(String username) throws Exception {
+		System.out.println("getting from DB");
+		Connection con = null;
+		Statement stmt = null;
+		String query = "SELECT LoginTime, LogoutTime FROM UsersSessionLog WHERE UserName = \"" + username + "\";";
+		List<UserSessionLog> sessionLog = new ArrayList<UserSessionLog>();
+		try {
+			con = Database.getConnection();
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			while (rs.next()) {
+				sessionLog.add(new UserSessionLog(rs.getTimestamp("LoginTime"), rs.getTimestamp("LogoutTime")));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			throw new Exception("Unable to fetch tasks");
+		} finally {
+			if (stmt != null) {
+				stmt.close();
+			}
+		}
+		return sessionLog;
 	}
 
 	public static void main(String... args) {
