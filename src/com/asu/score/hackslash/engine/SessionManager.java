@@ -2,9 +2,14 @@ package com.asu.score.hackslash.engine;
 
 import java.util.Date;
 
+import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
+import org.jivesoftware.smack.XMPPException.XMPPErrorException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
+import org.jivesoftware.smackx.iqregister.AccountManager;
+
+import com.asu.score.hackslash.properties.Constants;
 
 /**
  * This manager is responsible for the handling of the XMPPTCPConnection. This is used
@@ -22,7 +27,7 @@ public class SessionManager {
     private String username;
     private String password;
     private Date loginTime;
-    private String JID;
+    private String userJID;
 
     private SessionManager() {
     }
@@ -41,14 +46,17 @@ public class SessionManager {
      * @param connection the XMPPTCPConnection used in this session.
      * @param username   the agents username.
      * @param password   the agents password.
+     * @throws NotConnectedException 
+     * @throws XMPPErrorException 
+     * @throws NoResponseException 
      */
-    public void initializeSession(XMPPTCPConnection connection, String username, String password) {
+    public void initializeSession(XMPPTCPConnection connection, String username, String password) throws NoResponseException, XMPPErrorException, NotConnectedException {
         this.connection = connection;
         this.username = username;
         this.password = password;
         this.loginTime = new Date();
 		setServerAddress(connection.getServiceName());
-		setJID(connection.getUser());
+		setUserJID(username + Constants.SERVER_NAME);
     }
 
 	/**
@@ -125,8 +133,8 @@ public class SessionManager {
      *
      * @return the jid of the user.
      */
-    public String getJID() {
-        return JID;
+    public String getUserJID() {
+        return userJID;
     }
 
     /**
@@ -134,8 +142,8 @@ public class SessionManager {
      *
      * @param jid the jid of the current user.
      */
-    public void setJID(String jid) {
-        this.JID = jid;
+    public void setUserJID(String jid) {
+        this.userJID = jid;
     }
     
     public Date getLoginTime() {

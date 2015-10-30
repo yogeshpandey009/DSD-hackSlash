@@ -1,6 +1,7 @@
 package com.asu.score.hackslash.actions.im;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.swt.widgets.Display;
 import org.jivesoftware.smack.SmackException;
@@ -17,10 +18,12 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Presence.Type;
 import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.Roster.SubscriptionMode;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 
 import com.asu.score.hackslash.chathelper.ActiveChats;
 import com.asu.score.hackslash.chathelper.LocalChat;
+import com.asu.score.hackslash.dao.TMemberDAO;
 import com.asu.score.hackslash.engine.SessionManager;
 
 /**
@@ -66,6 +69,7 @@ public class ChatController {
 		chatManager = ChatManager.getInstanceFor(connection);
 		managerListener = new MyManagerListener();
 		chatManager.addChatListener(managerListener);
+		Roster.setDefaultSubscriptionMode(SubscriptionMode.accept_all);
 	}
 	
 	/**
@@ -93,13 +97,37 @@ public class ChatController {
 		chat.sendMessage(message);
 	}
 
-	public void createEntry(String user, String name)
+	public void createEntry(String user)
 			throws NotLoggedInException, NoResponseException,
 			XMPPErrorException, NotConnectedException {
 		System.out.println(String.format(
-				"Creating entry for buddy '%1$s' with name %2$s", user, name));
+				"Creating entry for buddy '%1$s'", user));
 		Roster roster = Roster.getInstanceFor(connection);
-		roster.createEntry(user, name, null);
+		roster.createEntry(user, null, null);
+	}
+	
+	/**
+	 * Updates rosters after getting all users from the database
+	 */
+	public void updateRoster(){
+		TMemberDAO tmDao = new TMemberDAO();
+		List<String> userList = tmDao.getUsers();
+		String currentUser = SessionManager.getInstance().getUserJID();
+		
+		try {
+				/*
+				 * Roster entry subscription mode should be "both" to see each others last login
+				 */
+				//userList.removeAll(uList);
+				for (String user : userList){
+					if (!user.equals(currentUser)){
+						createEntry(user);
+					}
+				}
+			} catch (NotLoggedInException | NoResponseException | XMPPErrorException | NotConnectedException e) {
+				System.out.println("Problem while updating Roster!!");
+				e.printStackTrace();
+			}
 	}
 
 	class MyMessageListener implements ChatMessageListener {

@@ -11,13 +11,14 @@ public class Task implements IAdaptable {
 	private String assignedTo;
 	private String status;
 	
-	public Task(String name, String desc, String assignedTo, String taskID) {
+	public Task(String name, String desc, String assignedTo, String taskID, String status) {
 		super();
 		
 		this.name = name;
 		this.desc = desc;
 		this.assignedTo = assignedTo;
 		this.taskID = taskID;
+		this.status = status;
 	}
 	public String getName() {
         return name;
@@ -30,6 +31,9 @@ public class Task implements IAdaptable {
     }
 	public String getAssignedTo() {
 		return assignedTo;
+	}
+	public String getStatus() {
+		return status;
 	}
 	
 	public String toString() {
@@ -57,10 +61,6 @@ public class Task implements IAdaptable {
 		this.assignedTo = assignedTo;
 	}
 
-	public String getStatus() {
-		return status;
-	}
-	
 	public void setStatus(String status) {
 		this.status = status;
 	}

@@ -41,8 +41,10 @@ public class TaskInput {
 		System.out.println("inside update");
 		String taskID = updateTask(task);
 		//task.setTaskID(taskID);
-		if (listener != null)
+		if (listener != null){
 			listener.updated(task);
+			
+		}
 		return task;
 	}
 	

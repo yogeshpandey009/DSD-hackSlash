@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.asu.score.hackslash.actions.im.UsersService;
 import com.asu.score.hackslash.dao.ShowTasksDetailsDAO;
-import com.asu.score.hackslash.engine.ConnectionManger;
+import com.asu.score.hackslash.engine.ConnectionManager;
 import com.asu.score.hackslash.taskhelper.Task;
 
 public class TaskDialog extends Dialog {
@@ -39,6 +39,7 @@ public class TaskDialog extends Dialog {
 			name = task.getName();
 			desc = task.getDesc();
 			assignedTo = task.getAssignedTo();
+			status = task.getStatus();
 		}
 	}
 
@@ -56,7 +57,8 @@ public class TaskDialog extends Dialog {
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setText("Enter task name:");
 		txtName = new Text(container, SWT.BORDER);
-		txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+				1, 1));
 		txtName.setText(name);
 		txtName.addModifyListener(new ModifyListener() {
 
@@ -68,12 +70,14 @@ public class TaskDialog extends Dialog {
 		});
 
 		Label lblDesc = new Label(container, SWT.NONE);
-		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1);
 		gd_lblNewLabel.horizontalIndent = 1;
 		lblDesc.setLayoutData(gd_lblNewLabel);
 		lblDesc.setText("Description:");
 
-		txtDesc = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		txtDesc = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP
+				| SWT.V_SCROLL);
 		txtDesc.setLayoutData(new GridData(GridData.FILL_BOTH));
 		txtDesc.setText(desc);
 		txtDesc.addModifyListener(new ModifyListener() {
@@ -88,24 +92,25 @@ public class TaskDialog extends Dialog {
 		Label lblAssignedTo = new Label(container, SWT.NONE);
 		lblAssignedTo.setText("Assigned To:");
 		comboAssignedTo = new Combo(container, SWT.READ_ONLY);
-		comboAssignedTo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboAssignedTo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		comboAssignedTo.setBounds(50, 50, 150, 65);
 		String[] items = {};
-		if (ConnectionManger.isUserLoggedIn()) {
-			List<String> users = UsersService.getAllUsernames();
+		if (ConnectionManager.isUserLoggedIn()){
+			List<String> users = UsersService.getAllUsernames(); 
 			users.add("Unassigned");
 			items = users.toArray(new String[users.size()]);
 		}
 		comboAssignedTo.setItems(items);
-		if (assignedTo != null) {
+		if (assignedTo != null){
 			int index = 200;
-			for (int i = 0; i < items.length; i++) {
-				if (assignedTo.equals(items[i])) {
+			for (int i=0; i< items.length ; i++){
+				if (assignedTo.equals(items[i])){
 					index = i;
 				}
 			}
-			if (index != 200) {
-				comboAssignedTo.select(index);
+			if (index != 200){
+			comboAssignedTo.select(index);
 			}
 		}
 		comboAssignedTo.addModifyListener(new ModifyListener() {
@@ -116,22 +121,23 @@ public class TaskDialog extends Dialog {
 				assignedTo = comboWidget.getText();
 			}
 		});
-
+		
 		Label lblStatus = new Label(container, SWT.NONE);
 		lblStatus.setText("Status:");
 		comboStatus = new Combo(container, SWT.READ_ONLY);
-		comboStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		comboStatus.setBounds(50, 50, 150, 65);
-		String[] status_items = { "New", "In Progress", "Closed" };
+		String[] status_items = {"New", "In Progress", "Closed"};
 		comboStatus.setItems(status_items);
-		if (status != null) {
+		if (status != null){
 			int index = 200;
-			for (int i = 0; i < status_items.length; i++) {
-				if (status.equals(items[i])) {
+			for (int i=0; i< status_items.length ; i++){
+				if (status.equals(status_items[i])){
 					index = i;
 				}
 			}
-			if (index != 200) {
+			if (index != 200){
 				comboStatus.select(index);
 			}
 		}
@@ -145,7 +151,7 @@ public class TaskDialog extends Dialog {
 		});
 
 		return container;
-	}
+		}
 
 	// override method to use "Login" as label for the OK button
 	@Override
@@ -203,6 +209,13 @@ public class TaskDialog extends Dialog {
 
 	public void setAssignedTo(String assignedTo) {
 		this.assignedTo = assignedTo;
+	}
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

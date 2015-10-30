@@ -41,6 +41,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.part.WorkbenchPart;
 
 import com.asu.score.hackslash.dialogs.TaskDialog;
+import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
 import com.asu.score.hackslash.taskhelper.Task;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
@@ -126,18 +127,18 @@ public class TaskView extends ViewPart {
 			}
 		});
 
-		// Third column is for the Task Description
-		col = createTableViewerColumn(titles[2], bounds[2], 2);
-		col.setLabelProvider(new ColumnLabelProvider() {
-			@Override
-			public String getText(Object element) {
-				if (element instanceof Task) {
-					Task p = (Task) element;
-					return "";
-				}
-				return "";
-			}
-		});
+		// Third column is for the Task status
+				col = createTableViewerColumn(titles[2], bounds[2], 2);
+				col.setLabelProvider(new ColumnLabelProvider() {
+					@Override
+					public String getText(Object element) {
+						if (element instanceof Task) {
+							Task p = (Task) element;
+							return p.getStatus();
+						}
+						return "";
+					}
+				});
 
 	}
 
@@ -274,21 +275,6 @@ public class TaskView extends ViewPart {
 		});
 	}
 
-	private void onDoubleClick() {
-
-		ISelection selection = viewer.getSelection();
-		Object obj = ((IStructuredSelection) selection).getFirstElement();
-		Task task = (Task) obj;
-		task = promptForUpdateTask(task);
-		if (task != null) {
-			input.update(task);
-			viewer.setSelection(new StructuredSelection(task));
-		}
-		// String message = task.getTaskID() + task.getName() + task.getDesc() +
-		// task.getAssignedTo();
-		// showMessage(message);
-	}
-
 	private void showMessage(String message) {
 		MessageDialog.openInformation(viewer.getControl().getShell(), "DSD Task View", message);
 	}
@@ -393,6 +379,43 @@ public class TaskView extends ViewPart {
 	/**
 	 * Edit item to list.
 	 */
+	private void onDoubleClick() {
+		if (SessionManager.getInstance().isAuthenticated()){
+			ISelection selection = viewer.getSelection();
+			Object obj = ((IStructuredSelection) selection).getFirstElement();
+			Task task = (Task)obj;
+			Task task_update = promptForUpdateTask(task);
+			//checking for any changes in task variables
+			int flag = 0;
+			boolean task_name = false;
+			boolean task_desc = false ;
+			boolean task_allocation = false;
+			boolean task_status = false;
+			if (task_update!=null){
+				
+				if (task_update.getAssignedTo().equals(task.getAssignedTo()))
+					task_allocation = true;
+				if (task_update.getName().equals(task.getName()))
+					task_name = true;
+				if (task_update.getDesc().equals(task.getDesc()))
+					task_desc = true;
+				if (task_update.getStatus().equals(task.getStatus()))
+					task_status = true;
+				if (!task_name || !task_desc || !task_allocation || !task_status)
+					flag = 1;
+				System.out.println(flag);
+				// Update task, if there is any change in the task variables
+				if (flag == 1) {
+					task_update = input.update(task_update);
+					input.refresh();
+					viewer.setSelection(new StructuredSelection(task_update));
+				}
+			}
+		}
+		//String message = task.getTaskID() + task.getName() + task.getDesc() + task.getAssignedTo();
+		//showMessage(message);
+	}
+
 	private void editItem() {
 		Task task = promptForValue(null);
 		if (task != null) {
@@ -430,7 +453,7 @@ public class TaskView extends ViewPart {
 		// "List View", text, oldValue, null);
 		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
 		if (dlg.open() == Window.OK)
-			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), null);
+			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), null, dlg.getStatus());
 		return null;
 	}
 
@@ -439,7 +462,7 @@ public class TaskView extends ViewPart {
 
 		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
 		if (dlg.open() == Window.OK)
-			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), oldTask.getTaskID());
+			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), oldTask.getTaskID(), dlg.getStatus());
 		return null;
 	}
 
@@ -447,14 +470,16 @@ public class TaskView extends ViewPart {
 	 * Saves the object state within a memento.
 	 */
 	public void saveState(IMemento memento) {
-		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-		if (sel.isEmpty())
-			return;
-		memento = memento.createChild("selection");
-		Iterator iter = sel.iterator();
-		while (iter.hasNext()) {
-			Task task = (Task) iter.next();
-			memento.createChild("descriptor", task.toString());
+		if (SessionManager.getInstance().isAuthenticated()){
+			IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+			if (sel.isEmpty())
+				return;
+			memento = memento.createChild("selection");
+			Iterator iter = sel.iterator();
+			while (iter.hasNext()) {
+				Task task = (Task) iter.next();
+				memento.createChild("descriptor", task.toString());
+			}
 		}
 	}
 
@@ -468,7 +493,7 @@ public class TaskView extends ViewPart {
 		if (memento != null) {
 			IMemento descriptors[] = memento.getChildren("descriptor");
 			if (descriptors.length > 0) {
-				ArrayList objList = new ArrayList(descriptors.length);
+				ArrayList<Task> objList = new ArrayList<Task>(descriptors.length);
 				for (int nX = 0; nX < descriptors.length; nX++) {
 					String id = descriptors[nX].getID();
 					Task task = input.find(id);

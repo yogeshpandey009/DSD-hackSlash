@@ -12,8 +12,6 @@ import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smackx.iqlast.LastActivityManager;
-import org.jivesoftware.smackx.iqlast.packet.LastActivity;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.actions.im.UsersService;
@@ -22,7 +20,7 @@ import com.asu.score.hackslash.properties.Constants;
 /**
  * Singleton Class manages connection to the server.
  */
-public class ConnectionManger {
+public class ConnectionManager {
 
 	private static XMPPTCPConnection mConnection = null;
 	
@@ -104,6 +102,7 @@ public class ConnectionManger {
 			SessionManager.getInstance().initializeSession(mConnection, user,
 					pwrd);
 			ChatController.getInstance().init();
+			ChatController.getInstance().updateRoster();
 		} catch (XMPPException | SmackException | IOException e) {
 			mConnection.disconnect();//otherwise login always fail after wrong attempt
 			System.out.println("Error while logging into Server. ->"
@@ -161,21 +160,18 @@ public class ConnectionManger {
 
 	public static void main(String[] args) throws Exception {
 
-		login("bharat", "bharat");
-		
+		login("yashu", "yashu");
 
 		ChatController chatCtrl = ChatController.getInstance();
 
-		chatCtrl.setStatus(true, "Yoooo Hello everyone");
+		chatCtrl.setStatus(true, "Hello everyone");
 
-		
+		String buddyJID = "yp";
+		chatCtrl.createEntry(buddyJID);
 
-		chatCtrl.sendMessage("Hello mate", "mihir@bks-pc");
-		Thread.sleep(1050);
-		chatCtrl.sendMessage("Hello mate 2", "mihir@bks-pc");
+		chatCtrl.sendMessage("Hello mate", "yp@yashu.local");
 		
-		
-		/*UsersService.getAllUsers();
+		UsersService.getAllUsers();
 
 		Scanner sc = new Scanner(System.in);
 		for (int x = 0; x < 10; x++) {
@@ -188,7 +184,7 @@ public class ConnectionManger {
 
 		while (isRunning) {
 			Thread.sleep(50);
-		}*/
+		}
 
 		disconnect();
 	}
