@@ -94,5 +94,10 @@ public class AddContactDialog extends Dialog {
 	public void setUser(String user) {
 		this.buddyJID = user;
 	}
+	
+	@Override
+	protected boolean isResizable() {
+	    return true;
+	}
 
 }

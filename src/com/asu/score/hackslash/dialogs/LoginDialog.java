@@ -126,6 +126,11 @@ public class LoginDialog extends Dialog {
 		setReturnCode(buttonId);
 		close();
 	}
+	
+	@Override
+	protected boolean isResizable() {
+	    return true;
+	}
 
 	public String getUser() {
 		return user;

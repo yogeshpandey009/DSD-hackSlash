@@ -194,6 +194,11 @@ public class TaskDialog extends Dialog {
 		desc = txtDesc.getText();
 		super.okPressed();
 	}
+	
+	@Override
+	protected boolean isResizable() {
+	    return true;
+	}
 
 	public String getName() {
 		return name;

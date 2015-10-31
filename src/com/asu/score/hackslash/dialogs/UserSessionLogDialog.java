@@ -33,6 +33,11 @@ public class UserSessionLogDialog extends Dialog {
 	protected Point getInitialSize() {
 		return new Point(250, 400);
 	}
+	
+	@Override
+	protected boolean isResizable() {
+	    return true;
+	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {

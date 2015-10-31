@@ -100,6 +100,11 @@ public class ChatDialog extends Dialog {
 		setReturnCode(buttonId);
 		close();
 	}
+	
+	@Override
+	protected boolean isResizable() {
+	    return true;
+	}
 
 	public String getMsg() {
 		return msg;

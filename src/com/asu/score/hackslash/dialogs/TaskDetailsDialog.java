@@ -101,6 +101,10 @@ public class TaskDetailsDialog extends Dialog {
 
 		return container;
 }
+	@Override
+	protected boolean isResizable() {
+	    return true;
+	}
 
 }
 
