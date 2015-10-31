@@ -128,17 +128,17 @@ public class TaskView extends ViewPart {
 		});
 
 		// Third column is for the Task status
-				col = createTableViewerColumn(titles[2], bounds[2], 2);
-				col.setLabelProvider(new ColumnLabelProvider() {
-					@Override
-					public String getText(Object element) {
-						if (element instanceof Task) {
-							Task p = (Task) element;
-							return p.getStatus();
-						}
-						return "";
-					}
-				});
+		col = createTableViewerColumn(titles[2], bounds[2], 2);
+		col.setLabelProvider(new ColumnLabelProvider() {
+			@Override
+			public String getText(Object element) {
+				if (element instanceof Task) {
+					Task p = (Task) element;
+					return p.getStatus();
+				}
+				return "";
+			}
+		});
 
 	}
 
@@ -380,19 +380,19 @@ public class TaskView extends ViewPart {
 	 * Edit item to list.
 	 */
 	private void onDoubleClick() {
-		if (SessionManager.getInstance().isAuthenticated()){
+		if (SessionManager.getInstance().isAuthenticated()) {
 			ISelection selection = viewer.getSelection();
 			Object obj = ((IStructuredSelection) selection).getFirstElement();
-			Task task = (Task)obj;
+			Task task = (Task) obj;
 			Task task_update = promptForUpdateTask(task);
-			//checking for any changes in task variables
+			// checking for any changes in task variables
 			int flag = 0;
 			boolean task_name = false;
-			boolean task_desc = false ;
+			boolean task_desc = false;
 			boolean task_allocation = false;
 			boolean task_status = false;
-			if (task_update!=null){
-				
+			if (task_update != null) {
+
 				if (task_update.getAssignedTo().equals(task.getAssignedTo()))
 					task_allocation = true;
 				if (task_update.getName().equals(task.getName()))
@@ -412,8 +412,9 @@ public class TaskView extends ViewPart {
 				}
 			}
 		}
-		//String message = task.getTaskID() + task.getName() + task.getDesc() + task.getAssignedTo();
-		//showMessage(message);
+		// String message = task.getTaskID() + task.getName() + task.getDesc() +
+		// task.getAssignedTo();
+		// showMessage(message);
 	}
 
 	private void editItem() {
@@ -448,10 +449,11 @@ public class TaskView extends ViewPart {
 	 * Ask user for value.
 	 */
 	private Task promptForValue(Task oldTask) {
+		System.out.println("promptForValue");
 		// TODO: old value in case of edit
 		// InputDialog dlg = new InputDialog(getSite().getShell(),
 		// "List View", text, oldValue, null);
-		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
+		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask, false);
 		if (dlg.open() == Window.OK)
 			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), null, dlg.getStatus());
 		return null;
@@ -459,8 +461,8 @@ public class TaskView extends ViewPart {
 
 	private Task promptForUpdateTask(Task oldTask) {
 		// TODO: old value in case of edit
-
-		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask);
+		System.out.println("promptForUpdateTask");
+		TaskDialog dlg = new TaskDialog(getSite().getShell(), oldTask, true);
 		if (dlg.open() == Window.OK)
 			return new Task(dlg.getName(), dlg.getDesc(), dlg.getAssignedTo(), oldTask.getTaskID(), dlg.getStatus());
 		return null;
@@ -470,7 +472,7 @@ public class TaskView extends ViewPart {
 	 * Saves the object state within a memento.
 	 */
 	public void saveState(IMemento memento) {
-		if (SessionManager.getInstance().isAuthenticated()){
+		if (SessionManager.getInstance().isAuthenticated()) {
 			IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
 			if (sel.isEmpty())
 				return;

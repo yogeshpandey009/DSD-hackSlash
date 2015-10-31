@@ -32,14 +32,17 @@ public class TaskDialog extends Dialog {
 	private String desc = "";
 	private String assignedTo;
 	private String status;
+	private boolean isEditMode = false;
 
-	public TaskDialog(Shell parentShell, Task task) {
+	public TaskDialog(Shell parentShell, Task task, boolean isEditMode) {
 		super(parentShell);
 		if (task != null) {
 			name = task.getName();
 			desc = task.getDesc();
 			assignedTo = task.getAssignedTo();
 			status = task.getStatus();
+			this.isEditMode = isEditMode;
+			System.out.println("COnst isNew" + isEditMode);
 		}
 	}
 
@@ -57,8 +60,7 @@ public class TaskDialog extends Dialog {
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setText("Enter task name:");
 		txtName = new Text(container, SWT.BORDER);
-		txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-				1, 1));
+		txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		txtName.setText(name);
 		txtName.addModifyListener(new ModifyListener() {
 
@@ -70,15 +72,12 @@ public class TaskDialog extends Dialog {
 		});
 
 		Label lblDesc = new Label(container, SWT.NONE);
-		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1);
+		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblNewLabel.horizontalIndent = 1;
 		lblDesc.setLayoutData(gd_lblNewLabel);
 		lblDesc.setText("Description:");
 
-
-		txtDesc = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP
-				| SWT.V_SCROLL);
+		txtDesc = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
 		txtDesc.setLayoutData(new GridData(GridData.FILL_BOTH));
 		txtDesc.setText(desc);
 		txtDesc.addModifyListener(new ModifyListener() {
@@ -93,28 +92,29 @@ public class TaskDialog extends Dialog {
 		Label lblAssignedTo = new Label(container, SWT.NONE);
 		lblAssignedTo.setText("Assigned To:");
 		comboAssignedTo = new Combo(container, SWT.READ_ONLY);
-		comboAssignedTo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
+		comboAssignedTo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboAssignedTo.setBounds(50, 50, 150, 65);
 		String[] items = {};
-		if (ConnectionManager.isUserLoggedIn()){
-			List<String> users = UsersService.getAllUsernames(); 
+		if (ConnectionManager.isUserLoggedIn()) {
+			List<String> users = UsersService.getAllUsernames();
 			users.add("Unassigned");
 			items = users.toArray(new String[users.size()]);
 		}
 		comboAssignedTo.setItems(items);
-		comboAssignedTo.select(items.length-1);
-		
+		if (!isEditMode) {
+			System.out.println("isNew" + isEditMode);
+			comboAssignedTo.select(items.length - 1);
+		}
 
-		if (assignedTo != null){
+		if (assignedTo != null) {
 			int index = 200;
-			for (int i=0; i< items.length ; i++){
-				if (assignedTo.equals(items[i])){
+			for (int i = 0; i < items.length; i++) {
+				if (assignedTo.equals(items[i])) {
 					index = i;
 				}
 			}
-			if (index != 200){
-			comboAssignedTo.select(index);
+			if (index != 200) {
+				comboAssignedTo.select(index);
 			}
 		}
 		comboAssignedTo.addModifyListener(new ModifyListener() {
@@ -126,24 +126,25 @@ public class TaskDialog extends Dialog {
 			}
 		});
 
-		
 		Label lblStatus = new Label(container, SWT.NONE);
 		lblStatus.setText("Status:");
 		comboStatus = new Combo(container, SWT.READ_ONLY);
-		comboStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
+		comboStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		comboStatus.setBounds(50, 50, 150, 65);
-		String[] status_items = {"New", "In Progress", "Closed"};
+		String[] status_items = { "New", "In Progress", "Closed" };
 		comboStatus.setItems(status_items);
-		comboStatus.select(0);
-		if (status != null){
+		if (!isEditMode) {
+			System.out.println("Status isNew" + isEditMode);
+			comboStatus.select(0);
+		}
+		if (status != null) {
 			int index = 200;
-			for (int i=0; i< status_items.length ; i++){
-				if (status.equals(status_items[i])){
+			for (int i = 0; i < status_items.length; i++) {
+				if (status.equals(status_items[i])) {
 					index = i;
 				}
 			}
-			if (index != 200){
+			if (index != 200) {
 				comboStatus.select(index);
 			}
 		}
@@ -158,16 +159,16 @@ public class TaskDialog extends Dialog {
 
 		return container;
 
-		}
+	}
 
 	// override method to use "Login" as label for the OK button
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-
-		createButton(parent, IDialogConstants.DETAILS_ID, IDialogConstants.SHOW_DETAILS_LABEL, false);
+		if (isEditMode) {
+			createButton(parent, IDialogConstants.DETAILS_ID, IDialogConstants.SHOW_DETAILS_LABEL, false);
+		}
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
-		
 
 	}
 
@@ -198,10 +199,10 @@ public class TaskDialog extends Dialog {
 		desc = txtDesc.getText();
 		super.okPressed();
 	}
-	
+
 	@Override
 	protected boolean isResizable() {
-	    return true;
+		return true;
 	}
 
 	public String getName() {
