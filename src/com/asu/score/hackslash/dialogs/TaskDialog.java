@@ -103,6 +103,8 @@ public class TaskDialog extends Dialog {
 			items = users.toArray(new String[users.size()]);
 		}
 		comboAssignedTo.setItems(items);
+		comboAssignedTo.select(items.length-1);
+		
 
 		if (assignedTo != null){
 			int index = 200;
@@ -133,6 +135,7 @@ public class TaskDialog extends Dialog {
 		comboStatus.setBounds(50, 50, 150, 65);
 		String[] status_items = {"New", "In Progress", "Closed"};
 		comboStatus.setItems(status_items);
+		comboStatus.select(0);
 		if (status != null){
 			int index = 200;
 			for (int i=0; i< status_items.length ; i++){
@@ -164,6 +167,7 @@ public class TaskDialog extends Dialog {
 		createButton(parent, IDialogConstants.DETAILS_ID, IDialogConstants.SHOW_DETAILS_LABEL, false);
 		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
 		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		
 
 	}
 
