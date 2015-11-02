@@ -60,7 +60,8 @@ public class TaskDialog extends Dialog {
 		Label lblName = new Label(container, SWT.NONE);
 		lblName.setText("Enter task name:");
 		txtName = new Text(container, SWT.BORDER);
-		txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+				1, 1));
 		txtName.setText(name);
 		txtName.addModifyListener(new ModifyListener() {
 
@@ -72,12 +73,14 @@ public class TaskDialog extends Dialog {
 		});
 
 		Label lblDesc = new Label(container, SWT.NONE);
-		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1);
 		gd_lblNewLabel.horizontalIndent = 1;
 		lblDesc.setLayoutData(gd_lblNewLabel);
 		lblDesc.setText("Description:");
 
-		txtDesc = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL);
+		txtDesc = new Text(container, SWT.MULTI | SWT.BORDER | SWT.WRAP
+				| SWT.V_SCROLL);
 		txtDesc.setLayoutData(new GridData(GridData.FILL_BOTH));
 		txtDesc.setText(desc);
 		txtDesc.addModifyListener(new ModifyListener() {
@@ -92,7 +95,8 @@ public class TaskDialog extends Dialog {
 		Label lblAssignedTo = new Label(container, SWT.NONE);
 		lblAssignedTo.setText("Assigned To:");
 		comboAssignedTo = new Combo(container, SWT.READ_ONLY);
-		comboAssignedTo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboAssignedTo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		comboAssignedTo.setBounds(50, 50, 150, 65);
 		String[] items = {};
 		if (ConnectionManager.isUserLoggedIn()) {
@@ -101,10 +105,6 @@ public class TaskDialog extends Dialog {
 			items = users.toArray(new String[users.size()]);
 		}
 		comboAssignedTo.setItems(items);
-		if (!isEditMode) {
-			System.out.println("isNew" + isEditMode);
-			comboAssignedTo.select(items.length - 1);
-		}
 
 		if (assignedTo != null) {
 			int index = 200;
@@ -129,14 +129,11 @@ public class TaskDialog extends Dialog {
 		Label lblStatus = new Label(container, SWT.NONE);
 		lblStatus.setText("Status:");
 		comboStatus = new Combo(container, SWT.READ_ONLY);
-		comboStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		comboStatus.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 		comboStatus.setBounds(50, 50, 150, 65);
 		String[] status_items = { "New", "In Progress", "Closed" };
 		comboStatus.setItems(status_items);
-		if (!isEditMode) {
-			System.out.println("Status isNew" + isEditMode);
-			comboStatus.select(0);
-		}
 		if (status != null) {
 			int index = 200;
 			for (int i = 0; i < status_items.length; i++) {
@@ -157,6 +154,12 @@ public class TaskDialog extends Dialog {
 			}
 		});
 
+		if (!isEditMode) {
+			System.out.println("Status isNew" + isEditMode);
+			comboAssignedTo.select(items.length - 1);
+			comboStatus.select(0);
+		}
+
 		return container;
 
 	}
@@ -165,10 +168,13 @@ public class TaskDialog extends Dialog {
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		if (isEditMode) {
-			createButton(parent, IDialogConstants.DETAILS_ID, IDialogConstants.SHOW_DETAILS_LABEL, false);
+			createButton(parent, IDialogConstants.DETAILS_ID,
+					IDialogConstants.SHOW_DETAILS_LABEL, false);
 		}
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
-		createButton(parent, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
+		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
+				true);
+		createButton(parent, IDialogConstants.CANCEL_ID,
+				IDialogConstants.CANCEL_LABEL, false);
 
 	}
 
@@ -178,7 +184,6 @@ public class TaskDialog extends Dialog {
 	}
 
 	@Override
-
 	protected void buttonPressed(int DETAILS_ID) {
 
 		if (DETAILS_ID == IDialogConstants.DETAILS_ID) {
@@ -186,7 +191,8 @@ public class TaskDialog extends Dialog {
 			System.out.println("DETAILS_ID button pressed+name ->" + name);
 			ShowTasksDetailsDAO std = new ShowTasksDetailsDAO();
 			std.setTaskName(name);
-			TaskDetailsDialog tdd = new TaskDetailsDialog(getShell(), name, std.getTaskDetails());
+			TaskDetailsDialog tdd = new TaskDetailsDialog(getShell(), name,
+					std.getTaskDetails());
 			tdd.open();
 		}
 		super.buttonPressed(DETAILS_ID);
