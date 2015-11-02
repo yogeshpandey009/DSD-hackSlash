@@ -42,6 +42,8 @@ public class TaskDetailsDialog extends Dialog {
 	private List<String> user_id_list = new ArrayList<String>();
 	private List<Timestamp> start_date_list = new ArrayList<Timestamp>();
 	private List<Timestamp> end_date_list = new ArrayList<Timestamp>();
+	private List<String> start_date_list1 = new ArrayList<String>();
+	private List<String> end_date_list1 = new ArrayList<String>();
 
 	public TaskDetailsDialog(Shell parentShell, String name,List task_details) {
 		super(parentShell);
@@ -55,7 +57,31 @@ public class TaskDetailsDialog extends Dialog {
 			end_date_list =   (List<Timestamp>) task_details.get(2);
 			list_size = user_id_list.size();
 		}
-		System.out.println("cons end");
+		SimpleDateFormat smpldtFrmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+		System.out.println(user_id_list);
+		System.out.println(start_date_list);
+		System.out.println(end_date_list);
+		for(int i=0;i<start_date_list.size();i++){
+			if(start_date_list.get(i)==null)
+				start_date_list1.add("");				
+			else
+				start_date_list1.add(smpldtFrmt.format(start_date_list.get(i)));
+			
+		}
+		for(int i=0;i<end_date_list.size();i++){
+			if(end_date_list.get(i)==null)
+				end_date_list1.add("");				
+			else
+				end_date_list1.add(smpldtFrmt.format(start_date_list.get(i)));
+			
+		}
+		for(int i=0;i<user_id_list.size();i++){
+			if(user_id_list.get(i)==null)
+				user_id_list.add("");				
+			
+		}
+		
+		
 	}
 
 	@Override
@@ -89,7 +115,8 @@ public class TaskDetailsDialog extends Dialog {
 		item.setText(new String[] { taskName, "", "" });
 		for (int j = 0; j < list_size; j++) {
 			TreeItem subItem = new TreeItem(item, SWT.NONE);
-			subItem.setText(new String[] { user_id_list.get(j),  smpldtFrmt.format(start_date_list.get(j)) ,  smpldtFrmt.format(end_date_list.get(j))});
+			//subItem.setText(new String[] { user_id_list.get(j),  smpldtFrmt.format(start_date_list.get(j)) ,  smpldtFrmt.format(end_date_list.get(j))});
+			subItem.setText(new String[] { user_id_list.get(j),  start_date_list1.get(j),  end_date_list1.get(j)});
 			TreeItem item1 = new TreeItem(tree, SWT.NONE);
 			item1.setText(new String[] { "", "", "" });
 			
