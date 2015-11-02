@@ -160,7 +160,7 @@ public class ConnectionManager {
 
 	public static void main(String[] args) throws Exception {
 
-		login("yashu", "yashu");
+		login("bharat", "bharat");
 
 		ChatController chatCtrl = ChatController.getInstance();
 
