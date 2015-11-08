@@ -87,6 +87,15 @@
                toolbarPath="sampleGroup"
                tooltip="Add Contact">
          </action>
+         <action
+               class="com.asu.score.hackslash.actions.GitAction"
+               icon="icons/sample.gif"
+               id="com.asu.score.hackslash.actions.GitAction"
+               label="&amp;Statistics"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Statistics">
+         </action>
       </actionSet>
    </extension>
 
