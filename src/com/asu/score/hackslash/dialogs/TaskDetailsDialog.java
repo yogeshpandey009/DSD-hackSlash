@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import com.asu.score.hackslash.actions.im.UsersService;
 import com.asu.score.hackslash.dao.ShowTasksDetailsDAO;
 import com.asu.score.hackslash.engine.ConnectionManager;
+import com.asu.score.hackslash.model.ShowTaskDetails;
 import com.asu.score.hackslash.taskhelper.Task;
 
 public class TaskDetailsDialog extends Dialog {
@@ -44,6 +45,8 @@ public class TaskDetailsDialog extends Dialog {
 	private List<Timestamp> end_date_list = new ArrayList<Timestamp>();
 	private List<String> start_date_list1 = new ArrayList<String>();
 	private List<String> end_date_list1 = new ArrayList<String>();
+	ShowTaskDetails std = new ShowTaskDetails();
+	private List<ShowTaskDetails> details = new ArrayList<ShowTaskDetails>();
 
 	public TaskDetailsDialog(Shell parentShell, String name,List task_details) {
 		super(parentShell);
@@ -52,10 +55,12 @@ public class TaskDetailsDialog extends Dialog {
 			taskName = name;
 			}
 		if(task_details != null){
-			user_id_list = (List<String>) task_details.get(0);
-			start_date_list = (List<Timestamp>) task_details.get(1);
-			end_date_list =   (List<Timestamp>) task_details.get(2);
-			list_size = user_id_list.size();
+			//user_id_list = (List<String>) task_details.get(0);
+			//start_date_list = (List<Timestamp>) task_details.get(1);
+			//end_date_list =   (List<Timestamp>) task_details.get(2);
+			//list_size = user_id_list.size();
+			list_size = task_details.size();
+			details = task_details;
 		}
 		SimpleDateFormat smpldtFrmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 		System.out.println(user_id_list);
@@ -90,7 +95,7 @@ public class TaskDetailsDialog extends Dialog {
 		
 		
 		SimpleDateFormat smpldtFrmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-		getShell().setText("Task Details");
+		getShell().setText(taskName);
 		Composite container = (Composite) super.createDialogArea(parent);
 		GridLayout layout = new GridLayout(2, false);
 		layout.marginRight = 5;
@@ -102,7 +107,7 @@ public class TaskDetailsDialog extends Dialog {
 		Tree tree = new Tree(getShell(),   SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		tree.setHeaderVisible(true);
 		TreeColumn column1 = new TreeColumn(tree, SWT.LEFT);
-		column1.setText("User ID");
+		column1.setText("     User ID");
 		column1.setWidth(200);
 		TreeColumn column2 = new TreeColumn(tree, SWT.CENTER);
 		column2.setText("Start Date");
@@ -110,17 +115,36 @@ public class TaskDetailsDialog extends Dialog {
 		TreeColumn column3 = new TreeColumn(tree, SWT.RIGHT);
 		column3.setText("End Date");
 		column3.setWidth(200);
-		TreeItem item = new TreeItem(tree, SWT.NONE);
+		//TreeItem item = new TreeItem(tree, SWT.NONE);
 		//item.setText(new String[] { "taskName", "", "" });
-		item.setText(new String[] { taskName, "", "" });
-		for (int j = 0; j < list_size; j++) {
+		//item.setText(new String[] { taskName, "", "" });
+		//item.setText(new String[] { "    User ID", "Start Date","End Date" });
+		
+		//item.setExpanded(true);
+		/*for (int j = 0; j < list_size; j++) {
 			TreeItem subItem = new TreeItem(item, SWT.NONE);
 			//subItem.setText(new String[] { user_id_list.get(j),  smpldtFrmt.format(start_date_list.get(j)) ,  smpldtFrmt.format(end_date_list.get(j))});
 			subItem.setText(new String[] { user_id_list.get(j),  start_date_list1.get(j),  end_date_list1.get(j)});
 			TreeItem item1 = new TreeItem(tree, SWT.NONE);
 			item1.setText(new String[] { "", "", "" });
 			
+		}*/
+		
+		for (int j = 0; j < list_size; j++) {
+			std = details.get(j);
+			
+			TreeItem subItem = new TreeItem(tree, SWT.NONE);
+			//subItem.setText(new String[] { user_id_list.get(j),  smpldtFrmt.format(start_date_list.get(j)) ,  smpldtFrmt.format(end_date_list.get(j))});
+			//subItem.setText(new String[] { user_id_list.get(j),  start_date_list1.get(j),  end_date_list1.get(j)});
+			subItem.setText(new String[] { std.getUser_id() , std.getStart_dt() , std.getEnd_dt()});
+			//TreeItem item1 = new TreeItem(tree, SWT.NONE);
+			//item1.setText(new String[] { "", "", "" });
+			
 		}
+		TreeItem item1 = new TreeItem(tree, SWT.NONE);
+		item1.setText(new String[] { "", "", "" });
+		//item.setExpanded(true);
+		
 
 		getShell().pack();
 		getShell().open();
