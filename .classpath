@@ -73,5 +73,8 @@
 	<classpathentry kind="lib" path="libs/org.eclipse.jgit-3.7.0.201502260915-r.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-api-1.7.12.jar"/>
 	<classpathentry kind="lib" path="libs/slf4j-simple-1.7.12.jar"/>
+	<classpathentry kind="lib" path="libs/org.eclipse.draw2d_3.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/org.eclipse.nebula.visualization.xygraph_1.0.0.201511041902.jar"/>
+	<classpathentry kind="lib" path="libs/org.eclipse.nebula.visualization.xygraph.source_1.0.0.201511041902.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
