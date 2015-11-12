@@ -83,4 +83,6 @@ Bundle-ClassPath: src/,
  libs/slf4j-simple-1.7.12.jar,
  libs/org.eclipse.draw2d_3.5.0.jar,
  libs/org.eclipse.nebula.visualization.xygraph_1.0.0.201511041902.jar,
- libs/org.eclipse.nebula.visualization.xygraph.source_1.0.0.201511041902.jar
+ libs/org.eclipse.nebula.visualization.xygraph.source_1.0.0.201511041902.jar,
+ libs/org.eclipse.nebula.visualization.widgets_1.0.0.201511041902.jar,
+ libs/org.eclipse.nebula.visualization.widgets.source_1.0.0.201511041902.jar

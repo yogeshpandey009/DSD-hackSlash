@@ -6,6 +6,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
+import com.asu.score.hackslash.dialogs.DisplayGit;
 import com.asu.score.hackslash.dialogs.StatsDialog;
 
 /**
@@ -32,15 +33,16 @@ public class GitAction implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
+		DisplayGit disGit = new DisplayGit();
+		
 		StatsDialog dialog = new StatsDialog(window.getShell());
 
 		// get the new values from the dialog
 		int result = dialog.open();
-		if (result == IDialogConstants.OK_ID) {
+		if (result == 100) {
+			disGit.showCommitMeter(26);
+		} 
 			
-		} else if (result == IDialogConstants.CLOSE_ID) {
-			dialog.close();
-		}
 	}
 
 	/**

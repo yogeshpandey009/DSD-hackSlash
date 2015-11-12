@@ -38,8 +38,8 @@ public class StatsDialog extends TitleAreaDialog {
 		container.setLayout(layout);
 
 		if (session.isAuthenticated()) {
-			Label lblUser = new Label(container, SWT.NONE);
-			lblUser.setText("Commit Statistics of Contributors");
+			createButton(container, 100, "Monthly Commit Meter", true);
+			createButton(container, 101, "Commit Statistics Graph", true);
 
 		} else {
 			Label lblUser = new Label(container, SWT.NONE);

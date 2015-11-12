@@ -5,7 +5,8 @@ import java.io.File;
 public class Test {
 	public static void main(String[] args) throws Exception{
 		
-		
+		DisplayGit d = new DisplayGit();
+		d.showCommitMeter(45);
 		
 		System.out.println(System.getProperty("user.dir"));
 		
