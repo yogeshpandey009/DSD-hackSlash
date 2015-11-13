@@ -5,10 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.asu.score.hackslash.engine.Database;
+import com.asu.score.hackslash.model.ShowTaskDetails;
 import com.asu.score.hackslash.properties.SQLQueries;
 
 public class ShowTasksDetailsDAO {
@@ -23,8 +25,12 @@ public class ShowTasksDetailsDAO {
 	List<Timestamp> start_date_list = new ArrayList<Timestamp>();
 	List<Timestamp> end_date_list = new ArrayList<Timestamp>();
 	List task_details = new ArrayList<>();
+	ShowTaskDetails std;
+	List<ShowTaskDetails> details = new ArrayList<ShowTaskDetails>();
+	SimpleDateFormat smpldtFrmt = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 	
-	public List<String> getTaskDetails() {
+	//public List<String> getTaskDetails() {
+	public List<ShowTaskDetails> getTaskDetails() {
 
 		try {
 			conn = Database.getConnection();
@@ -36,9 +42,17 @@ public class ShowTasksDetailsDAO {
 			pst = conn.prepareStatement(sql);
 			rs = pst.executeQuery();
 			while (rs.next()) {
-				user_id_list.add(rs.getString("userID"));
-				start_date_list.add(rs.getTimestamp("StartDate"));
-				end_date_list.add(rs.getTimestamp("EndDate"));
+				std = new ShowTaskDetails();
+				//user_id_list.add(rs.getString("userID"));
+				//start_date_list.add(rs.getTimestamp("StartDate"));
+				//end_date_list.add(rs.getTimestamp("EndDate"));
+				if(rs.getString("userID")!= null)
+					std.setUser_id(rs.getString("userID"));
+				if((rs.getTimestamp("StartDate")) != null)
+					std.setStart_dt(smpldtFrmt.format(rs.getTimestamp("StartDate")));
+				if((rs.getTimestamp("EndDate")) != null)
+					std.setEnd_dt(smpldtFrmt.format(rs.getTimestamp("EndDate")));
+				details.add(std);
 				
 			}
 		} catch (SQLException e) {
@@ -47,7 +61,8 @@ public class ShowTasksDetailsDAO {
 		task_details.add(user_id_list);
 		task_details.add(start_date_list);
 		task_details.add(end_date_list);
-		return task_details;
+		//return task_details;
+		return details;
 	}
 
 	public String getTaskName() {
