@@ -27,7 +27,8 @@ import org.gitective.core.stat.YearCommitActivity;
 
 public class GitTest {
 
-	private static final String GIT_PATH = "/Users/yogeshpandey/Documents/dsd/DSD-hackSlash/.git";
+	//private static final String GIT_PATH = "/Users/yogeshpandey/Documents/dsd/DSD-hackSlash/.git";
+	private static final String GIT_PATH = "/Users/Mihir/Desktop/Fall 2015/SER 515 - Software Inception/DSDO/DSD-hackSlash/.git";
 	private static final String REMOTE_URL = "https://github.com/ser515asu/DSD-hackSlash.git";
 
 	public static void main(String... args) throws IOException,
@@ -35,7 +36,8 @@ public class GitTest {
 		Repository repo = new FileRepository(GIT_PATH);
 		Git git = new Git(repo);
 		RevWalk walk = new RevWalk(repo);
-
+		
+		
 		List<Ref> branches = git.branchList().call();
 
 		for (Ref branch : branches) {
@@ -74,10 +76,9 @@ public class GitTest {
 		}
 
 		CommitFinder finder = new CommitFinder(repo);
-
 		DiffLineCountFilter filter = new DiffLineCountFilter();
 		finder.setFilter(filter);
-
+		
 		// ObjectId start = repository.resolve(b);
 		// ObjectId end = repository.resolve(a);
 
@@ -119,7 +120,7 @@ public class GitTest {
 
 		for (UserCommitActivity user : activity)
 			System.out.println(user.getName() + " has done " + user.getCount()
-					+ " commits.");
+					+ " commits." );
 
 		AuthorSetFilter authors = new AuthorSetFilter();
 		CommitFinder afinder = new CommitFinder(repo);
