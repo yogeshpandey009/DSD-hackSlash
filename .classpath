@@ -78,5 +78,6 @@
 	<classpathentry kind="lib" path="libs/org.eclipse.nebula.visualization.xygraph.source_1.0.0.201511041902.jar"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.nebula.visualization.widgets_1.0.0.201511041902.jar"/>
 	<classpathentry kind="lib" path="libs/org.eclipse.nebula.visualization.widgets.source_1.0.0.201511041902.jar"/>
+	<classpathentry kind="lib" path="libs/com.jcraft.jsch_0.1.51.v201410302000.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

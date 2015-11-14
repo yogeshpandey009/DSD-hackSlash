@@ -1,11 +1,13 @@
 package com.asu.score.hackslash.git.test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
@@ -28,16 +30,32 @@ import org.gitective.core.stat.YearCommitActivity;
 public class GitTest {
 
 	//private static final String GIT_PATH = "/Users/yogeshpandey/Documents/dsd/DSD-hackSlash/.git";
-	private static final String GIT_PATH = "/Users/Mihir/Desktop/Fall 2015/SER 515 - Software Inception/DSDO/DSD-hackSlash/.git";
+
 	private static final String REMOTE_URL = "https://github.com/ser515asu/DSD-hackSlash.git";
 
 	public static void main(String... args) throws IOException,
 			NoHeadException, GitAPIException {
-		Repository repo = new FileRepository(GIT_PATH);
-		Git git = new Git(repo);
+		
+		File localPath = File.createTempFile("TestGitRepository", "");
+        localPath.delete();
+
+        System.out.println("Cloning from " + REMOTE_URL + " to " + localPath);
+       
+        	
+        Git git = Git.cloneRepository()
+        .setURI( REMOTE_URL )
+        .setDirectory(localPath)
+        .call();
+        
+        
+        Repository repo = git.getRepository();
+        
+        
+        System.out.println("Having repository: " + repo.getDirectory());
+	    
+		
 		RevWalk walk = new RevWalk(repo);
-		
-		
+	
 		List<Ref> branches = git.branchList().call();
 
 		for (Ref branch : branches) {
@@ -84,7 +102,6 @@ public class GitTest {
 
 		// finder.findBetween(start, end);
 		finder.find();
-
 		System.out.println("Added:\t" + filter.getAdded());
 		System.out.println("Changed:\t" + filter.getEdited());
 		System.out.println("Deleted:\t" + filter.getDeleted());
@@ -130,6 +147,7 @@ public class GitTest {
 			System.out.println(author);
 
 		walk.dispose();
+		repo.close();
 		git.close();
 
 	}
