@@ -104,13 +104,14 @@ public class ConnectionManager {
 					pwrd);
 			ChatController.getInstance().init();
 			ChatController.getInstance().updateRoster();
+			
 			Thread t = new Thread(new Runnable() {
 				@Override
 				public void run() {
 					GitController.getInstance();
 				}
 			});
-			t.run();
+			t.start();
 		} catch (XMPPException | SmackException | IOException e) {
 			mConnection.disconnect();//otherwise login always fail after wrong attempt
 			System.out.println("Error while logging into Server. ->"
