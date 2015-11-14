@@ -11,11 +11,11 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.asu.score.hackslash.engine.SessionManager;
-import com.asu.score.hackslash.statistics.GitControl;
+import com.asu.score.hackslash.statistics.GitController;
 
 public class StatsDialog extends TitleAreaDialog {
 
-	private GitControl gitCtrl = GitControl.getInstance();
+	private GitController gitCtrl = GitController.getInstance();
 	private SessionManager session = SessionManager.getInstance();
 
 	public StatsDialog(Shell parentShell) {
