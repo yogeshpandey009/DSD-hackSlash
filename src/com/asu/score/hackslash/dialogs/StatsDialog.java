@@ -34,12 +34,14 @@ public class StatsDialog extends TitleAreaDialog {
 		Composite area = (Composite) super.createDialogArea(parent);
 		Composite container = new Composite(area, SWT.NONE);
 		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		GridLayout layout = new GridLayout(2, false);
+		GridLayout layout = new GridLayout(2, true);
 		container.setLayout(layout);
 
 		if (session.isAuthenticated()) {
-			createButton(container, 100, "Monthly Commit Meter", true);
-			createButton(container, 101, "Commit Statistics Graph", true);
+			createButton(container, 100, "Total Commit Meter", true);
+			createButton(container, 101, "User Commit Statistics Graph", true);
+			createButton(container, 102, "Monthly Commit Statistics Graph", true);
+			createButton(container, 103, "LOC Statistics Graph", true);
 
 		} else {
 			Label lblUser = new Label(container, SWT.NONE);

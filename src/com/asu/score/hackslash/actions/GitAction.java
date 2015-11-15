@@ -57,6 +57,22 @@ public class GitAction implements IWorkbenchWindowActionDelegate {
 				e.printStackTrace();
 			}
 		}
+		if (result == 102) {
+			try {
+				disGit.showMonthlyCommits();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (result == 103) {
+			try {
+				disGit.showLocChange();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 			
 	}
 

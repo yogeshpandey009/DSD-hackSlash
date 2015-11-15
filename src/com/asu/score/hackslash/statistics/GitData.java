@@ -9,6 +9,7 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.gitective.core.CommitFinder;
 import org.gitective.core.filter.commit.AuthorSetFilter;
+import org.gitective.core.filter.commit.DiffLineCountFilter;
 import org.gitective.core.stat.AuthorHistogramFilter;
 import org.gitective.core.stat.CommitCalendar;
 import org.gitective.core.stat.Month;
@@ -84,6 +85,7 @@ public class GitData {
 		}
 		return all;
 	}
+	
 	public int getTotalCurrentMonthCommits() throws IOException{
 		Repository repo = GitController.getInstance().getRepo();
 		//Repository repo = new FileRepository(GIT_PATH);
@@ -101,6 +103,27 @@ public class GitData {
 		return c;
 	}
 	
+	public int getTotalCommits() throws IOException{
+		//Repository repo = GitController.getInstance().getRepo();
+		Repository repo = new FileRepository(GIT_PATH);
+		Git git = new Git(repo);
+		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
+		CommitFinder cfinder = new CommitFinder(repo);
+		cfinder.setFilter(afilter).find();
+		UserCommitActivity[] activity = afilter.getHistogram()
+				.getUserActivity();
+		CommitCalendar commits = new CommitCalendar(activity);
+		int count = 0;
+		for (YearCommitActivity year : commits.getYears()) {
+			int m = 0;
+			for (int c : year.getMonths()) {
+				count = count + c;
+			}
+		}
+		return count;
+	}
+	
+
 	
 	public static void main(String[] args) throws IOException{
 		GitData git = new GitData();
