@@ -123,7 +123,26 @@ public class GitData {
 		return count;
 	}
 	
-
+	public List<Integer> getLocChange() throws IOException {
+		//Repository repo = GitController.getInstance().getRepo();
+		Repository repo = new FileRepository(GIT_PATH);
+		Git git = new Git(repo);
+		CommitFinder finder = new CommitFinder(repo);
+		DiffLineCountFilter filter = new DiffLineCountFilter();
+		finder.setFilter(filter);
+		finder.find();
+		List<Integer> loc = new ArrayList<Integer>();
+		loc.add((int) filter.getAdded());
+		loc.add((int) filter.getEdited());
+		loc.add((int) filter.getDeleted());
+		loc.add((int) filter.getAdded() + (int)filter.getEdited());
+		System.out.println("Added:\t" + filter.getAdded());
+		System.out.println("Changed:\t" + filter.getEdited());
+		System.out.println("Deleted:\t" + filter.getDeleted());
+		System.out.println("CSI:\t" + (filter.getAdded() + filter.getEdited()));
+		return loc;
+		
+	}
 	
 	public static void main(String[] args) throws IOException{
 		GitData git = new GitData();
