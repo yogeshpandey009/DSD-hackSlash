@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.util.*;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.gitective.core.CommitFinder;
 import org.gitective.core.filter.commit.AuthorSetFilter;
 import org.gitective.core.filter.commit.DiffLineCountFilter;
@@ -17,7 +22,7 @@ import org.gitective.core.stat.UserCommitActivity;
 import org.gitective.core.stat.YearCommitActivity;
 
 public class GitData {
-	private static final String GIT_PATH = "C:/Users/samam/Desktop/Fall 2015/Software Enterprise/Code!/DSD-hackSlash/.git";
+	private static final String GIT_PATH = "C:/Users/Mihir/Desktop/Fall 2015/SER 515 - Software Inception/DSDO/DSD-hackSlash/.git";
 	private static final String REMOTE_URL = "https://github.com/ser515asu/DSD-hackSlash.git";
 
 	public Set<String> getContributor() throws IOException{
@@ -85,6 +90,57 @@ public class GitData {
 		}
 		return all;
 	}
+	public List<List<String>> getGitCommitLog() throws IOException, GitAPIException{
+		//Repository repo = GitController.getInstance().getRepo();
+		Repository repo = new FileRepository(GIT_PATH);
+		Git git = new Git(repo);
+		RevWalk walk = new RevWalk(repo);
+		List<List<String>> log = new ArrayList<List<String>>();
+		List<String> logRow = new ArrayList();
+		List<Ref> branches = git.branchList().call();
+		for (Ref branch : branches) {
+			String branchName = branch.getName();
+
+			System.out.println("Commits of branch: " + branch.getName());
+			System.out.println("-------------------------------------");
+
+			Iterable<RevCommit> commits = git.log().all().call();
+
+			for (RevCommit commit : commits) {
+				boolean foundInThisBranch = false;
+
+				RevCommit targetCommit = walk.parseCommit(repo.resolve(commit
+						.getName()));
+				for (Map.Entry<String, Ref> e : repo.getAllRefs().entrySet()) {
+					if (e.getKey().startsWith(Constants.R_HEADS)) {
+						if (walk.isMergedInto(targetCommit,
+								walk.parseCommit(e.getValue().getObjectId()))) {
+							String foundInBranch = e.getValue().getName();
+							if (branchName.equals(foundInBranch)) {
+								foundInThisBranch = true;
+								break;
+							}
+						}
+					}
+				}
+
+				if (foundInThisBranch) {
+					logRow.add(commit.getName());
+					logRow.add(commit.getAuthorIdent().getName());
+					long time = commit.getCommitTime();
+					time = time*1000;
+					logRow.add(String.valueOf(new Date(time)));
+					logRow.add(commit.getFullMessage());
+					System.out.println(commit.getName());
+					System.out.println(commit.getAuthorIdent().getName());
+					System.out.println(new Date(commit.getCommitTime()));
+					System.out.println(commit.getFullMessage());
+				}
+			log.add(logRow);
+			}
+		}		
+		return log;
+	}
 	
 	public int getTotalCurrentMonthCommits() throws IOException{
 		Repository repo = GitController.getInstance().getRepo();
@@ -144,14 +200,15 @@ public class GitData {
 		
 	}
 	
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, GitAPIException{
 		GitData git = new GitData();
-		Set<String> set = git.getContributor();
-		Map<String,Integer> map = git.getCommitsPerContributor();
-		List<List<String>> mo = git.getMonthlyCommits();
+		//Set<String> set = git.getContributor();
+		//Map<String,Integer> map = git.getCommitsPerContributor();
+		//List<List<String>> mo = git.getMonthlyCommits();
+		List<List<String>> log = git.getGitCommitLog();
 		//int c = git.getTotalCurrentMonthCommits();
-		System.out.println(set);
-		System.out.println(mo);
+		//System.out.println(set);
+		System.out.println(log);
 		//System.out.println(map2);
 		//System.out.println(c);
 	}
