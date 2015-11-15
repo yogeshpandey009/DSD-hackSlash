@@ -16,12 +16,13 @@ import org.gitective.core.stat.UserCommitActivity;
 import org.gitective.core.stat.YearCommitActivity;
 
 public class GitData {
-	private static final String GIT_PATH = "/Users/Mihir/Desktop/Fall 2015/SER 515 - Software Inception/DSDO/DSD-hackSlash/.git";
+	private static final String GIT_PATH = "C:/Users/samam/Desktop/Fall 2015/Software Enterprise/Code!/DSD-hackSlash/.git";
 	private static final String REMOTE_URL = "https://github.com/ser515asu/DSD-hackSlash.git";
 
 	public Set<String> getContributor() throws IOException{
-		Repository repo = new FileRepository(GIT_PATH);
-		Git git = new Git(repo);
+		//Repository repo = new FileRepository(GIT_PATH);
+		Repository repo = GitController.getInstance().getRepo();
+		//Git git = new Git(repo);
 		AuthorSetFilter authors = new AuthorSetFilter();
 		CommitFinder afinder = new CommitFinder(repo);
 		afinder.setFilter(authors).find();
@@ -33,10 +34,11 @@ public class GitData {
 			
 		return set;
 	}
-	public Map<String,String> getCommitsPerContributor() throws IOException{
+	public Map<String,Integer> getCommitsPerContributor() throws IOException {
+		//Repository repo = GitController.getInstance().getRepo();
 		Repository repo = new FileRepository(GIT_PATH);
-		Git git = new Git(repo);
-		Map<String,String> map = new HashMap<String,String>();
+		//Git git = new Git(repo);
+		Map<String,Integer> map = new HashMap<String,Integer>();
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
 		cfinder.setFilter(afilter).find();
@@ -44,17 +46,21 @@ public class GitData {
 				.getUserActivity();
 		
 		for (UserCommitActivity user : activity){
-			map.put(user.getName(), String.valueOf(user.getCount()));
+			map.put(user.getName(), user.getCount());
 			System.out.println(user.getName() + " has done " + user.getCount()
 			+ " commits.");
 			
 		}
 		return map;
 	}
-	public Map<String,String> getMonthlyCommits() throws IOException{
+
+	
+	public List<List<String>> getMonthlyCommits() throws IOException{
+		//Repository repo = GitController.getInstance().getRepo();
 		Repository repo = new FileRepository(GIT_PATH);
-		Git git = new Git(repo);
-		Map<String,String> map = new HashMap<String,String>();
+		//Git git = new Git(repo);
+		List<List<String>> all = new ArrayList<List<String>>();
+		
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
 		cfinder.setFilter(afilter).find();
@@ -66,16 +72,21 @@ public class GitData {
 			int m = 0;
 			for (int c : year.getMonths()) {
 				String month =  Month.month(m) + "-" + year.getYear();
-				map.put(month,String.valueOf(c));
+				List<String> mo = new ArrayList<String>();
+				mo.add(month);
+				mo.add(String.valueOf(c));
+				all.add(mo);
+				//map.put(month,c);
 				System.out.println(c + " commits in " + Month.month(m) + "-"
 						+ year.getYear());
 				m++;
 			}
 		}
-		return map;
+		return all;
 	}
 	public int getTotalCurrentMonthCommits() throws IOException{
-		Repository repo = new FileRepository(GIT_PATH);
+		Repository repo = GitController.getInstance().getRepo();
+		//Repository repo = new FileRepository(GIT_PATH);
 		Git git = new Git(repo);
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
@@ -94,12 +105,12 @@ public class GitData {
 	public static void main(String[] args) throws IOException{
 		GitData git = new GitData();
 		Set<String> set = git.getContributor();
-		Map<String,String> map = git.getCommitsPerContributor();
-		Map<String,String> map2 = git.getMonthlyCommits();
-		int c = git.getTotalCurrentMonthCommits();
+		Map<String,Integer> map = git.getCommitsPerContributor();
+		List<List<String>> mo = git.getMonthlyCommits();
+		//int c = git.getTotalCurrentMonthCommits();
 		System.out.println(set);
-		System.out.println(map);
-		System.out.println(map2);
-		System.out.println(c);
+		System.out.println(mo);
+		//System.out.println(map2);
+		//System.out.println(c);
 	}
 }

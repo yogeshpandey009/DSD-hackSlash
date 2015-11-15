@@ -1,5 +1,7 @@
 package com.asu.score.hackslash.actions;
 
+import java.io.IOException;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
@@ -40,8 +42,21 @@ public class GitAction implements IWorkbenchWindowActionDelegate {
 		// get the new values from the dialog
 		int result = dialog.open();
 		if (result == 100) {
-			disGit.showCommitMeter(26);
+			try {
+				disGit.showCommitMeter();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} 
+		if (result == 101) {
+			try {
+				disGit.showUserCommitsGraph();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 			
 	}
 
