@@ -67,6 +67,7 @@ public class DisplayGit {
 		barSeries1.setBarColor(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 		// adjust the axis range
 		chart.getAxisSet().adjustRange();
+		chart.getAxisSet().getYAxis(0).setRange(new Range(0, max + max / 10));
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -182,6 +183,7 @@ public class DisplayGit {
 		chart.getAxisSet().getXAxis(0).getTitle().setText("Months");
 		chart.getAxisSet().getYAxis(0).getTitle().setText("Commits");
 		// set category
+		double max = 0;
 		List<List<String>> all = gitData.getMonthlyCommits();
 		String[] months = new String[12];
 		double[] commits = new double[12];
@@ -189,8 +191,10 @@ public class DisplayGit {
 			List<String> month = all.get(i);
 			months[i] = month.get(0);
 			commits[i] = Double.parseDouble(month.get(1));
+			if(commits[i] > max)
+				max = commits[i];
 		}
-
+		System.out.println(max);
 		chart.getAxisSet().getXAxis(0).enableCategory(true);
 		chart.getAxisSet().getXAxis(0).setCategorySeries(months);
 
@@ -199,14 +203,15 @@ public class DisplayGit {
 				"Number of Commits per Month");
 		barSeries1.setYSeries(commits);
 		barSeries1.setBarColor(Display.getDefault().getSystemColor(SWT.COLOR_YELLOW));
-
+		// adjust the axis range
+		chart.getAxisSet().adjustRange();
+		chart.getAxisSet().getYAxis(0).setRange(new Range(0, max + max / 10));
 		/*
 		 * IBarSeries barSeries2 = (IBarSeries)
 		 * chart.getSeriesSet().createSeries( SeriesType.BAR, "bar series 2");
 		 * barSeries2.setYSeries(new double[] {3, 4 ,5 ,7 ,2});
 		 */
-		// adjust the axis range
-		chart.getAxisSet().adjustRange();
+		
 		shell.open();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch())
@@ -217,7 +222,7 @@ public class DisplayGit {
 
 	public static void main(String[] args) throws IOException {
 		DisplayGit dg = new DisplayGit();
-		dg.showLocChange();
+		dg.showUserCommitsGraph();
 	}
 
 }
