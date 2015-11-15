@@ -16,7 +16,6 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.actions.im.UsersService;
 import com.asu.score.hackslash.properties.Constants;
-import com.asu.score.hackslash.statistics.GitController;
 
 /**
  * Singleton Class manages connection to the server.
@@ -104,14 +103,6 @@ public class ConnectionManager {
 					pwrd);
 			ChatController.getInstance().init();
 			ChatController.getInstance().updateRoster();
-			
-			Thread t = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					GitController.getInstance();
-				}
-			});
-			t.start();
 		} catch (XMPPException | SmackException | IOException e) {
 			mConnection.disconnect();//otherwise login always fail after wrong attempt
 			System.out.println("Error while logging into Server. ->"
