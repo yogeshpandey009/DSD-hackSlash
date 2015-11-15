@@ -5,15 +5,11 @@ import java.io.IOException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import com.asu.score.hackslash.dialogs.DisplayGit;
-import com.asu.score.hackslash.dialogs.GitLogsDialog;
 import com.asu.score.hackslash.dialogs.StatsDialog;
-import com.asu.score.hackslash.properties.Constants;
-import com.asu.score.hackslash.statistics.GitData;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will
@@ -40,38 +36,43 @@ public class GitAction implements IWorkbenchWindowActionDelegate {
 	 */
 	public void run(IAction action) {
 		DisplayGit disGit = new DisplayGit();
-		GitData gitData = new GitData();
+		
 		StatsDialog dialog = new StatsDialog(window.getShell());
 
 		// get the new values from the dialog
 		int result = dialog.open();
 		if (result == 100) {
-			disGit.showCommitMeter(gitData.getTotalCommits());
-		} else if (result == 101){
-			disGit.showCommitGraph();
-		}
-		else if(result == Constants.GIT_COMMIT_LOGS_BUTTON_ID){
-			System.out.println("else if");
-			/*try {
-				Git gitLogDialog1 = new Git(window.getShell(),new GitData().getGitCommitLog());
-				gitLogDialog1.open();
-					//gitLogDialog1.setCommitLogs(new GitData().getGitCommitLog());
-				} catch (IOException | GitAPIException e) {
-					System.out.println("Exception in run():GitAction class");
-					e.printStackTrace();
-				}
-				*/
-			GitLogsDialog gitLogDialog =  new GitLogsDialog();
-		
 			try {
-				gitLogDialog.setCommitLogs(new GitData().getGitCommitLog());
-				gitLogDialog.showCommitLogs(gitLogDialog.getCommitLogs());
-			} catch (IOException | GitAPIException e) {
-				System.out.println("Exception in run():GitAction class");
+				disGit.showCommitMeter();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-		 }
+		} 
+		if (result == 101) {
+			try {
+				disGit.showUserCommitsGraph();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (result == 102) {
+			try {
+				disGit.showMonthlyCommits();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (result == 103) {
+			try {
+				disGit.showLocChange();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 			
 	}
 

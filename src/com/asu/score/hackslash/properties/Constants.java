@@ -16,8 +16,4 @@ public class Constants {
 
 	// Button Labels
 	public static final String SEND_LABEL = "Send";
-	
-	//Button Ids
-	public static final int GIT_COMMIT_LOGS_BUTTON_ID = 102;
-	
 }
