@@ -133,7 +133,9 @@ public class GitData {
 					showGitLogsModel = new ShowGitLogsModel();
 					showGitLogsModel.setLogIdentifier(commit.getName());
 					showGitLogsModel.setAuthorName(commit.getAuthorIdent().getName());
-					showGitLogsModel.setDate(String.valueOf(new Date(commit.getCommitTime())));
+					long time = commit.getCommitTime();
+					time = time*1000;
+					showGitLogsModel.setDate(String.valueOf(new Date(time)));
 					showGitLogsModel.setCommitMessage(commit.getFullMessage());
 					//logRow = new ArrayList();
 					//logRow.add(commit.getName());
