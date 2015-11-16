@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import com.asu.score.hackslash.engine.SessionManager;
+import com.asu.score.hackslash.properties.Constants;
 import com.asu.score.hackslash.statistics.GitController;
 
 public class StatsDialog extends TitleAreaDialog {
@@ -42,6 +43,7 @@ public class StatsDialog extends TitleAreaDialog {
 			createButton(container, 101, "User Commit Statistics Graph", true);
 			createButton(container, 102, "Monthly Commit Statistics Graph", true);
 			createButton(container, 103, "LOC Statistics Graph", true);
+			createButton(container, Constants.GIT_COMMIT_LOGS_BUTTON_ID, "Show commit logs", true);
 
 		} else {
 			Label lblUser = new Label(container, SWT.NONE);
@@ -58,6 +60,7 @@ public class StatsDialog extends TitleAreaDialog {
 
 	@Override
 	protected void buttonPressed(int buttonId) {
+		System.out.println("buttonpressed in StatsDialog id: "+buttonId);
 		setReturnCode(buttonId);
 		close();
 	}

@@ -21,6 +21,8 @@ import org.gitective.core.stat.Month;
 import org.gitective.core.stat.UserCommitActivity;
 import org.gitective.core.stat.YearCommitActivity;
 
+import com.asu.score.hackslash.model.ShowGitLogsModel;
+
 public class GitData {
 	private static final String GIT_PATH = "C:/Users/Mihir/Desktop/Fall 2015/SER 515 - Software Inception/DSDO/DSD-hackSlash/.git";
 	private static final String REMOTE_URL = "https://github.com/ser515asu/DSD-hackSlash.git";
@@ -90,13 +92,16 @@ public class GitData {
 		}
 		return all;
 	}
-	public List<List<String>> getGitCommitLog() throws IOException, GitAPIException{
-		//Repository repo = GitController.getInstance().getRepo();
-		Repository repo = new FileRepository(GIT_PATH);
+	public List<ShowGitLogsModel> getGitCommitLog() throws IOException, GitAPIException{
+		Repository repo = GitControl.getInstance().getRepo();
 		Git git = new Git(repo);
 		RevWalk walk = new RevWalk(repo);
-		List<List<String>> log = new ArrayList<List<String>>();
-		List<String> logRow = new ArrayList();
+		//List<List<String>> log = new ArrayList<List<String>>();
+		List<ShowGitLogsModel> log = new ArrayList<ShowGitLogsModel>();
+		//List<String> logRow = new ArrayList();
+		List<String> logRow;
+		ShowGitLogsModel showGitLogsModel;
+		
 		List<Ref> branches = git.branchList().call();
 		for (Ref branch : branches) {
 			String branchName = branch.getName();
@@ -125,18 +130,23 @@ public class GitData {
 				}
 
 				if (foundInThisBranch) {
-					logRow.add(commit.getName());
-					logRow.add(commit.getAuthorIdent().getName());
-					long time = commit.getCommitTime();
-					time = time*1000;
-					logRow.add(String.valueOf(new Date(time)));
-					logRow.add(commit.getFullMessage());
-					System.out.println(commit.getName());
-					System.out.println(commit.getAuthorIdent().getName());
-					System.out.println(new Date(commit.getCommitTime()));
-					System.out.println(commit.getFullMessage());
+					showGitLogsModel = new ShowGitLogsModel();
+					showGitLogsModel.setLogIdentifier(commit.getName());
+					showGitLogsModel.setAuthorName(commit.getAuthorIdent().getName());
+					showGitLogsModel.setDate(String.valueOf(new Date(commit.getCommitTime())));
+					showGitLogsModel.setCommitMessage(commit.getFullMessage());
+					//logRow = new ArrayList();
+					//logRow.add(commit.getName());
+					//logRow.add(commit.getAuthorIdent().getName());
+					//logRow.add(String.valueOf(new Date(commit.getCommitTime())));
+					//logRow.add(commit.getFullMessage());
+					//System.out.println(commit.getName());
+					//System.out.println(commit.getAuthorIdent().getName());
+					//System.out.println(new Date(commit.getCommitTime()));
+					//System.out.println(commit.getFullMessage());
+					log.add(showGitLogsModel);
 				}
-			log.add(logRow);
+			
 			}
 		}		
 		return log;
@@ -205,10 +215,10 @@ public class GitData {
 		//Set<String> set = git.getContributor();
 		//Map<String,Integer> map = git.getCommitsPerContributor();
 		//List<List<String>> mo = git.getMonthlyCommits();
-		List<List<String>> log = git.getGitCommitLog();
+		//List<List<String>> log = git.getGitCommitLog();
 		//int c = git.getTotalCurrentMonthCommits();
 		//System.out.println(set);
-		System.out.println(log);
+		//System.out.println(log);
 		//System.out.println(map2);
 		//System.out.println(c);
 	}
