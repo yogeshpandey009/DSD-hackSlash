@@ -4,6 +4,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.swt.widgets.Display;
 
 public class ChatContentProvider 
 	implements IStructuredContentProvider, ChatInput.Listener
@@ -49,13 +50,18 @@ public class ChatContentProvider
 	public void added(Chat e) {
 		if (viewer != null)
 			viewer.add(e);
+		refresh();
 	}
 	
 
 	@Override
 	public void refresh() {
-		if (viewer != null) {
-			viewer.refresh();
-		}
+		Display.getDefault().syncExec(new Runnable() {
+			public void run() {
+				if (viewer != null) {
+					viewer.refresh();
+				}
+			}
+		});
 	}
 }

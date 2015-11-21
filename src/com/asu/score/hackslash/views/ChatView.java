@@ -28,9 +28,10 @@ import org.jivesoftware.smack.XMPPException;
 
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.chathelper.Chat;
+import com.asu.score.hackslash.chathelper.ChatContentProvider;
 import com.asu.score.hackslash.chathelper.ChatInput;
 import com.asu.score.hackslash.engine.SessionManager;
-import com.asu.score.hackslash.taskhelper.TaskContentProvider;
+import com.asu.score.hackslash.views.UsersView.ViewLabelProvider;
 
 public class ChatView extends ViewPart {
 	public static final String ID = FormView.class.getPackage().getName()
@@ -60,16 +61,10 @@ public class ChatView extends ViewPart {
 			if (session.isAuthenticated()) {
 				if (obj instanceof Chat) {
 					Chat u = (Chat) obj;
-					if (index == 0) {
-						txt = u.getBuddy();
-					} else if (index == 1) {
-						txt = u.getMsg();
+					txt = u.getBuddy() + ":" + u.getMsg();
 					}
-				}
 			} else {
-				if (index == 0) {
-					txt = obj.toString();
-				}
+				txt = obj.toString();
 			}
 			return txt;
 		}
@@ -111,6 +106,7 @@ public class ChatView extends ViewPart {
 			public void mouseDown(MouseEvent e) {
 				try {
 					ChatController.getInstance().sendMessage(text.getText());
+					text.setText("");
 				} catch (XMPPException | SmackException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -127,8 +123,8 @@ public class ChatView extends ViewPart {
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
 		
-		// viewer.setContentProvider(new ArrayContentProvider());
-		viewer.setContentProvider(new TaskContentProvider());
+		viewer.setContentProvider(new ChatContentProvider());
+		viewer.setLabelProvider(new ViewLabelProvider());
 		// get the content for the viewer, setInput will call getElements in the
 		// contentProvider
 		// viewer.setInput(ModelProvider.INSTANCE.getPersons());
@@ -136,10 +132,8 @@ public class ChatView extends ViewPart {
 		// make the selection available to other views
 		getSite().setSelectionProvider(viewer);
 		// set the sorter for the table
-		TableColumn from = new TableColumn(viewer.getTable(), SWT.LEFT);
-		from.setWidth(150);
-		TableColumn msg = new TableColumn(viewer.getTable(), SWT.RIGHT);
-		msg.setWidth(150);
+		TableColumn chatCol = new TableColumn(viewer.getTable(), SWT.LEFT);
+		chatCol.setWidth(300);
 
 		// define layout for the viewer
 		GridData gridData = new GridData();
@@ -155,13 +149,6 @@ public class ChatView extends ViewPart {
 	public void setFocus() {
 	}
 	
-	/**
-	 * Add item to list.
-	 */
-	private void refresh() {
-		input.refresh();
-	}
-
 	/**
 	 * Add item to list.
 	 */
