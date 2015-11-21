@@ -4,7 +4,16 @@ import java.io.IOException;
 import java.util.*;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.api.errors.CanceledException;
+import org.eclipse.jgit.api.errors.DetachedHeadException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidConfigurationException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.api.errors.RefNotFoundException;
+import org.eclipse.jgit.api.errors.TransportException;
+import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -27,9 +36,10 @@ public class GitData {
 	private static final String GIT_PATH = "C:/Users/Mihir/Desktop/Fall 2015/SER 515 - Software Inception/DSDO/DSD-hackSlash/.git";
 	private static final String REMOTE_URL = "https://github.com/ser515asu/DSD-hackSlash.git";
 
-	public Set<String> getContributor() throws IOException{
+	public Set<String> getContributor() throws IOException {
 		//Repository repo = new FileRepository(GIT_PATH);
-		Repository repo = GitController.getInstance().getRepo();
+		GitController gitCtrl = GitController.getInstance();
+		Repository repo = gitCtrl.getRepo();
 		//Git git = new Git(repo);
 		AuthorSetFilter authors = new AuthorSetFilter();
 		CommitFinder afinder = new CommitFinder(repo);
@@ -43,6 +53,7 @@ public class GitData {
 		return set;
 	}
 	public Map<String,Integer> getCommitsPerContributor() throws IOException {
+		GitController gitCtrl = GitController.getInstance();
 		Repository repo = GitController.getInstance().getRepo();
 		//Repository repo = new FileRepository(GIT_PATH);
 		//Git git = new Git(repo);
@@ -64,7 +75,8 @@ public class GitData {
 
 	
 	public List<List<String>> getMonthlyCommits() throws IOException{
-		Repository repo = GitController.getInstance().getRepo();
+		GitController gitCtrl = GitController.getInstance();
+		Repository repo = gitCtrl.getRepo();
 		//Repository repo = new FileRepository(GIT_PATH);
 		//Git git = new Git(repo);
 		List<List<String>> all = new ArrayList<List<String>>();
@@ -93,8 +105,9 @@ public class GitData {
 		return all;
 	}
 	public List<ShowGitLogsModel> getGitCommitLog() throws IOException, GitAPIException{
-		Repository repo = GitController.getInstance().getRepo();
-		Git git = new Git(repo);
+		GitController gitCtrl = GitController.getInstance();
+		Git git = gitCtrl.getGit();
+		Repository repo = gitCtrl.getRepo();
 		RevWalk walk = new RevWalk(repo);
 		//List<List<String>> log = new ArrayList<List<String>>();
 		List<ShowGitLogsModel> log = new ArrayList<ShowGitLogsModel>();
@@ -155,9 +168,8 @@ public class GitData {
 	}
 	
 	public int getTotalCurrentMonthCommits() throws IOException{
-		Repository repo = GitController.getInstance().getRepo();
-		//Repository repo = new FileRepository(GIT_PATH);
-		Git git = new Git(repo);
+		GitController gitCtrl = GitController.getInstance();
+		Repository repo = gitCtrl.getRepo();
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
 		cfinder.setFilter(afilter).find();
@@ -172,9 +184,8 @@ public class GitData {
 	}
 	
 	public int getTotalCommits() throws IOException{
-		Repository repo = GitController.getInstance().getRepo();
-		//Repository repo = new FileRepository(GIT_PATH);
-		Git git = new Git(repo);
+		GitController gitCtrl = GitController.getInstance();
+		Repository repo = gitCtrl.getRepo();
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
 		cfinder.setFilter(afilter).find();
@@ -192,9 +203,8 @@ public class GitData {
 	}
 	
 	public List<Integer> getLocChange() throws IOException {
-		Repository repo = GitController.getInstance().getRepo();
-		//Repository repo = new FileRepository(GIT_PATH);
-		Git git = new Git(repo);
+		GitController gitCtrl = GitController.getInstance();
+		Repository repo = gitCtrl.getRepo();
 		CommitFinder finder = new CommitFinder(repo);
 		DiffLineCountFilter filter = new DiffLineCountFilter();
 		finder.setFilter(filter);
