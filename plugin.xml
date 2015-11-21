@@ -22,6 +22,13 @@
             id="com.asu.score.hackslash.views.UsersView"
             name="Users View">
       </view>
+      <view
+            category="com.asu.score.hackslash"
+            class="com.asu.score.hackslash.views.ChatView"
+            icon="icons/sample.gif"
+            id="com.asu.score.hackslash.views.ChatView"
+            name="ChatView View">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.perspectiveExtensions">
@@ -43,9 +50,21 @@
                relative="org.eclipse.ui.views.ProblemView">
          </view>
       </perspectiveExtension>
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               id="com.asu.score.hackslash.views.ChatView"
+               ratio="0.5"
+               relationship="right"
+               relative="org.eclipse.ui.views.ProblemView">
+         </view>
+      </perspectiveExtension>
    </extension>
    <extension
          point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
       <contexts
             file="contexts.xml">
       </contexts>
