@@ -361,7 +361,7 @@ public class TaskView extends ViewPart {
 	/**
 	 * Add item to list.
 	 */
-	private void refresh() {
+	public void refresh() {
 		input.refresh();
 	}
 

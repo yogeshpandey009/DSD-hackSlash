@@ -22,8 +22,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.ui.IActionBars;
@@ -36,6 +36,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterListener;
+
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.chathelper.ActiveChats;
 import com.asu.score.hackslash.chathelper.LocalChat;
@@ -43,12 +44,10 @@ import com.asu.score.hackslash.dao.UsersDAO;
 import com.asu.score.hackslash.dialogs.AddContactDialog;
 import com.asu.score.hackslash.dialogs.ChatDialog;
 import com.asu.score.hackslash.dialogs.LoginDialog;
-
 import com.asu.score.hackslash.dialogs.UserSessionLogDialog;
 import com.asu.score.hackslash.engine.ConnectionManager;
 import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.helper.ImageProviderHelper;
-
 import com.asu.score.hackslash.userhelper.User;
 import com.asu.score.hackslash.userhelper.UserContentProvider;
 import com.asu.score.hackslash.userhelper.UserInput;
@@ -253,11 +252,11 @@ public class UsersView extends ViewPart {
 		addContactAction.setImageDescriptor(ImageProviderHelper
 				.getImageDescriptor("add.gif"));
 
-		doubleClickAction = new Action() {
-			public void run() {
-				onDoubleClick();
-			}
-		};
+//		doubleClickAction = new Action() {
+//			public void run() {
+//				onDoubleClick();
+//			}
+//		};
 		
 		userSessionLogAction = new Action() {
 			public void run() {
@@ -303,6 +302,7 @@ public class UsersView extends ViewPart {
 					message = "Hello " + user
 							+ ", Welcome to DSD work enviroment";
 					hookRosterListeners();
+					input.refresh();
 				} catch (XMPPException | SmackException | IOException e) {
 					message = "UnAuthorized Username or Password!";
 				}
@@ -319,7 +319,11 @@ public class UsersView extends ViewPart {
 			input.refresh();
 		}
 	}
-
+	
+	public void refresh() {
+		input.refresh();
+	} 
+	
 	private void addContact() {
 
 		AddContactDialog dialog = new AddContactDialog(getSite().getShell());

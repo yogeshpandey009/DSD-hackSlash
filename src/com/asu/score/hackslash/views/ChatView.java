@@ -158,4 +158,9 @@ public class ChatView extends ViewPart {
 			viewer.setSelection(new StructuredSelection(chat));
 		}
 	}
+	
+	public void refresh() {
+		input.refresh();
+	} 
+
 }
