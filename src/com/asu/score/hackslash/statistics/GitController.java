@@ -22,7 +22,7 @@ public class GitController {
 	private String gitPath = "https://github.com/ser515asu/DSD-hackSlash.git";
 	private Repository repo;
 	private Git git;
-	private String filePath = "./hackslash/.git";
+	private String filePath = "./temp/.git";
 
 	/**
 	 * Returns the instance of the singleton class
@@ -46,32 +46,26 @@ public class GitController {
 	}
 
 	private GitController() {
-		try {
-			File gitDir = new File(filePath);
-			git = openOrCreate(gitDir);
-			repo = git.getRepository();
-
-		} catch (GitAPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		File gitDir = new File(filePath);
+		openOrCreateGitRepo(gitDir);
+		repo = git.getRepository();
 	}
 
-	static Git openOrCreate(File gitDirectory) throws IOException,
-			GitAPIException {
-		Git git;
+	private void openOrCreateGitRepo(File gitDirectory) {
 		FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
 		repositoryBuilder.addCeilingDirectory(gitDirectory);
 		repositoryBuilder.findGitDir(gitDirectory);
-		if (repositoryBuilder.getGitDir() == null) {
-			git = Git.init().setDirectory(gitDirectory.getParentFile()).call();
-		} else {
-			git = new Git(repositoryBuilder.build());
+		try {
+			if (repositoryBuilder.getGitDir() == null) {
+				git = Git.cloneRepository().setURI(gitPath).setDirectory(gitDirectory.getParentFile()).call();
+				//git = Git.init().setDirectory(gitDirectory.getParentFile()).call();
+			} else {
+				git = new Git(repositoryBuilder.build());
+			}
+		} catch (IllegalStateException | GitAPIException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return git;
 	}
 
 	public String getGitPath() {
