@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -28,8 +29,8 @@ import org.jivesoftware.smack.XMPPException;
 import com.asu.score.hackslash.actions.im.ChatController;
 import com.asu.score.hackslash.chathelper.Chat;
 import com.asu.score.hackslash.chathelper.ChatInput;
+import com.asu.score.hackslash.engine.SessionManager;
 import com.asu.score.hackslash.taskhelper.TaskContentProvider;
-import com.asu.score.hackslash.taskhelper.TaskInput;
 
 public class ChatView extends ViewPart {
 	public static final String ID = FormView.class.getPackage().getName()
@@ -40,6 +41,8 @@ public class ChatView extends ViewPart {
 	private Text text;
 	private TableViewer viewer;
 	private ChatInput input;
+	private SessionManager session = SessionManager.getInstance();
+
 	
 	/**
 	 * Constructor
@@ -54,19 +57,29 @@ public class ChatView extends ViewPart {
 
 		public String getColumnText(Object obj, int index) {
 			String txt = "";
+			if (session.isAuthenticated()) {
+				if (obj instanceof Chat) {
+					Chat u = (Chat) obj;
+					if (index == 0) {
+						txt = u.getBuddy();
+					} else if (index == 1) {
+						txt = u.getMsg();
+					}
+				}
+			} else {
+				if (index == 0) {
+					txt = obj.toString();
+				}
+			}
 			return txt;
 		}
 
-		public Image getColumnImage(Object obj, int index) {
-			if (index == 0) {
-				return getImage(obj);
-			}
+		@Override
+		public Image getColumnImage(Object arg0, int arg1) {
+			// TODO Auto-generated method stub
 			return null;
 		}
 
-		public Image getImage(Object obj) {
-			return null;
-		}
 	}
 
 	@Override
@@ -74,6 +87,7 @@ public class ChatView extends ViewPart {
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);
 		createViewer(parent);
+		
 		toolkit = new FormToolkit(parent.getDisplay());
 		
 		form = toolkit.createForm(parent);
@@ -122,6 +136,10 @@ public class ChatView extends ViewPart {
 		// make the selection available to other views
 		getSite().setSelectionProvider(viewer);
 		// set the sorter for the table
+		TableColumn from = new TableColumn(viewer.getTable(), SWT.LEFT);
+		from.setWidth(150);
+		TableColumn msg = new TableColumn(viewer.getTable(), SWT.RIGHT);
+		msg.setWidth(150);
 
 		// define layout for the viewer
 		GridData gridData = new GridData();

@@ -161,10 +161,15 @@ public class ChatController {
 			System.out.println(String.format(
 					"Received message '%1$s' from %2$s", body, from));
 
-			ChatView chatView = (ChatView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("com.asu.score.hackslash.views.ChatView");
-			if(chatView != null) {
-				chatView.addItem(new com.asu.score.hackslash.chathelper.Chat(from, body));				
-			}
+			Display.getDefault().asyncExec(new Runnable() {
+			    @Override
+			    public void run() {
+					ChatView chatView = (ChatView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("com.asu.score.hackslash.views.ChatView");
+					if(chatView != null) {
+						chatView.addItem(new com.asu.score.hackslash.chathelper.Chat(from, body));				
+					}
+			    }
+			});
 			/*boolean flag = false;
 			LocalChat lChat = ActiveChats.getChatIfAlreadyExist(from);
 			if(lChat == null){
