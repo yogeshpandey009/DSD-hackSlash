@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class ActiveChats {
 
 	public static ArrayList<LocalChat> activeChats = new ArrayList<LocalChat>();
-
+	
 	/**
 	 * Returns object of local chat if it already exists for that user else
 	 * creates returns null.

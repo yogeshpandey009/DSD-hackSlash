@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.SmackException.NoResponseException;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -25,6 +27,8 @@ import com.asu.score.hackslash.chathelper.ActiveChats;
 import com.asu.score.hackslash.chathelper.LocalChat;
 import com.asu.score.hackslash.dao.TMemberDAO;
 import com.asu.score.hackslash.engine.SessionManager;
+import com.asu.score.hackslash.userhelper.User;
+import com.asu.score.hackslash.views.ChatView;
 
 /**
  * Controls the chat commands and messages exchanged between users.
@@ -96,6 +100,24 @@ public class ChatController {
 		Chat chat = chatManager.createChat(buddyJID, messageListener);
 		chat.sendMessage(message);
 	}
+	
+	public void sendMessage(String message)
+			throws NotConnectedException {
+		UsersService userSer = new UsersService();
+		List<User> users;
+		try {
+			users = userSer.getAllUsers();
+			for (User user : users) {
+				System.out.println(String.format("Sending mesage '%1$s' to user %2$s",
+						message, user.getName()));
+				Chat chat = chatManager.createChat(user.getName(), messageListener);
+				chat.sendMessage(message);
+			}
+		} catch (SmackException | IOException | XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
 	public void createEntry(String user)
 			throws NotLoggedInException, NoResponseException,
@@ -138,12 +160,18 @@ public class ChatController {
 			String body = message.getBody();
 			System.out.println(String.format(
 					"Received message '%1$s' from %2$s", body, from));
-			boolean flag = false;
+
+			ChatView chatView = (ChatView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("com.asu.score.hackslash.views.ChatView");
+			if(chatView != null) {
+				chatView.addItem(new com.asu.score.hackslash.chathelper.Chat(from, body));				
+			}
+			/*boolean flag = false;
 			LocalChat lChat = ActiveChats.getChatIfAlreadyExist(from);
 			if(lChat == null){
 				lChat = new LocalChat(from, new Display());
 			}
-			lChat.receivedChat(body);
+			lChat.receivedChat(body);*/
+			
 		}
 
 	}
