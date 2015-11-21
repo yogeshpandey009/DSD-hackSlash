@@ -34,14 +34,6 @@ public class GitController {
 		if (null == gitCtrl) {
 			gitCtrl = new GitController();
 		}
-		try {
-			gitCtrl.getGit().pull().call();
-			System.out.println("Pulling remote repository");
-		} catch (GitAPIException e) {
-			e.printStackTrace();
-			System.out
-					.println("Exception occured while pulling remote repository");
-		}
 		return gitCtrl;
 	}
 
@@ -57,9 +49,11 @@ public class GitController {
 		repositoryBuilder.findGitDir(gitDirectory);
 		try {
 			if (repositoryBuilder.getGitDir() == null) {
+				System.out.println("cloning new repo");
 				git = Git.cloneRepository().setURI(gitPath).setDirectory(gitDirectory.getParentFile()).call();
 				//git = Git.init().setDirectory(gitDirectory.getParentFile()).call();
 			} else {
+				System.out.println("using existing repo");
 				git = new Git(repositoryBuilder.build());
 			}
 		} catch (IllegalStateException | GitAPIException | IOException e) {

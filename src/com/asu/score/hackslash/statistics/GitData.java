@@ -33,54 +33,52 @@ import org.gitective.core.stat.YearCommitActivity;
 import com.asu.score.hackslash.model.ShowGitLogsModel;
 
 public class GitData {
-	private static final String GIT_PATH = "C:/Users/Mihir/Desktop/Fall 2015/SER 515 - Software Inception/DSDO/DSD-hackSlash/.git";
-	private static final String REMOTE_URL = "https://github.com/ser515asu/DSD-hackSlash.git";
+	private GitController gitCtrl = GitController.getInstance();
 
 	public Set<String> getContributor() throws IOException {
-		//Repository repo = new FileRepository(GIT_PATH);
-		GitController gitCtrl = GitController.getInstance();
+		gitPull();
 		Repository repo = gitCtrl.getRepo();
-		//Git git = new Git(repo);
+		// Git git = new Git(repo);
 		AuthorSetFilter authors = new AuthorSetFilter();
 		CommitFinder afinder = new CommitFinder(repo);
 		afinder.setFilter(authors).find();
 		Set<String> set = new HashSet<String>();
-		for (PersonIdent author : authors.getPersons()){
-				set.add(author.getName());
-			/*System.out.println(author);*/
+		for (PersonIdent author : authors.getPersons()) {
+			set.add(author.getName());
+			/* System.out.println(author); */
 		}
-			
+
 		return set;
 	}
-	public Map<String,Integer> getCommitsPerContributor() throws IOException {
-		GitController gitCtrl = GitController.getInstance();
-		Repository repo = GitController.getInstance().getRepo();
-		//Repository repo = new FileRepository(GIT_PATH);
-		//Git git = new Git(repo);
-		Map<String,Integer> map = new HashMap<String,Integer>();
+
+	public Map<String, Integer> getCommitsPerContributor() throws IOException {
+		gitPull();
+		Repository repo = gitCtrl.getRepo();
+		// Repository repo = new FileRepository(GIT_PATH);
+		// Git git = new Git(repo);
+		Map<String, Integer> map = new HashMap<String, Integer>();
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
 		cfinder.setFilter(afilter).find();
 		UserCommitActivity[] activity = afilter.getHistogram()
 				.getUserActivity();
-		
-		for (UserCommitActivity user : activity){
+
+		for (UserCommitActivity user : activity) {
 			map.put(user.getName(), user.getCount());
 			System.out.println(user.getName() + " has done " + user.getCount()
-			+ " commits.");
-			
+					+ " commits.");
+
 		}
 		return map;
 	}
 
-	
-	public List<List<String>> getMonthlyCommits() throws IOException{
-		GitController gitCtrl = GitController.getInstance();
+	public List<List<String>> getMonthlyCommits() throws IOException {
+		gitPull();
 		Repository repo = gitCtrl.getRepo();
-		//Repository repo = new FileRepository(GIT_PATH);
-		//Git git = new Git(repo);
+		// Repository repo = new FileRepository(GIT_PATH);
+		// Git git = new Git(repo);
 		List<List<String>> all = new ArrayList<List<String>>();
-		
+
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
 		cfinder.setFilter(afilter).find();
@@ -91,12 +89,12 @@ public class GitData {
 		for (YearCommitActivity year : commits.getYears()) {
 			int m = 0;
 			for (int c : year.getMonths()) {
-				String month =  Month.month(m) + "-" + year.getYear();
+				String month = Month.month(m) + "-" + year.getYear();
 				List<String> mo = new ArrayList<String>();
 				mo.add(month);
 				mo.add(String.valueOf(c));
 				all.add(mo);
-				//map.put(month,c);
+				// map.put(month,c);
 				System.out.println(c + " commits in " + Month.month(m) + "-"
 						+ year.getYear());
 				m++;
@@ -104,17 +102,19 @@ public class GitData {
 		}
 		return all;
 	}
-	public List<ShowGitLogsModel> getGitCommitLog() throws IOException, GitAPIException{
-		GitController gitCtrl = GitController.getInstance();
+
+	public List<ShowGitLogsModel> getGitCommitLog() throws IOException,
+			GitAPIException {
+		gitPull();
 		Git git = gitCtrl.getGit();
 		Repository repo = gitCtrl.getRepo();
 		RevWalk walk = new RevWalk(repo);
-		//List<List<String>> log = new ArrayList<List<String>>();
+		// List<List<String>> log = new ArrayList<List<String>>();
 		List<ShowGitLogsModel> log = new ArrayList<ShowGitLogsModel>();
-		//List<String> logRow = new ArrayList();
+		// List<String> logRow = new ArrayList();
 		List<String> logRow;
 		ShowGitLogsModel showGitLogsModel;
-		
+
 		List<Ref> branches = git.branchList().call();
 		for (Ref branch : branches) {
 			String branchName = branch.getName();
@@ -145,30 +145,32 @@ public class GitData {
 				if (foundInThisBranch) {
 					showGitLogsModel = new ShowGitLogsModel();
 					showGitLogsModel.setLogIdentifier(commit.getName());
-					showGitLogsModel.setAuthorName(commit.getAuthorIdent().getName());
+					showGitLogsModel.setAuthorName(commit.getAuthorIdent()
+							.getName());
 					long time = commit.getCommitTime();
-					time = time*1000;
+					time = time * 1000;
 					showGitLogsModel.setDate(String.valueOf(new Date(time)));
 					showGitLogsModel.setCommitMessage(commit.getFullMessage());
-					//logRow = new ArrayList();
-					//logRow.add(commit.getName());
-					//logRow.add(commit.getAuthorIdent().getName());
-					//logRow.add(String.valueOf(new Date(commit.getCommitTime())));
-					//logRow.add(commit.getFullMessage());
-					//System.out.println(commit.getName());
-					//System.out.println(commit.getAuthorIdent().getName());
-					//System.out.println(new Date(commit.getCommitTime()));
-					//System.out.println(commit.getFullMessage());
+					// logRow = new ArrayList();
+					// logRow.add(commit.getName());
+					// logRow.add(commit.getAuthorIdent().getName());
+					// logRow.add(String.valueOf(new
+					// Date(commit.getCommitTime())));
+					// logRow.add(commit.getFullMessage());
+					// System.out.println(commit.getName());
+					// System.out.println(commit.getAuthorIdent().getName());
+					// System.out.println(new Date(commit.getCommitTime()));
+					// System.out.println(commit.getFullMessage());
 					log.add(showGitLogsModel);
 				}
-			
+
 			}
-		}		
+		}
 		return log;
 	}
-	
-	public int getTotalCurrentMonthCommits() throws IOException{
-		GitController gitCtrl = GitController.getInstance();
+
+	public int getTotalCurrentMonthCommits() throws IOException {
+		gitPull();
 		Repository repo = gitCtrl.getRepo();
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
@@ -176,15 +178,16 @@ public class GitData {
 		UserCommitActivity[] activity = afilter.getHistogram()
 				.getUserActivity();
 		CommitCalendar commits = new CommitCalendar(activity);
-		
-		int c = commits.getMonthCount(Calendar.getInstance().get(Calendar.MONTH)); 
-			System.out.println(c);
-		
+
+		int c = commits.getMonthCount(Calendar.getInstance()
+				.get(Calendar.MONTH));
+		System.out.println(c);
+
 		return c;
 	}
-	
-	public int getTotalCommits() throws IOException{
-		GitController gitCtrl = GitController.getInstance();
+
+	public int getTotalCommits() throws IOException {
+		gitPull();
 		Repository repo = gitCtrl.getRepo();
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
@@ -201,9 +204,9 @@ public class GitData {
 		}
 		return count;
 	}
-	
+
 	public List<Integer> getLocChange() throws IOException {
-		GitController gitCtrl = GitController.getInstance();
+		gitPull();
 		Repository repo = gitCtrl.getRepo();
 		CommitFinder finder = new CommitFinder(repo);
 		DiffLineCountFilter filter = new DiffLineCountFilter();
@@ -213,25 +216,36 @@ public class GitData {
 		loc.add((int) filter.getAdded());
 		loc.add((int) filter.getEdited());
 		loc.add((int) filter.getDeleted());
-		loc.add((int) filter.getAdded() + (int)filter.getEdited());
+		loc.add((int) filter.getAdded() + (int) filter.getEdited());
 		System.out.println("Added:\t" + filter.getAdded());
 		System.out.println("Changed:\t" + filter.getEdited());
 		System.out.println("Deleted:\t" + filter.getDeleted());
 		System.out.println("CSI:\t" + (filter.getAdded() + filter.getEdited()));
 		return loc;
-		
+
 	}
-	
-	public static void main(String[] args) throws IOException, GitAPIException{
+
+	private void gitPull() {
+		try {
+			gitCtrl.getGit().pull().call();
+			System.out.println("pulled remote repository");
+		} catch (GitAPIException e) {
+			e.printStackTrace();
+			System.out
+					.println("Exception occured while pulling remote repository");
+		}
+	}
+
+	public static void main(String[] args) throws IOException, GitAPIException {
 		GitData git = new GitData();
-		//Set<String> set = git.getContributor();
-		//Map<String,Integer> map = git.getCommitsPerContributor();
-		//List<List<String>> mo = git.getMonthlyCommits();
-		//List<List<String>> log = git.getGitCommitLog();
-		//int c = git.getTotalCurrentMonthCommits();
-		//System.out.println(set);
-		//System.out.println(log);
-		//System.out.println(map2);
-		//System.out.println(c);
+		// Set<String> set = git.getContributor();
+		// Map<String,Integer> map = git.getCommitsPerContributor();
+		// List<List<String>> mo = git.getMonthlyCommits();
+		// List<List<String>> log = git.getGitCommitLog();
+		// int c = git.getTotalCurrentMonthCommits();
+		// System.out.println(set);
+		// System.out.println(log);
+		// System.out.println(map2);
+		// System.out.println(c);
 	}
 }
