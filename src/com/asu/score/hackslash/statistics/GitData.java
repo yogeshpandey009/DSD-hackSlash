@@ -43,8 +43,8 @@ public class GitData {
 		return set;
 	}
 	public Map<String,Integer> getCommitsPerContributor() throws IOException {
-		//Repository repo = GitController.getInstance().getRepo();
-		Repository repo = new FileRepository(GIT_PATH);
+		Repository repo = GitController.getInstance().getRepo();
+		//Repository repo = new FileRepository(GIT_PATH);
 		//Git git = new Git(repo);
 		Map<String,Integer> map = new HashMap<String,Integer>();
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
@@ -64,8 +64,8 @@ public class GitData {
 
 	
 	public List<List<String>> getMonthlyCommits() throws IOException{
-		//Repository repo = GitController.getInstance().getRepo();
-		Repository repo = new FileRepository(GIT_PATH);
+		Repository repo = GitController.getInstance().getRepo();
+		//Repository repo = new FileRepository(GIT_PATH);
 		//Git git = new Git(repo);
 		List<List<String>> all = new ArrayList<List<String>>();
 		
@@ -93,7 +93,7 @@ public class GitData {
 		return all;
 	}
 	public List<ShowGitLogsModel> getGitCommitLog() throws IOException, GitAPIException{
-		Repository repo = GitControl.getInstance().getRepo();
+		Repository repo = GitController.getInstance().getRepo();
 		Git git = new Git(repo);
 		RevWalk walk = new RevWalk(repo);
 		//List<List<String>> log = new ArrayList<List<String>>();
@@ -172,8 +172,8 @@ public class GitData {
 	}
 	
 	public int getTotalCommits() throws IOException{
-		//Repository repo = GitController.getInstance().getRepo();
-		Repository repo = new FileRepository(GIT_PATH);
+		Repository repo = GitController.getInstance().getRepo();
+		//Repository repo = new FileRepository(GIT_PATH);
 		Git git = new Git(repo);
 		AuthorHistogramFilter afilter = new AuthorHistogramFilter();
 		CommitFinder cfinder = new CommitFinder(repo);
@@ -192,8 +192,8 @@ public class GitData {
 	}
 	
 	public List<Integer> getLocChange() throws IOException {
-		//Repository repo = GitController.getInstance().getRepo();
-		Repository repo = new FileRepository(GIT_PATH);
+		Repository repo = GitController.getInstance().getRepo();
+		//Repository repo = new FileRepository(GIT_PATH);
 		Git git = new Git(repo);
 		CommitFinder finder = new CommitFinder(repo);
 		DiffLineCountFilter filter = new DiffLineCountFilter();

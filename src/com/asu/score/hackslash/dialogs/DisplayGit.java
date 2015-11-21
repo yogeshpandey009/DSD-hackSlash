@@ -31,7 +31,7 @@ public class DisplayGit {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		shell.setText("User Commit Statistics");
-		shell.setSize(3000, 2400);
+		shell.setSize(1200, 500);
 		shell.setLayout(new FillLayout());
 		Composite com = shell;
 		GitData gitData = new GitData();
@@ -81,7 +81,7 @@ public class DisplayGit {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		shell.setText("LOC Statistics");
-		shell.setSize(3000, 2400);
+		shell.setSize(1200, 500);
 		shell.setLayout(new FillLayout());
 		Composite com = shell;
 		GitData gitData = new GitData();
@@ -172,7 +172,7 @@ public class DisplayGit {
 		Display display = Display.getDefault();
 		Shell shell = new Shell(display);
 		shell.setText("Monthly Commit Statistics");
-		shell.setSize(3000, 2400);
+		shell.setSize(1200, 500);
 		shell.setLayout(new FillLayout());
 		Composite com = shell;
 		GitData gitData = new GitData();
