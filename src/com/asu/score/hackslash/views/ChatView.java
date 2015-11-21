@@ -1,190 +1,119 @@
 package com.asu.score.hackslash.views;
 
+import javax.swing.text.html.FormView;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.part.*;
-import org.eclipse.jface.viewers.*;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.jface.action.*;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.*;
-import org.eclipse.swt.widgets.Menu;
+import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.widgets.Form;
+import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.eclipse.ui.part.ViewPart;
 
-
-/**
- * This sample class demonstrates how to plug-in a new
- * workbench view. The view shows data obtained from the
- * model. The sample creates a dummy model on the fly,
- * but a real implementation would connect to the model
- * available either in this or another plug-in (e.g. the workspace).
- * The view is connected to the model using a content provider.
- * <p>
- * The view uses a label provider to define how model
- * objects should be presented in the view. Each
- * view can present the same model objects using
- * different labels and icons, if needed. Alternatively,
- * a single label provider can be shared between views
- * in order to ensure that objects of the same type are
- * presented in the same way everywhere.
- * <p>
- */
+import com.asu.score.hackslash.taskhelper.TaskContentProvider;
+import com.asu.score.hackslash.userhelper.UserContentProvider;
 
 public class ChatView extends ViewPart {
+	public static final String ID = FormView.class.getPackage().getName()
+			+ ".Form";
 
-	/**
-	 * The ID of the view as specified by the extension.
-	 */
-	public static final String ID = "com.asu.score.hackslash.views.ChatView";
-
+	private FormToolkit toolkit;
+	private Form form;
+	private Text text;
 	private TableViewer viewer;
-	private Action action1;
-	private Action action2;
-	private Action doubleClickAction;
 
-	/*
-	 * The content provider class is responsible for
-	 * providing objects to the view. It can wrap
-	 * existing objects in adapters or simply return
-	 * objects as-is. These objects may be sensitive
-	 * to the current input of the view, or ignore
-	 * it and always show the same content 
-	 * (like Task List, for example).
-	 */
-	 
-	class ViewContentProvider implements IStructuredContentProvider {
-		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
-		}
-		public void dispose() {
-		}
-		public Object[] getElements(Object parent) {
-			return new String[] { "One", "Two", "Three" };
-		}
-	}
-	class ViewLabelProvider extends LabelProvider implements ITableLabelProvider {
+	class ViewLabelProvider extends LabelProvider implements
+			ITableLabelProvider {
+
 		public String getColumnText(Object obj, int index) {
-			return getText(obj);
+			String txt = "";
+			return txt;
 		}
+
 		public Image getColumnImage(Object obj, int index) {
-			return getImage(obj);
+			if (index == 0) {
+				return getImage(obj);
+			}
+			return null;
 		}
+
 		public Image getImage(Object obj) {
-			return PlatformUI.getWorkbench().
-					getSharedImages().getImage(ISharedImages.IMG_OBJ_ELEMENT);
+			return null;
 		}
 	}
-	class NameSorter extends ViewerSorter {
-	}
 
-	/**
-	 * The constructor.
-	 */
-	public ChatView() {
-	}
-
-	/**
-	 * This is a callback that will allow us
-	 * to create the viewer and initialize it.
-	 */
+	@Override
 	public void createPartControl(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-		viewer.setContentProvider(new ViewContentProvider());
-		viewer.setLabelProvider(new ViewLabelProvider());
-		viewer.setSorter(new NameSorter());
-		viewer.setInput(getViewSite());
-
-		// Create the help context id for the viewer's control
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(viewer.getControl(), "com.asu.score.hackslash.viewer");
-		makeActions();
-		hookContextMenu();
-		hookDoubleClickAction();
-		contributeToActionBars();
-	}
-
-	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu");
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			public void menuAboutToShow(IMenuManager manager) {
-				ChatView.this.fillContextMenu(manager);
-			}
-		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, viewer);
-	}
-
-	private void contributeToActionBars() {
-		IActionBars bars = getViewSite().getActionBars();
-		fillLocalPullDown(bars.getMenuManager());
-		fillLocalToolBar(bars.getToolBarManager());
-	}
-
-	private void fillLocalPullDown(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(new Separator());
-		manager.add(action2);
-	}
-
-	private void fillContextMenu(IMenuManager manager) {
-		manager.add(action1);
-		manager.add(action2);
-		// Other plug-ins can contribute there actions here
-		manager.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-	}
-	
-	private void fillLocalToolBar(IToolBarManager manager) {
-		manager.add(action1);
-		manager.add(action2);
-	}
-
-	private void makeActions() {
-		action1 = new Action() {
-			public void run() {
-				showMessage("Action 1 executed");
-			}
-		};
-		action1.setText("Action 1");
-		action1.setToolTipText("Action 1 tooltip");
-		action1.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		GridLayout layout = new GridLayout(2, false);
+		parent.setLayout(layout);
+		createViewer(parent);
+		toolkit = new FormToolkit(parent.getDisplay());
 		
-		action2 = new Action() {
-			public void run() {
-				showMessage("Action 2 executed");
-			}
-		};
-		action2.setText("Action 2");
-		action2.setToolTipText("Action 2 tooltip");
-		action2.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-				getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-		doubleClickAction = new Action() {
-			public void run() {
-				ISelection selection = viewer.getSelection();
-				Object obj = ((IStructuredSelection)selection).getFirstElement();
-				showMessage("Double-click detected on "+obj.toString());
-			}
-		};
-	}
-
-	private void hookDoubleClickAction() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
+		form = toolkit.createForm(parent);
+		// form.setText("Pie Chucker");
+		GridLayout layout2 = new GridLayout();
+		form.getBody().setLayout(layout2);
+		layout2.numColumns = 2;
+		GridData gd = new GridData();
+		gd.horizontalSpan = 2;
+		Label label = new Label(form.getBody(), SWT.NULL);
+		label.setText("Chart Title:");
+		text = new Text(form.getBody(), SWT.BORDER);
+		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		Button button = new Button(form.getBody(), SWT.PUSH);
+		button.setText("Plot");
+		gd = new GridData();
+		gd.horizontalSpan = 2;
+		button.setLayoutData(gd);
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				System.out.println("here");
 			}
 		});
-	}
-	private void showMessage(String message) {
-		MessageDialog.openInformation(
-			viewer.getControl().getShell(),
-			"ChatView View",
-			message);
+
 	}
 
-	/**
-	 * Passing the focus request to the viewer's control.
-	 */
+	public void createViewer(Composite parent) {
+		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		//createColumns(parent, viewer);
+		final Table table = viewer.getTable();
+		table.setHeaderVisible(true);
+		table.setLinesVisible(true);
+
+		// viewer.setContentProvider(new ArrayContentProvider());
+		viewer.setContentProvider(new TaskContentProvider());
+		// get the content for the viewer, setInput will call getElements in the
+		// contentProvider
+		// viewer.setInput(ModelProvider.INSTANCE.getPersons());
+		//viewer.setInput(input);
+		// make the selection available to other views
+		getSite().setSelectionProvider(viewer);
+		// set the sorter for the table
+
+		// define layout for the viewer
+		GridData gridData = new GridData();
+		gridData.verticalAlignment = GridData.FILL;
+		gridData.horizontalSpan = 2;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		gridData.horizontalAlignment = GridData.FILL;
+		viewer.getControl().setLayoutData(gridData);
+	}
+
+	@Override
 	public void setFocus() {
-		viewer.getControl().setFocus();
 	}
 }
