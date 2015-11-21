@@ -61,7 +61,11 @@ public class ChatView extends ViewPart {
 			if (session.isAuthenticated()) {
 				if (obj instanceof Chat) {
 					Chat u = (Chat) obj;
-					txt = u.getBuddy() + ":" + u.getMsg();
+					String name = u.getBuddy();
+					if (name.indexOf('@') != -1){
+						name = name.substring(0, name.indexOf('@')).toUpperCase();
+					}
+					txt = name + "  says ->  " + u.getMsg();
 					}
 			} else {
 				txt = obj.toString();
@@ -133,7 +137,7 @@ public class ChatView extends ViewPart {
 		getSite().setSelectionProvider(viewer);
 		// set the sorter for the table
 		TableColumn chatCol = new TableColumn(viewer.getTable(), SWT.LEFT);
-		chatCol.setWidth(300);
+		chatCol.setWidth(400);
 
 		// define layout for the viewer
 		GridData gridData = new GridData();
