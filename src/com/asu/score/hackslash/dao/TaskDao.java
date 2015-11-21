@@ -162,14 +162,18 @@ public class TaskDao {
 		System.out.println("getting from DB");
 		Connection con = null;
 		Statement stmt = null;
+		Statement stmt1 = null;
 		//String query = "Select * from Task";
 		String query = "Select t.taskid, t.taskname, t.TaskDscription, t.Status, a.userid from Task t, allocation a where t.taskid = a.taskid and a.enddate = timestamp(0);";
+		String query1 = "Select t.taskid, t.taskname, t.TaskDscription, t.Status, a.userid, max(a.enddate) from Task t, allocation a where t.taskid = a.taskid and t.status = 'C' group by t.taskid;";
 		// where taskid in (Select max(TaskID) tskid from Task)
 		List<Task> tasks = new ArrayList<Task>();
 		try {
 			con = Database.getConnection();
 			stmt = con.createStatement();
+			stmt1 = con.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
+			ResultSet rs1 = stmt1.executeQuery(query1);
 			while (rs.next()) {
 				String status = null;
 				if ( rs.getString("Status").equals("N"))
@@ -181,12 +185,29 @@ public class TaskDao {
 				
 				tasks.add(new Task(rs.getString("TaskName"), rs.getString("TaskDscription"), rs.getString("userid"), rs.getString("TaskID"), status));
 			}
+			while (rs1.next()) {
+				String status = null;
+				if ( rs1.getString("Status").equals("N"))
+					status = "New";
+				else if ( rs1.getString("Status").equals("I"))
+					status = "In Progress";
+				else
+					status = "Closed";
+				
+				tasks.add(new Task(rs1.getString("TaskName"), rs1.getString("TaskDscription"), rs1.getString("userid"), rs1.getString("TaskID"), status));
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new Exception("Unable to fetch tasks");
 		} finally {
 			if (stmt != null) {
 				stmt.close();
+			}
+			if (stmt1 != null) {
+				stmt1.close();
+			}
+			if (con != null) {
+				con.close();
 			}
 		}
 		return tasks;

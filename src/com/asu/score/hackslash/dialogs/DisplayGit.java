@@ -133,7 +133,7 @@ public class DisplayGit {
 
 		final Shell shell = new Shell();
 		shell.setText("-- Total Commits --");
-		shell.setSize(1000, 700);
+		shell.setSize(600, 400);
 		shell.open();
 		// Getting total number of commits
 		GitData gitData = new GitData();

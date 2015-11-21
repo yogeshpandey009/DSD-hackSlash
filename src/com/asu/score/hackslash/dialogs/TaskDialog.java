@@ -171,8 +171,10 @@ public class TaskDialog extends Dialog {
 			createButton(parent, IDialogConstants.DETAILS_ID,
 					IDialogConstants.SHOW_DETAILS_LABEL, false);
 		}
-		createButton(parent, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL,
-				true);
+		if (!status.equals("Closed")) {
+			createButton(parent, IDialogConstants.OK_ID, "Save",
+					true);
+		}
 		createButton(parent, IDialogConstants.CANCEL_ID,
 				IDialogConstants.CANCEL_LABEL, false);
 
