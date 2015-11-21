@@ -27,6 +27,7 @@ public class LoginDialog extends Dialog {
 	private String user = "";
 	private String password = "";
 	private SessionManager session = SessionManager.getInstance();
+	private Composite container;
 	
 
 	public LoginDialog(Shell parentShell) {
@@ -40,27 +41,27 @@ public class LoginDialog extends Dialog {
 		getShell().setBackgroundImage(img);
 		getShell().setBackgroundMode(SWT.INHERIT_FORCE);  
 		getShell().setBounds(300, 200, img.getBounds().width, img.getBounds().height+40);
-		Composite container = new Composite(getShell(), SWT.NONE);
+		Composite container1 = new Composite(getShell(), SWT.NONE);
 		//container.setBounds(300, 200, img.getBounds().width, img.getBounds().height);
-		GridLayout layout = new GridLayout(2, false);
-		layout.marginRight = 5;
+		GridLayout layout = new GridLayout(3, true);
+/*		layout.marginRight = 5;
 		layout.marginLeft = 10;
-		layout.marginTop = 4;
-		container.setLayout(layout);
+		layout.marginBottom = 4;*/
+		container1.setLayout(layout);
 		
 		Color color = new Color(getShell().getDisplay(), new RGB(255, 255, 255));
 		if (session.isAuthenticated()) {
-			Label lblUser = new Label(container, SWT.NONE);
+			Label lblUser = new Label(container1, SWT.NONE);
 			lblUser.setBackground(color);
 			lblUser.setText("You are Logged In as :- "
 					+ session.getUsername());
 		} else {
-			Label lblUser = new Label(container, SWT.NONE);
+			Label lblUser = new Label(container1, SWT.NONE);
 			lblUser.setText("User:");
 			//lblUser.setBackground(color);
-			txtUser = new Text(container, SWT.BORDER);
+			txtUser = new Text(container1, SWT.BORDER);
 			txtUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-					false, 1, 1));
+					false, 2, 1));
 			txtUser.setBackground(color);
 			txtUser.setText(user);
 			txtUser.addModifyListener(new ModifyListener() {
@@ -73,7 +74,7 @@ public class LoginDialog extends Dialog {
 				}
 			});
 
-			Label lblPassword = new Label(container, SWT.NONE);
+			Label lblPassword = new Label(container1, SWT.NONE);
 			GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
 					false, 1, 1);
 			gd_lblNewLabel.horizontalIndent = 1;
@@ -81,9 +82,9 @@ public class LoginDialog extends Dialog {
 			//lblPassword.setBackground(color);
 			lblPassword.setText("Password:");
 
-			txtPassword = new Text(container, SWT.BORDER | SWT.PASSWORD);
+			txtPassword = new Text(container1, SWT.BORDER | SWT.PASSWORD);
 			txtPassword.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-					false, 1, 1));
+					false, 2, 1));
 			txtPassword.setBackground(color);
 			txtPassword.setText(password);
 			txtPassword.addModifyListener(new ModifyListener() {
@@ -97,17 +98,20 @@ public class LoginDialog extends Dialog {
 			});
 		}
 
-		return container;
+		return container1;
 	}
 
 	// override method to use "Login" as label for the OK button
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		container = new Composite(getShell(), SWT.NONE);
+		GridLayout layout = new GridLayout(2, true);
+		container.setLayout(layout);
 		if (session.isAuthenticated()) {
-			createButton(parent, IDialogConstants.CLOSE_ID, "Logout", true);
+			createButton(container, IDialogConstants.CLOSE_ID, "Logout", true);
 		} else {
-			createButton(parent, IDialogConstants.OK_ID, "Login", true);
-			createButton(parent, IDialogConstants.CANCEL_ID,
+			createButton(container, IDialogConstants.OK_ID, "Login", true);
+			createButton(container, IDialogConstants.CANCEL_ID,
 					IDialogConstants.CANCEL_LABEL, false);
 		}
 	}
