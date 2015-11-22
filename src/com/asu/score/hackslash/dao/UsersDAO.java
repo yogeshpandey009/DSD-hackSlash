@@ -17,20 +17,29 @@ import com.asu.score.hackslash.sessionloghelper.UserSessionLog;
 
 
 public class UsersDAO {
-	Connection conn = null;
-	PreparedStatement pst = null;
+	
 
 	ResultSet rs = null;
 	List<String> users_list = new ArrayList<String>();
 
 	public List<String> getUsers() {
-
+		Connection conn = null;
+		PreparedStatement pst = null;
 		try {
-			conn = Database.getConnection();
-			pst = conn.prepareStatement(SQLQueries.SQL_GET_USERS);
-			rs = pst.executeQuery();
-			while (rs.next()) {
-				users_list.add(rs.getString("userID"));
+			try {
+				conn = Database.getConnection();
+				pst = conn.prepareStatement(SQLQueries.SQL_GET_USERS);
+				rs = pst.executeQuery();
+				while (rs.next()) {
+					users_list.add(rs.getString("userID"));
+				}
+			} finally {
+				if (pst != null) {
+					pst.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -44,16 +53,26 @@ public class UsersDAO {
 		Timestamp login = new Timestamp(loginTime.getTime());
 		Timestamp logout = new Timestamp(System.currentTimeMillis());
 		try {
-			conn = Database.getConnection();
-			stmt = conn.createStatement();
-			String query = "Insert into UsersSessionLog(UserName, LoginTime, LogoutTime) values(\"" + username + "\",\""
-					+ login + "\",\"" + logout + "\");";
-			System.out.println(query);
-			stmt.executeUpdate(query);
+			try {
+				conn = Database.getConnection();
+				stmt = conn.createStatement();
+				String query = "Insert into UsersSessionLog(UserName, LoginTime, LogoutTime) values(\"" + username + "\",\""
+						+ login + "\",\"" + logout + "\");";
+				System.out.println(query);
+				stmt.executeUpdate(query);
+			} finally {
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			}
+			
 		} catch(SQLException se) {
 			System.out.println("Unable to add user Session Time");
 			se.printStackTrace();
-		}
+		} 
 	}
 
 	
@@ -76,6 +95,9 @@ public class UsersDAO {
 		} finally {
 			if (stmt != null) {
 				stmt.close();
+			}
+			if (con != null) {
+				con.close();
 			}
 		}
 		return sessionLog;

@@ -33,27 +33,37 @@ public class ShowTasksDetailsDAO {
 	public List<ShowTaskDetails> getTaskDetails() {
 
 		try {
-			conn = Database.getConnection();
-			sql = "SELECT A.USERID,A.StartDate,A.EndDate FROM ALLOCATION AS A, TASK AS T WHERE T.TASKID = A.TASKID "
-
-					+ " AND T.TASKNAME = '"+getTaskName()+"' ";
-
-			System.out.println("getTaskName()"+getTaskName());
-			pst = conn.prepareStatement(sql);
-			rs = pst.executeQuery();
-			while (rs.next()) {
-				std = new ShowTaskDetails();
-				//user_id_list.add(rs.getString("userID"));
-				//start_date_list.add(rs.getTimestamp("StartDate"));
-				//end_date_list.add(rs.getTimestamp("EndDate"));
-				if(rs.getString("userID")!= null)
-					std.setUser_id(rs.getString("userID"));
-				if((rs.getTimestamp("StartDate")) != null)
-					std.setStart_dt(smpldtFrmt.format(rs.getTimestamp("StartDate")));
-				if((rs.getTimestamp("EndDate")) != null)
-					std.setEnd_dt(smpldtFrmt.format(rs.getTimestamp("EndDate")));
-				details.add(std);
+			try {
 				
+				conn = Database.getConnection();
+				sql = "SELECT A.USERID,A.StartDate,A.EndDate FROM ALLOCATION AS A, TASK AS T WHERE T.TASKID = A.TASKID "
+						
+					+ " AND T.TASKNAME = '"+getTaskName()+"' ";
+				
+				System.out.println("getTaskName()"+getTaskName());
+				pst = conn.prepareStatement(sql);
+				rs = pst.executeQuery();
+				while (rs.next()) {
+					std = new ShowTaskDetails();
+					//user_id_list.add(rs.getString("userID"));
+					//start_date_list.add(rs.getTimestamp("StartDate"));
+					//end_date_list.add(rs.getTimestamp("EndDate"));
+					if(rs.getString("userID")!= null)
+						std.setUser_id(rs.getString("userID"));
+					if((rs.getTimestamp("StartDate")) != null)
+						std.setStart_dt(smpldtFrmt.format(rs.getTimestamp("StartDate")));
+					if((rs.getTimestamp("EndDate")) != null)
+						std.setEnd_dt(smpldtFrmt.format(rs.getTimestamp("EndDate")));
+					details.add(std);
+					
+				}
+			} finally {
+				if (pst != null) {
+					pst.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

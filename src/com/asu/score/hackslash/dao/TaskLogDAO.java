@@ -30,6 +30,10 @@ public class TaskLogDAO {
 	        { 
 	        	stmt.close(); 
 	        }
+	        if (con != null) 
+	        { 
+	        	con.close(); 
+	        }
 	    }
 	}
 	
