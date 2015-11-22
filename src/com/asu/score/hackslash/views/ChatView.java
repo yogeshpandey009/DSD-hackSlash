@@ -91,15 +91,15 @@ public class ChatView extends ViewPart {
 		
 		form = toolkit.createForm(parent);
 		// form.setText("Pie Chucker");
-		GridLayout layout2 = new GridLayout();
+		GridLayout layout2 = new GridLayout(3, true);
 		form.getBody().setLayout(layout2);
-		layout2.numColumns = 2;
 		GridData gd = new GridData();
 		gd.horizontalSpan = 2;
 		Label label = new Label(form.getBody(), SWT.NULL);
 		label.setText("Chat Box:");
 		text = new Text(form.getBody(), SWT.BORDER);
-		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 2, 1));
 		Button button = new Button(form.getBody(), SWT.PUSH);
 		button.setText("Send");
 		gd = new GridData();

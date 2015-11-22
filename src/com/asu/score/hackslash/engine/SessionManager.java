@@ -197,13 +197,23 @@ public class SessionManager {
 						.getActiveWorkbenchWindow().getActivePage();
 				UsersView usersView = (UsersView) page
 						.findView("com.asu.score.hackslash.views.UsersView");
-				usersView.refresh();
+				if (usersView != null) {
+					usersView.refresh();
+				}
+
 				ChatView chatView = (ChatView) page
 						.findView("com.asu.score.hackslash.views.ChatView");
-				chatView.refresh();
+
+				if (chatView != null) {
+					chatView.refresh();
+				}
+
 				TaskView taskView = (TaskView) page
 						.findView("com.asu.score.hackslash.views.TaskView");
-				taskView.refresh();
+
+				if (taskView != null) {
+					taskView.refresh();
+				}
 			}
 		});
 	}
