@@ -107,20 +107,20 @@ public class ChatController {
 		List<User> users;
 		try {
 			users = userSer.getAllUsers();
+			Display.getDefault().asyncExec(new Runnable() {
+			    @Override
+			    public void run() {
+					ChatView chatView = (ChatView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("com.asu.score.hackslash.views.ChatView");
+					if(chatView != null) {
+						chatView.addItem(new com.asu.score.hackslash.chathelper.Chat(SessionManager.getInstance().getUsername().toUpperCase(), message));				
+					}
+			    }
+			});
 			for (User user : users) {
 				System.out.println(String.format("Sending mesage '%1$s' to user %2$s",
 						message, user.getName()));
 				String me = user.getName().substring(0, user.getName().indexOf('@')).toLowerCase();
 				if(SessionManager.getInstance().getUsername().toLowerCase().contains(me)){
-					Display.getDefault().asyncExec(new Runnable() {
-					    @Override
-					    public void run() {
-							ChatView chatView = (ChatView) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("com.asu.score.hackslash.views.ChatView");
-							if(chatView != null) {
-								chatView.addItem(new com.asu.score.hackslash.chathelper.Chat(me.toUpperCase(), message));				
-							}
-					    }
-					});
 					continue;
 				}
 				Chat chat = chatManager.createChat(user.getName(), messageListener);

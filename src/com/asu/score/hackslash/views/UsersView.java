@@ -148,7 +148,7 @@ public class UsersView extends ViewPart {
 		getSite().setSelectionProvider(viewer);
 		makeActions();
 		hookContextMenu();
-		hookDoubleClickAction();
+		//hookDoubleClickAction();
 		contributeToActionBars();
 	}
 
@@ -223,6 +223,14 @@ public class UsersView extends ViewPart {
 
 			public void run() {
 				System.out.println("Refreshing User List....");
+				try {
+					if (session.isAuthenticated()){
+						ChatController.getInstance().updateRoster();
+					}
+				} catch (XMPPException | SmackException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				input.refresh();
 			}
 		};
@@ -274,13 +282,13 @@ public class UsersView extends ViewPart {
 
 	}
 
-	private void hookDoubleClickAction() {
+	/*private void hookDoubleClickAction() {
 		viewer.addDoubleClickListener(new IDoubleClickListener() {
 			public void doubleClick(DoubleClickEvent event) {
 				doubleClickAction.run();
 			}
 		});
-	}
+	}*/
 
 	private void showMessage(String message) {
 		MessageDialog.openInformation(viewer.getControl().getShell(),
