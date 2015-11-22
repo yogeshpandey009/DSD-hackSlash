@@ -9,6 +9,8 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Image;
@@ -31,7 +33,6 @@ import com.asu.score.hackslash.chathelper.Chat;
 import com.asu.score.hackslash.chathelper.ChatContentProvider;
 import com.asu.score.hackslash.chathelper.ChatInput;
 import com.asu.score.hackslash.engine.SessionManager;
-import com.asu.score.hackslash.views.UsersView.ViewLabelProvider;
 
 public class ChatView extends ViewPart {
 	public static final String ID = FormView.class.getPackage().getName()
@@ -44,7 +45,6 @@ public class ChatView extends ViewPart {
 	private ChatInput input;
 	private SessionManager session = SessionManager.getInstance();
 
-	
 	/**
 	 * Constructor
 	 */
@@ -52,7 +52,7 @@ public class ChatView extends ViewPart {
 		super();
 		input = new ChatInput();
 	}
-	
+
 	class ViewLabelProvider extends LabelProvider implements
 			ITableLabelProvider {
 
@@ -62,11 +62,12 @@ public class ChatView extends ViewPart {
 				if (obj instanceof Chat) {
 					Chat u = (Chat) obj;
 					String name = u.getBuddy();
-					if (name.indexOf('@') != -1){
-						name = name.substring(0, name.indexOf('@')).toUpperCase();
+					if (name.indexOf('@') != -1) {
+						name = name.substring(0, name.indexOf('@'))
+								.toUpperCase();
 					}
 					txt = name + "  says ->  " + u.getMsg();
-					}
+				}
 			} else {
 				txt = obj.toString();
 			}
@@ -86,9 +87,9 @@ public class ChatView extends ViewPart {
 		GridLayout layout = new GridLayout(2, false);
 		parent.setLayout(layout);
 		createViewer(parent);
-		
+
 		toolkit = new FormToolkit(parent.getDisplay());
-		
+
 		form = toolkit.createForm(parent);
 		// form.setText("Pie Chucker");
 		GridLayout layout2 = new GridLayout(3, true);
@@ -98,8 +99,16 @@ public class ChatView extends ViewPart {
 		Label label = new Label(form.getBody(), SWT.NULL);
 		label.setText("Chat Box:");
 		text = new Text(form.getBody(), SWT.BORDER);
-		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 2, 1));
+		text.setFocus();
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
+		text.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.CR) {
+					sendMessage(text);
+				}
+			}
+		});
+
 		Button button = new Button(form.getBody(), SWT.PUSH);
 		button.setText("Send");
 		gd = new GridData();
@@ -108,25 +117,30 @@ public class ChatView extends ViewPart {
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {
-				try {
-					ChatController.getInstance().sendMessage(text.getText());
-					text.setText("");
-				} catch (XMPPException | SmackException | IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				sendMessage(text);
 			}
 		});
 
 	}
 
+	private void sendMessage(Text text) {
+		try {
+			ChatController.getInstance().sendMessage(text.getText());
+			text.setText("");
+		} catch (XMPPException | SmackException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
 	public void createViewer(Composite parent) {
-		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-		//createColumns(parent, viewer);
+		viewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+		// createColumns(parent, viewer);
 		final Table table = viewer.getTable();
 		table.setHeaderVisible(true);
 		table.setLinesVisible(true);
-		
+
 		viewer.setContentProvider(new ChatContentProvider());
 		viewer.setLabelProvider(new ViewLabelProvider());
 		// get the content for the viewer, setInput will call getElements in the
@@ -152,7 +166,7 @@ public class ChatView extends ViewPart {
 	@Override
 	public void setFocus() {
 	}
-	
+
 	/**
 	 * Add item to list.
 	 */
@@ -162,9 +176,9 @@ public class ChatView extends ViewPart {
 			viewer.setSelection(new StructuredSelection(chat));
 		}
 	}
-	
+
 	public void refresh() {
 		input.refresh();
-	} 
+	}
 
 }

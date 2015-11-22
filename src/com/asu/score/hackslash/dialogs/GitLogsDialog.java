@@ -4,15 +4,13 @@ import java.io.IOException;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -44,7 +42,6 @@ public class GitLogsDialog extends Dialog {
 	protected Control createDialogArea(Composite parent) {
 	//public void showCommitLogs(List<ShowGitLogsModel> commitLogs) {
 		
-		Display d = getShell().getDisplay();
 		//final Shell s = new Shell();
 		//Composite container = new Composite(getShell(), SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		//s.setBounds(500, 500, 500, 500);
@@ -106,26 +103,24 @@ public class GitLogsDialog extends Dialog {
 		//input.setLayoutData(new GridData(GridData.FILL_BOTH));
 		//input.setText("");
 
-		Text input = new Text(getShell(),  SWT.BORDER );
+		Text input = new Text(container,  SWT.BORDER );
 		input.setFocus();
-		input.redraw(100, 100, 50, 50, true);
-		input.setBounds(50,50,50,50);
+		input.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == SWT.CR) {
+					searchOnLogs(t.getItems(), input.getText());
+				}
+			}
+		});
+		//input.redraw(100, 100, 50, 50, true);
+		//input.setBounds(50,50,50,50);
 		
-		Button searchBtn = new Button(getShell(), SWT.NONE);
+		Button searchBtn = new Button(container, SWT.NONE);
 		//searchBtn.setLayoutData(gd_lblNewLabel);
 		searchBtn.setText("Search");
 		searchBtn.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				TableItem[] tia = t.getItems();
-				String search = input.getText(); 
-				for (int i = 0; i < tia.length; i++) {
-					if (tia[i].getText(0).contains(search)) {
-						tia[i].setBackground(new Color(d,127, 178, 127));
-					} else {
-						tia[i].setBackground(new Color(d, 255, 255, 255));
-					}
-
-				}
+				searchOnLogs(t.getItems(), input.getText());
 			}
 		});
 		
@@ -135,6 +130,18 @@ public class GitLogsDialog extends Dialog {
 	
 	}
 	
+	private void searchOnLogs(TableItem[] tia, String search) {
+		Display d = getShell().getDisplay();
+		for (int i = 0; i < tia.length; i++) {
+			if (tia[i].getText(0).toLowerCase().contains(search.toLowerCase())) {
+				tia[i].setBackground(new Color(d,127, 178, 127));
+			} else {
+				tia[i].setBackground(new Color(d, 255, 255, 255));
+			}
+
+		}
+	}
+
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 	}
