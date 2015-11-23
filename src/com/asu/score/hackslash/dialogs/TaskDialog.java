@@ -32,11 +32,13 @@ public class TaskDialog extends Dialog {
 	private String desc = "";
 	private String assignedTo;
 	private String status;
+	private String taskId;
 	private boolean isEditMode = false;
 
 	public TaskDialog(Shell parentShell, Task task, boolean isEditMode) {
 		super(parentShell);
 		if (task != null) {
+			taskId = task.getTaskID();
 			name = task.getName();
 			desc = task.getDesc();
 			assignedTo = task.getAssignedTo();
@@ -193,6 +195,7 @@ public class TaskDialog extends Dialog {
 			System.out.println("DETAILS_ID button pressed+name ->" + name);
 			ShowTasksDetailsDAO std = new ShowTasksDetailsDAO();
 			std.setTaskName(name);
+			std.setTaskId(taskId);
 			TaskDetailsDialog tdd = new TaskDetailsDialog(getShell(), name,
 					std.getTaskDetails());
 			tdd.open();

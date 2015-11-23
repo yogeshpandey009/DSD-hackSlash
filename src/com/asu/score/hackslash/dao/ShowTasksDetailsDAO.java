@@ -19,7 +19,8 @@ public class ShowTasksDetailsDAO {
 	PreparedStatement pst = null;
 	String sql = "";
 	String taskName = "";
-
+	String taskId = "";
+	
 	ResultSet rs = null;
 	List<String> user_id_list = new ArrayList<String>();
 	List<Timestamp> start_date_list = new ArrayList<Timestamp>();
@@ -36,9 +37,7 @@ public class ShowTasksDetailsDAO {
 			try {
 				
 				conn = Database.getConnection();
-				sql = "SELECT A.USERID,A.StartDate,A.EndDate FROM ALLOCATION AS A, TASK AS T WHERE T.TASKID = A.TASKID "
-						
-					+ " AND T.TASKNAME = '"+getTaskName()+"' ";
+				sql = "SELECT A.USERID,A.StartDate,A.EndDate FROM ALLOCATION AS A WHERE A.TASKID = '"+getTaskId()+"' ";
 				
 				System.out.println("getTaskName()"+getTaskName());
 				pst = conn.prepareStatement(sql);
@@ -84,5 +83,15 @@ public class ShowTasksDetailsDAO {
 		this.taskName = taskName;
 		
 	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+	
+	
 
 }
