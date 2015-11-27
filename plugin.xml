@@ -115,6 +115,15 @@
                toolbarPath="sampleGroup"
                tooltip="Statistics">
          </action>
+         <action
+               class="com.asu.score.hackslash.actions.RegisterAction"
+               icon="icons/sample.gif"
+               id="com.asu.score.hackslash.actions.RegisterAction"
+               label="&amp;Register"
+               menubarPath="sampleMenu/sampleGroup"
+               toolbarPath="sampleGroup"
+               tooltip="Register Team">
+         </action>
       </actionSet>
    </extension>
 
