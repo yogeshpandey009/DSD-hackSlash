@@ -3,8 +3,14 @@ package com.asu.score.hackslash.engine;
 import java.io.IOException;
 import java.util.Scanner;
 
+import javax.inject.Inject;
 import javax.net.SocketFactory;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.internal.UISynchronizer;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -24,12 +30,15 @@ import com.asu.score.hackslash.statistics.GitController;
 public class ConnectionManager {
 
 	private static XMPPTCPConnection mConnection = null;
-	
+	@Inject
+	static UISynchronizer sync;
+
 	/**
 	 * Creates a connection to the Openfire server using Smack APIs
+	 * 
 	 * @return Connection Object
 	 * @throws SmackException
-	 * @throws IOException
+	 * @throws IOExceptionx
 	 * @throws XMPPException
 	 */
 	private static XMPPTCPConnection createConnection() throws SmackException,
@@ -46,8 +55,8 @@ public class ConnectionManager {
 		config.setSocketFactory(SocketFactory.getDefault());
 
 		XMPPTCPConnection mConnection = new XMPPTCPConnection(config.build());
-		//SASLAuthentication.unBlacklistSASLMechanism("PLAIN");
-		//SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
+		// SASLAuthentication.unBlacklistSASLMechanism("PLAIN");
+		// SASLAuthentication.blacklistSASLMechanism("DIGEST-MD5");
 		try {
 			mConnection.connect();
 			System.out.println("Successfully connected to Server!");
@@ -58,20 +67,22 @@ public class ConnectionManager {
 		}
 		return mConnection;
 	}
-	
+
 	/**
 	 * Returns true or false based on the logged in status of the user.
+	 * 
 	 * @return flag
 	 */
-	public static boolean isUserLoggedIn(){
-		if (mConnection != null && mConnection.isAuthenticated()){
+	public static boolean isUserLoggedIn() {
+		if (mConnection != null && mConnection.isAuthenticated()) {
 			return true;
-		} 
+		}
 		return false;
 	}
-	
+
 	/**
 	 * A thread safe method to get the object of connection
+	 * 
 	 * @return Connection object
 	 * @throws SmackException
 	 * @throws IOException
@@ -86,10 +97,13 @@ public class ConnectionManager {
 	}
 
 	/**
-	 * Logs into the user account using user ID and password
-	 * Throws exceptions in case of login errors
-	 * @param user username
-	 * @param pwrd Password
+	 * Logs into the user account using user ID and password Throws exceptions
+	 * in case of login errors
+	 * 
+	 * @param user
+	 *            username
+	 * @param pwrd
+	 *            Password
 	 * @throws XMPPException
 	 * @throws SmackException
 	 * @throws IOException
@@ -104,16 +118,32 @@ public class ConnectionManager {
 					pwrd);
 			ChatController.getInstance().init();
 			ChatController.getInstance().updateRoster();
-			
-			Thread t = new Thread(new Runnable() {
+
+			/*
+			 * Thread t = new Thread(new Runnable() {
+			 * 
+			 * @Override public void run() { GitController.getInstance(); } });
+			 * t.start();
+			 */
+			Job j = new Job("My Job") {
 				@Override
-				public void run() {
+				protected IStatus run(IProgressMonitor monitor) {
+
+					// If you want to update the UI
+					/*
+					 * sync.asyncExec(new Runnable() {
+					 * 
+					 * @Override public void run() { // do something in the user
+					 * interface // e.g. set a text field } });
+					 */
 					GitController.getInstance();
+					return Status.OK_STATUS;
 				}
-			});
-			t.start();
+			};
+			j.schedule();
 		} catch (XMPPException | SmackException | IOException e) {
-			mConnection.disconnect();//otherwise login always fail after wrong attempt
+			mConnection.disconnect();// otherwise login always fail after wrong
+										// attempt
 			System.out.println("Error while logging into Server. ->"
 					+ e.getMessage());
 			throw e;
@@ -122,6 +152,7 @@ public class ConnectionManager {
 
 	/**
 	 * Returns the currently logged in User
+	 * 
 	 * @return Current User
 	 * @throws SmackException
 	 * @throws IOException
@@ -132,17 +163,19 @@ public class ConnectionManager {
 		mConnection = getConnection();
 		return mConnection.getUser();
 	}
-	
+
 	/**
 	 * Returns the instanse of Roster
+	 * 
 	 * @return Roster
 	 */
-	public static Roster getRoster(){
+	public static Roster getRoster() {
 		return Roster.getInstanceFor(mConnection);
 	}
 
 	/**
 	 * Disconnects the connection to server.
+	 * 
 	 * @throws SmackException
 	 * @throws IOException
 	 * @throws XMPPException
@@ -153,9 +186,10 @@ public class ConnectionManager {
 		mConnection.disconnect();
 		System.out.println("User Logged Out. Server Connection Closed!");
 	}
-	
+
 	/**
 	 * Gets an instance of ChatManager from the server.
+	 * 
 	 * @return ChatManager Object
 	 * @throws SmackException
 	 * @throws IOException
@@ -179,7 +213,7 @@ public class ConnectionManager {
 		chatCtrl.createEntry(buddyJID);
 
 		chatCtrl.sendMessage("Hello mate", "yp@yashu.local");
-		
+
 		UsersService.getAllUsers();
 
 		Scanner sc = new Scanner(System.in);
